@@ -39,9 +39,9 @@ async function createPassenger(passengerId, name, age, gender) {
     const contract = network.getContract('ticketadda');
 
     // Submit the transaction to the network
-    await contract.submitTransaction('createPassenger', passengerId, name, age, true);
+    await contract.submitTransaction('createPassenger', passengerId, name, age, 'male', true);
     // ===============================Delete later======================================
-    await contract.submitTransaction('createTransportation', 'Bus1', 'Aditya', 'Bus', 'delhi to goa', 100)
+    // await contract.submitTransaction('createTransportation', 'Bus1', 'Aditya', 'Bus', 'delhi to goa', 100)
     console.log(`Passenger ${passengerId} has been created`);
     console.log(`Transporatation has been created`);
 

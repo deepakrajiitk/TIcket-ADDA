@@ -35,7 +35,7 @@ async function queryPassenger(appUser, passengerId) {
         const contract = network.getContract('ticketadda');
 
         // Evaluate the specified transaction.
-        const result = await contract.evaluateTransaction('readPassenger', passengerId);
+        const result = await contract.evaluateTransaction('getPassengerDetails', passengerId);
         console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
 
     } catch (error) {
@@ -44,4 +44,4 @@ async function queryPassenger(appUser, passengerId) {
     }
 }
 
-queryPassenger('johndoe@example.com', 'deepakraj@example.com');
+queryPassenger('deepakraj@example.com', 'deepakraj@example.com');
