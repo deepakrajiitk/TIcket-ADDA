@@ -5,14 +5,14 @@ const FabricCAServices = require('fabric-ca-client');
 const fs = require('fs');
 const path = require('path');
 
-async function registerPassenger(firstName, lastName, email, password) {
+async function registerTransporter(firstName, lastName, email, password) {
     try {
       // Load the network configuration
-      const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
+      const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org2.example.com', 'connection-org2.json');
       const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
   
       // Create a new CA client for interacting with the CA.
-      const caURL = ccp.certificateAuthorities['ca.org1.example.com'].url;
+      const caURL = ccp.certificateAuthorities['ca.org2.example.com'].url;
       const ca = new FabricCAServices(caURL);
   
       // Create a new file system based wallet for managing identities.
@@ -28,7 +28,7 @@ async function registerPassenger(firstName, lastName, email, password) {
       }
   
       // Check to see if we've already enrolled the admin user.
-      const adminIdentity = await wallet.get('admin');
+      const adminIdentity = await wallet.get('admin2');
       if (!adminIdentity) {
         console.log('An identity for the admin user "admin" does not exist in the wallet');
         console.log('Run the enrollAdmin.js application before retrying');
@@ -39,9 +39,11 @@ async function registerPassenger(firstName, lastName, email, password) {
       const provider = wallet.getProviderRegistry().getProvider(adminIdentity.type);
       const adminUser = await provider.getUserContext(adminIdentity, 'admin');
   
+
+
       // Register the user, enroll the user, and import the new identity into the wallet.
       const secret = await ca.register({
-        affiliation: 'org1.department1',
+        affiliation: 'org2.department1',
         enrollmentID: email,
         role: 'client',
         attrs: [
@@ -59,7 +61,7 @@ async function registerPassenger(firstName, lastName, email, password) {
           certificate: enrollment.certificate,
           privateKey: enrollment.key.toBytes(),
         },
-        mspId: 'Org1MSP',
+        mspId: 'Org2MSP',
         type: 'X.509',
       };
       await wallet.put(email, x509Identity);
@@ -71,6 +73,5 @@ async function registerPassenger(firstName, lastName, email, password) {
     }
   }
   
-  // registerPassenger('Deepak', 'Raj', 'deepakraj@example.com', 'password');
-  registerPassenger('Aditya ', 'Loth', 'adityaloth@example.com', 'password');
+  registerTransporter('MR', 'Travels', 'mrtravels@example.com', 'password');
   
