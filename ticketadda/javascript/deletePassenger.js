@@ -5,6 +5,11 @@ const { Gateway, Wallets } = require('fabric-network');
 const path = require('path');
 const fs = require('fs');
 
+const args = process.argv;
+
+// Extract the arguments
+const arg1 = args[2]; 
+
 async function main(passengerId) {
     try {
         // Load the network configuration
@@ -17,7 +22,7 @@ async function main(passengerId) {
         console.log(`Wallet path: ${walletPath}`);
 
         // Check to see if we've already enrolled the user
-        const userIdentity = await wallet.get('appUser');
+        const userIdentity = await wallet.get(passengerId);
         if (!userIdentity) {
             console.log('An identity for the user "appUser" does not exist in the wallet');
             return;
@@ -27,7 +32,7 @@ async function main(passengerId) {
         const gateway = new Gateway();
         await gateway.connect(ccp, {
             wallet,
-            identity: 'appUser',
+            identity: userIdentity,
             discovery: { enabled: true, asLocalhost: true },
         });
 
@@ -49,4 +54,4 @@ async function main(passengerId) {
     }
 }
 
-main("deepakraj@example.com");
+main(arg1);
