@@ -17,7 +17,7 @@ class TicketAdda extends Contract{
 
     async createPassenger(ctx, passengerID, name, age, gender, isPublic) {
         // Check if the passenger already exists
-        const exists = await passengerExists(ctx, passengerID);
+        const exists = await this.passengerExists(ctx, passengerID);
         if (exists) {
             throw new Error(`The passenger ${passengerID} already exists`);
         }
@@ -45,7 +45,7 @@ class TicketAdda extends Contract{
 
     async deletePassenger(ctx, passengerID) {
         // Check if the passenger exists
-        const exists = await passengerExists(ctx, passengerID);
+        const exists = await this.passengerExists(ctx, passengerID);
         if (!exists) {
             throw new Error(`The passenger ${passengerID} does not exist`);
         }
@@ -274,12 +274,12 @@ class TicketAdda extends Contract{
       
     async bookTicket(ctx, passengerID, transportID) {
         // Check if the passenger and mode of transport exist
-        const passengerExists = await passengerExists(ctx, passengerID);
+        const passengerExists = await this.passengerExists(ctx, passengerID);
         if (!passengerExists) {
           throw new Error(`The passenger ${passengerID} does not exist`);
         }
       
-        const transportExists = await transportExists(ctx, transportID);
+        const transportExists = await this.transportExists(ctx, transportID);
         if (!transportExists) {
           throw new Error(`The mode of transport ${transportID} does not exist`);
         }
