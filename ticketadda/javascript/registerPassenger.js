@@ -71,5 +71,6 @@ async function registerPassenger(firstName, lastName, email, password) {
     }
   }
   
-  registerPassenger('Deepak', 'Raj', 'deepakraj@example.com', 'password');
+  // registerPassenger('Deepak', 'Raj', 'deepakraj@example.com', 'password');
+  registerPassenger('Aditya ', 'Loth', 'adityaloth@example.com', 'password');
   
