@@ -6,6 +6,15 @@ const fs = require('fs');
 const { Context } = require('mocha');
 const path = require('path');
 
+const args = process.argv;
+
+// Extract the arguments
+const arg1 = args[2]; // First argument
+const arg2 = args[3]; 
+const arg3 = args[4];
+const arg4 = args[5];
+
+
 async function createPassenger(passengerId, name, age, gender) {
   try {
     // Load connection profile; will be used to locate a gateway
@@ -54,4 +63,4 @@ async function createPassenger(passengerId, name, age, gender) {
 }
 
 // Call the createPassenger function
-createPassenger('deepakraj@example.com', 'Deepak Raj', 23, 'male');
+createPassenger(arg1, arg2, arg3, arg4);

@@ -5,6 +5,14 @@ const FabricCAServices = require('fabric-ca-client');
 const fs = require('fs');
 const path = require('path');
 
+const args = process.argv;
+
+// Extract the arguments
+const arg1 = args[2]; // First argument
+const arg2 = args[3]; 
+const arg3 = args[4];
+const arg4 = args[5];
+
 async function registerTransporter(firstName, lastName, email, password) {
     try {
       // Load the network configuration
@@ -73,5 +81,5 @@ async function registerTransporter(firstName, lastName, email, password) {
     }
   }
   
-  registerTransporter('MR', 'Travels', 'mrtravels@example.com', 'password');
+  registerTransporter(arg1, arg2, arg3, arg4);
   

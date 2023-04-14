@@ -5,6 +5,14 @@ const FabricCAServices = require('fabric-ca-client');
 const fs = require('fs');
 const path = require('path');
 
+const args = process.argv;
+
+// Extract the arguments
+const arg1 = args[2]; // First argument
+const arg2 = args[3]; 
+const arg3 = args[4];
+const arg4 = args[5];
+
 async function registerPassenger(firstName, lastName, email, password) {
     try {
       // Load the network configuration
@@ -72,5 +80,5 @@ async function registerPassenger(firstName, lastName, email, password) {
   }
   
   // registerPassenger('Deepak', 'Raj', 'deepakraj@example.com', 'password');
-  registerPassenger('Aditya ', 'Loth', 'adityaloth@example.com', 'password');
+  registerPassenger(arg1, arg2, arg3, arg4);
   
