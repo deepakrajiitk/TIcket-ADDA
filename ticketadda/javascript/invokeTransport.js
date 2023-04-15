@@ -404,8 +404,12 @@ enrollAdmin2();
 // registerTransporter('Adi', 'Loth', 'testid1', 'Jodhpur', '1990');
 =======
 // enrollAdmin2();
+<<<<<<< HEAD
 registerTransporter('Adi', 'Loth', 'testid3', 'Jodhpur', '1990');
 >>>>>>> 8391aeb37ae601f9629750dd2d3da3fd9fddb2f9
+=======
+// registerTransporter('Adi', 'Loth', 'id1', 'Jodhpur', '1990');
+>>>>>>> c10f0804a7fd702fd37aa5ac7fd637c34403b07b
 
 // createModeOfTransport('testid1', 'Bu45', 50, '120' , 'Delhi', 'Bombay');
 // createModeOfTransport('testid1', 'Bus25', 150, '20' , 'Kanpur', 'Bombay');
