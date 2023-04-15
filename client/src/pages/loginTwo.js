@@ -83,7 +83,9 @@ function Show() {
                   </div>
                 </div>
                 <div class="form-btn">
-                  <button class="submit-btn">Search</button>
+                  <Link to="/tkt_det">
+                    <button class="submit-btn">Search</button>
+                  </Link>
                 </div>
               </form>
             </div>
