@@ -18,7 +18,7 @@ async function enrollAdmin2() {
         const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: false }, caInfo.caName);
 
         // Create a new file system based wallet for managing identities.
-        const walletPath = path.join(process.cwd(), 'wallet');
+        const walletPath = path.join(__dirname, 'wallet');
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         console.log(`Wallet path: ${walletPath}`);
 
@@ -64,7 +64,7 @@ async function registerTransporter(firstName, lastName, email, address, contactN
       const ca = new FabricCAServices(caURL);
   
       // Create a new file system based wallet for managing identities.
-      const walletPath = path.join(process.cwd(), 'wallet');
+      const walletPath = path.join(__dirname, 'wallet');
       const wallet = await Wallets.newFileSystemWallet(walletPath);
       console.log(`Wallet path: ${walletPath}`);
   
@@ -139,7 +139,7 @@ async function createModeOfTransport( transportID, name, capacity, speed, source
     try {
         // Connect to the gateway using a connection profile and wallet
         const connectionProfilePath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org2.example.com', 'connection-org2.json'); // Replace with the actual path to your connection profile
-        const walletPath = path.resolve(process.cwd(), 'wallet'); // Replace with the actual path to your wallet
+        const walletPath = path.resolve(__dirname, 'wallet'); // Replace with the actual path to your wallet
         const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, 'utf8'));
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         
@@ -156,8 +156,6 @@ async function createModeOfTransport( transportID, name, capacity, speed, source
         // Invoke the createModeOfTransport function on the chaincode
         const result = await contract.submitTransaction('createModeOfTransport', transportID, name, capacity, speed, source ,destination);
         console.log(`Transaction result: ${result.toString()}`);
-
-        return result;
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
     } finally {
@@ -178,7 +176,7 @@ async function deleteModeOfTransport(transportIDValue) {
     try {
         // Connect to the gateway using a connection profile and wallet
         const connectionProfilePath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org2.example.com', 'connection-org2.json'); // Replace with the actual path to your connection profile
-        const walletPath = path.resolve(process.cwd(), 'wallet'); // Replace with the actual path to your wallet
+        const walletPath = path.resolve(__dirname, 'wallet'); // Replace with the actual path to your wallet
         const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, 'utf8'));
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         
@@ -218,7 +216,7 @@ async function getTransportation(_transportID, busID) {
     try {
         // Connect to the gateway using a connection profile and wallet
         const connectionProfilePath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org2.example.com', 'connection-org2.json'); // Replace with the actual path to your connection profile
-        const walletPath = path.resolve(process.cwd(), 'wallet'); // Replace with the actual path to your wallet
+        const walletPath = path.resolve(__dirname, 'wallet'); // Replace with the actual path to your wallet
         const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, 'utf8'));
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         
@@ -255,7 +253,7 @@ async function updateTransportationDetails(transportID, name, capacity, speed, s
     try {
         // Connect to the gateway using a connection profile and wallet
         const connectionProfilePath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org2.example.com', 'connection-org2.json'); // Replace with the actual path to your connection profile
-        const walletPath = path.resolve(process.cwd(), 'wallet'); // Replace with the actual path to your wallet
+        const walletPath = path.resolve(__dirname, 'wallet'); // Replace with the actual path to your wallet
         const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, 'utf8'));
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         
@@ -294,7 +292,7 @@ async function createTransportProvider(providerID, name, address, contact) {
     try {
         // Connect to the gateway using a connection profile and wallet
         const connectionProfilePath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org2.example.com', 'connection-org2.json'); // Replace with the actual path to your connection profile
-        const walletPath = path.resolve(process.cwd(), 'wallet'); // Replace with the actual path to your wallet
+        const walletPath = path.resolve(__dirname, 'wallet'); // Replace with the actual path to your wallet
         const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, 'utf8'));
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         await gateway.connect(ccp, {
@@ -328,7 +326,7 @@ async function deleteTransportProvider(providerIDValue) {
     try {
         // Connect to the gateway using a connection profile and wallet
         const connectionProfilePath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org2.example.com', 'connection-org2.json'); // Replace with the actual path to your connection profile
-        const walletPath = path.resolve(process.cwd(), 'wallet'); // Replace with the actual path to your wallet
+        const walletPath = path.resolve(__dirname, 'wallet'); // Replace with the actual path to your wallet
         const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, 'utf8'));
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
@@ -343,10 +341,10 @@ async function deleteTransportProvider(providerIDValue) {
         const contract = network.getContract('ticketadda'); // Replace with the actual chaincode name
 
         // Invoke the deleteTransportProvider function on the chaincode
-        const result = await contract.submitTransaction('deleteTransportProvider', providerIDValue);
-        console.log(`Transaction result: ${result.toString()}`);
+        await wallet.remove(providerIDValue);
+        await contract.submitTransaction('deleteTransportProvider', providerIDValue);
+        console.log(`TSP deleted`);
 
-        return result;
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
     } finally {
@@ -364,7 +362,7 @@ async function findAvailableTransport(source, destination) {
     try {
         // Connect to the gateway using a connection profile and wallet
         const connectionProfilePath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org2.example.com', 'connection-org2.json'); // Replace with the actual path to your connection profile
-        const walletPath = path.resolve(process.cwd(), 'wallet'); // Replace with the actual path to your wallet
+        const walletPath = path.resolve(__dirname, 'wallet'); // Replace with the actual path to your wallet
         const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, 'utf8'));
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
@@ -401,19 +399,29 @@ async function findAvailableTransport(source, destination) {
 
 
 // enrollAdmin2();
-// console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-// registerTransporter('Adi', 'Loth', 'testid1', 'Jodhpur', '1990');
+registerTransporter('Adi', 'Loth', 'testid3', 'Jodhpur', '1990');
 
-// createModeOfTransport('testid1', 'Bus15', 50, '120' , 'Kanpur', 'Bombay');
+// createModeOfTransport('testid1', 'Bu45', 50, '120' , 'Delhi', 'Bombay');
 // createModeOfTransport('testid1', 'Bus25', 150, '20' , 'Kanpur', 'Bombay');
 // createModeOfTransport('testid1', 'Bus35', 250, '10' , 'Kanpur', 'Bombay');
 
 // deleteModeOfTransport('testid2')
-// getTransportation('testid1', 'Bus5');
+// getTransportation('testid1', 'Adi');
 
 // updateTransportationDetails('testid2', 'Bus2', '30', '40' , 'Kanpur', 'Delhi', 'bus')
 
 // createTransportProvider("testid2", "Dinkar", "Jodhpur", "1990")
-// deleteTransportProvider("testid1")
+// deleteTransportProvider("testid3");
 
 // findAvailableTransport("Kanpur", "Bombay") ;
+
+module.exports = {
+    registerTransporter,
+    createModeOfTransport,
+    deleteModeOfTransport,
+    getTransportation,
+    updateTransportationDetails,
+    createTransportProvider,
+    findAvailableTransport,
+    deleteTransportProvider,
+}

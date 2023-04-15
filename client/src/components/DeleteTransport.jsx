@@ -1,13 +1,28 @@
 import React, { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import axios from "axios";
+import { Container, Form, Button } from "react-bootstrap";
+
 
 const TransportDeleter = ({ onDelete }) => {
   const [transportID, setTransportID] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onDelete(transportID);
-    setTransportID("");
+
+    const data1 = {
+      transportID: transportID,
+    };
+  
+    try {
+      console.log(transportID);
+      const response = axios.get("http://localhost:5000/deleteTransport", {
+        params: data1,
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+
   };
 
   return (
