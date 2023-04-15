@@ -15,7 +15,7 @@ function ProviderPage() {
 
   return (
     <div className="container-fluid" style={{ height: "100vh" }}>
-      <div className="row flex-grow-1">
+      <div className="row flex-grow-1" style={{ height: "100vh" }}>
         <div className="col-md-2 bg-light">
           <Sidebar
             selectedMenuItem={selectedMenuItem}
