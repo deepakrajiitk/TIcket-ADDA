@@ -169,13 +169,41 @@ class TicketAdda extends Contract{
         await ctx.stub.setEvent('CreateModeOfTransportEvent', Buffer.from(eventPayload));
 
 
+        
         // To make search using source and destination
+        
         const compositeKey = ctx.stub.createCompositeKey('transport', [source, destination]);
         // Convert the transport object to a buffer
         const transportBuffer2 = Buffer.from(JSON.stringify(modeOfTransport));
     
-        // Store the transport object in the ledger
-        await ctx.stub.putState(compositeKey, transportBuffer2);
+        const existingTransportBuffer = await ctx.stub.getState(compositeKey);
+        if (existingTransportBuffer && existingTransportBuffer.length > 0) {
+          // Deserialize the existing buffer to an array of transport objects
+          const existingTransportObjects = JSON.parse(existingTransportBuffer.toString());
+      
+          if (Array.isArray(existingTransportObjects)) {
+              // Append the new mode of transport object to the existing array
+              existingTransportObjects.push(modeOfTransport);
+      
+              // Serialize the updated array back to a buffer
+              const updatedTransportBuffer = Buffer.from(JSON.stringify(existingTransportObjects));
+      
+              // Save the updated buffer back to the ledger
+              await ctx.stub.putState(compositeKey, updatedTransportBuffer);
+          } else {
+              // If the existing value is not an array, create a new array containing both the existing and new mode of transport objects
+              const updatedTransportObjects = [JSON.parse(existingTransportBuffer.toString()), modeOfTransport];
+      
+              // Serialize the updated array back to a buffer
+              const updatedTransportBuffer = Buffer.from(JSON.stringify(updatedTransportObjects));
+      
+              // Save the updated buffer back to the ledger
+              await ctx.stub.putState(compositeKey, updatedTransportBuffer);
+          }
+          } else {
+              // If no existing value, save the new buffer as the value for the composite key
+              await ctx.stub.putState(compositeKey, transportBuffer);
+          }
     
         // Return the newly created mode of transport object
         return modeOfTransport;
@@ -474,31 +502,21 @@ class TicketAdda extends Contract{
       
     async findAvailableTransport(ctx, source, destination) {
       // Retrieve all mode of transport objects from the ledger
-        console.log('aaaaaaaaaaaaaaaaaa');
-        const allTransportBuffer = await ctx.stub.getStateByType('transport');
-        const allTransport = [];
+      const compositeKey = ctx.stub.createCompositeKey('transport', [source, destination]);
 
-        console.log('aaaaaaaaaaaaaaaaaa');
-        while (true) {
-            const transport = await allTransportBuffer.next();
-            if (transport.value && transport.value.value.toString()) {
-                const transportData = JSON.parse(transport.value.value.toString());
-                allTransport.push(transportData);
-            }
-            if (transport.done) {
-                await allTransportBuffer.close();
-                break;
-            }
-            }
-
-        console.log('aaaaaaaaaaaaaaaaaa');
-
-        // Filter the mode of transport objects based on the given date, source, and destination
-        const availableTransport = allTransport.filter(transport => {
-            return transport.Date === date && transport.Source === source && transport.Destination === destination;
-            });
-
-        return availableTransport;
+      // Query the state for the composite key
+      const transportBytes = await ctx.stub.getState(compositeKey);
+  
+      // Check if transport exists in the ledger
+      if (!transportBytes || transportBytes.length === 0) {
+          throw new Error(`Transport not found for date ${date}, source ${source}, destination ${destination}`);
+      }
+  
+      // Parse the transport object from the state
+      const transport = JSON.parse(transportBytes.toString());
+  
+      // Return the transport object
+      return transport;
       }
 }
 

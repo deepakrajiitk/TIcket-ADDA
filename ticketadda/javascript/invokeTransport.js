@@ -379,9 +379,8 @@ async function findAvailableTransport(source, destination) {
         const contract = network.getContract('ticketadda'); // Replace with the actual chaincode name
 
         // Invoke the chaincode function to find available transport
-        // const date = '2023-04-15';
 
-        const result = await contract.evaluateTransaction('findAvailableTransport', source, destination);
+        const result = await contract.submitTransaction('findAvailableTransport', source, destination);
 
         // Parse the result as JSON
         const availableTransport = JSON.parse(result.toString());
@@ -395,12 +394,13 @@ async function findAvailableTransport(source, destination) {
     }
 }
 
+
 //////////////////////////////////////////////////////////////////////////////////////
 
 
 
 // enrollAdmin2();
-  
+// console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 // registerTransporter('Adi', 'Loth', 'testid1', 'Jodhpur', '1990');
 
 // createModeOfTransport('testid1', 'Bus15', 50, '120' , 'Kanpur', 'Bombay');
