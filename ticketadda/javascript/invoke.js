@@ -298,11 +298,11 @@ async function getAllBookingsForPassenger(userId) {
             "getAllBookingsForPassenger",
             userId
         );
-        console.log(`Bookings: ${result.toString()}`);
-
+        const final_res = JSON.parse(result);
+        // console.log(final_res)
         // disconnect the gateway
         gateway.disconnect();
-        return result;
+        return final_res;
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         // process.exit(1);
@@ -312,7 +312,7 @@ async function getAllBookingsForPassenger(userId) {
 // -------------------------------------------------------------------------------------
 
 // bookTicket('deepak@gmail', 'testid1', 'Bus45', 10);
-// calculateTicketPrice('testid1', 'Bus5');
+// calculateTicketPrice('testid1', 'Bus45');
 // validateTicket('4d5bb6df0c0c654a0f0ca8896cb190097acc816dfe746731670aacfaa55d6df4')
 // cancelBooking(
 //     "deepak@gmail",

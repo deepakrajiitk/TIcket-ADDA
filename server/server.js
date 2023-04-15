@@ -277,9 +277,10 @@ app.get("/getDetails", async (req, res) => {
 
   try {
     const result = await getAllBookingsForPassenger(passengerId);
+    // const final_res = JSON.parse(result);
 
-    console.log(`Bookings: ${result.toString()}`);
-    res.status(201).send(`Bookings: ${result.toString()}`);
+    // console.log(result[0]);
+    res.status(201).send(result);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
     res.status(500).send("Failed to delete transporter");
