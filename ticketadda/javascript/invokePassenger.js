@@ -129,7 +129,7 @@ async function deletePassenger(passengerId) {
         // Call the deletePassenger method
         // const passengerId = 'passenger1';
         await contract.submitTransaction("deletePassenger", passengerId);
-        
+
         await wallet.remove(passengerId);
 
         console.log(`Successfully deleted passenger ${passengerId}`);
@@ -264,7 +264,14 @@ async function queryPassenger(passengerId) {
     }
 }
 
-async function registerPassenger(firstName, lastName, email, age, gender, isPublic) {
+async function registerPassenger(
+    firstName,
+    lastName,
+    email,
+    age,
+    gender,
+    isPublic
+) {
     try {
         // Load the network configuration
         const ccpPath = path.resolve(
@@ -344,12 +351,10 @@ async function registerPassenger(firstName, lastName, email, age, gender, isPubl
             `Successfully registered and enrolled user "${email}" and imported it into the wallet`
         );
         createPassenger(email, firstName, age, gender, isPublic);
-
     } catch (error) {
         console.error(`Failed to register user "${email}": ${error}`);
         process.exit(1);
     }
-
 }
 
 async function updatePassenger(passengerId, name, age, gender, isPublic) {
@@ -423,7 +428,7 @@ enrollAdmin();
 // enrollAdmin();
 // registerPassenger("Deepak", "Raj", "deek@gmail", 23, "Male", true);
 // enrollAdmin();
-deletePassenger('deek@gmail');
+// deletePassenger('deek@gmail');
 // registerUser();
 // queryPassenger('adi@gmail.com');
 // updatePassenger('deepakraj@example.com', 'Deepak Raj', 24, 'male');

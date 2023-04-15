@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 
 const CancelBookingPage = () => {
@@ -7,6 +8,19 @@ const CancelBookingPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const data1 = {
+      passengerID: passengerID,
+      bookingID: bookingID
+    };
+    try {
+      const response = axios.get("http://localhost:5000/cancel_booking", {
+        params: data1
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

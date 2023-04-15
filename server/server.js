@@ -120,8 +120,18 @@ app.get("/transporter", async (req, res) => {
   const contactNumber = req.query.contact;
 
   try {
-    await registerTransporter( firstName, lastName, email, address,  contactNumber);
-    res.status(201).send(`Successfully registered and enrolled user "${email}" and imported it into the wallet`);
+    await registerTransporter(
+      firstName,
+      lastName,
+      email,
+      address,
+      contactNumber
+    );
+    res
+      .status(201)
+      .send(
+        `Successfully registered and enrolled user "${email}" and imported it into the wallet`
+      );
   } catch (error) {
     console.error(`Failed to register user "${email}": ${error}`);
     res.status(500).send("Failed to register transporter");
@@ -155,7 +165,7 @@ app.get("/transport", async (req, res) => {
 app.get("/deleteModeOfTransport", async (req, res) => {
   const transportID = req.query.transportID;
   const transporterID = req.query.transporterID;
-  
+
   try {
     await deleteModeOfTransport(transporterID, transportID);
     // console.log(`Transaction result: ${result.toString()}`);
@@ -261,8 +271,23 @@ app.get("/getDetails", async (req, res) => {
     console.error(`Failed to invoke chaincode:: ${error}`);
     res.status(500).send("Failed to delete transporter");
   }
-});
+}); 
+ 
+app.get("/cancel_booking", async (req, res) => {
+  const passengerID = req.query.passengerID;
+  const bookingID = req.query.bookingID;
 
+  try {
+    const result = await cancelBooking(passengerID, bookingID);
+
+    console.log(`Bookings: ${result.toString()}`);
+    res.status(201).send(`Bookings: ${result.toString()}`);
+  } catch (error) {
+    console.error(`Failed to invoke chaincode:: ${error}`);
+    res.status(500).send("Failed to delete transporter");
+  }
+}); 
+ 
 // Start the server
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

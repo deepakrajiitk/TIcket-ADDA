@@ -49,7 +49,7 @@ async function calculateTicketPrice(providerId, transportId) {
         await gateway.disconnect();
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
-        process.exit(1);
+        // process.exit(1);
     }
 }
 
@@ -113,7 +113,7 @@ async function bookTicket(userId, providerID, transportId, noSeats) {
         gateway.disconnect();
     } catch (error) {
         console.error(`Failed to submit transaction: ${error}`);
-        process.exit(1);
+        // process.exit(1);
     }
 }
 
@@ -212,7 +212,7 @@ async function cancelBooking(userId, ticketId) {
         gateway.disconnect();
     } catch (error) {
         console.error(`Failed to cancel booking: ${error}`);
-        process.exit(1);
+        // process.exit(1);
     }
 }
 
@@ -258,7 +258,7 @@ async function findAvailableSeats(providerId, transportId) {
         await gateway.disconnect();
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
-        process.exit(1);
+        // process.exit(1);
     }
 }
 
@@ -305,7 +305,7 @@ async function getAllBookingsForPassenger(userId) {
         return result;
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
-        process.exit(1);
+        // process.exit(1);
     }
 }
 
@@ -314,7 +314,10 @@ async function getAllBookingsForPassenger(userId) {
 // bookTicket('deepak@gmail', 'testid1', 'Bus45', 10);
 // calculateTicketPrice('testid1', 'Bus5');
 // validateTicket('4d5bb6df0c0c654a0f0ca8896cb190097acc816dfe746731670aacfaa55d6df4')
-// cancelBooking('deepak@gmail', 'ee66c305fc5d15bea6f91e5b926fb3f9865e6cd7910951a247b38c324b195691')
+// cancelBooking(
+//     "deepak@gmail",
+//     "ee66c305fc5d15bea6f91e5b926fb3f9865e6cd7910951a247b38c324b195691"
+// );
 // findAvailableSeats('testid1', 'Bus45')
 // getAllBookingsForPassenger('deepak@gmail')
 
