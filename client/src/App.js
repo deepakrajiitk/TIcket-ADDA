@@ -1,12 +1,9 @@
-import PassengerForm from './PassengerForm';
+import Home from "./pages/home"
+import logo from './logo.svg';
+import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <h1>Create a new Passenger</h1>
-      <PassengerForm />
-    </div>
-  );
+  return <Home />;
 }
 
 export default App;
