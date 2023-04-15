@@ -11,7 +11,7 @@ const { Wallets } = require('fabric-network');
 const fs = require('fs');
 const path = require('path');
 
-async function main() {
+async function enrollAdmin2() {
     try {
         // load the network configuration
         const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org2.example.com', 'connection-org2.json');
@@ -54,4 +54,4 @@ async function main() {
     }
 }
 
-main();
+enrollAdmin2();
