@@ -43,6 +43,7 @@ async function calculateTicketPrice(providerId, transportId) {
 
 async function bookTicket(userId, providerID, transportId, noSeats) {
   try {
+    console.log("lakdsf;;;;;;;;;adsffffffffffffdassda")
     // Load connection profile; will be used to locate a gateway
     const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
     const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
@@ -50,6 +51,7 @@ async function bookTicket(userId, providerID, transportId, noSeats) {
     // Create a new file system wallet for managing identities
     const walletPath = path.join(process.cwd(), 'wallet');
     const wallet = await Wallets.newFileSystemWallet(walletPath);
+    const list = await wallet.list();
 
     // Check to see if we've already enrolled the user
     const identity = await wallet.get(userId);
