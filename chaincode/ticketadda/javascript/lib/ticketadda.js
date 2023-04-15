@@ -135,17 +135,20 @@ class TicketAdda extends Contract{
             
     async createModeOfTransport(ctx, ProviderID, name, capacity, speed, source, destination) {
         // Check if the mode of transport already exists
-        transportID = ProviderID + name
+        const transportID = ProviderID + name;
         const exists = await this.transporterExists(ctx, ProviderID);
+
+        console.log('vvvvvvvvvvvvvvvvvvvvvvvvv');
         if (!exists) {
             throw new Error(`The mode of transport ${ProviderID} does not exists`);
         }
-
+        console.log('vvvvvvvvvvvvvvvvvvvvvvvvv');
         const exists2 = await this.transportExists(ctx, transportID);
         
         if (exists2) {
           throw new Error(`The mode of transport ${transportID} does not exists`);
         }
+        console.log('vvvvvvvvvvvvvvvvvvvvvvvvv');
         
         // Create a new mode of transport object
         const modeOfTransport = {

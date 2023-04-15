@@ -130,7 +130,7 @@ async function registerTransporter(firstName, lastName, email, address, contactN
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-async function createModeOfTransport( transportID, name, capacity, speed, source ,destination ,typeValue) {
+async function createModeOfTransport( transportID, name, capacity, speed, source ,destination) {
     // Create a new gateway instance
     const gateway = new Gateway();
 
@@ -152,7 +152,7 @@ async function createModeOfTransport( transportID, name, capacity, speed, source
         const contract = network.getContract('ticketadda'); // Replace with the actual chaincode name
 
         // Invoke the createModeOfTransport function on the chaincode
-        const result = await contract.submitTransaction('createModeOfTransport', transportID, name, capacity, speed, source ,destination ,typeValue);
+        const result = await contract.submitTransaction('createModeOfTransport', transportID, name, capacity, speed, source ,destination);
         console.log(`Transaction result: ${result.toString()}`);
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
@@ -203,9 +203,11 @@ async function deleteModeOfTransport(transportIDValue) {
 
 
 
-async function getTransportation(transportID) {
+async function getTransportation(_transportID, busID) {
     // Create a new gateway instance
     const gateway = new Gateway();
+
+    const transportID = _transportID + busID;
 
     try {
         // Connect to the gateway using a connection profile and wallet
@@ -340,7 +342,6 @@ async function deleteTransportProvider(providerIDValue) {
         gateway.disconnect();
     }
 
-    deleteModeOfTransport(providerIDValue)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -349,14 +350,14 @@ async function deleteTransportProvider(providerIDValue) {
 
 // enrollAdmin2();
   
-registerTransporter('Aditya', 'Loth', 'testid1', 'Jodhpur', '1990');
+// registerTransporter('Aditya', 'Loth', 'testid1', 'Jodhpur', '1990');
 
-// createModeOfTransport('testid2', 'Bus3', '200', '410' , 'Kanpur', 'Bombay', 'bus');
+// createModeOfTransport('testid1', 'Bus5', '200', '410' , 'Kanpur', 'Bombay');
 
 // deleteModeOfTransport('testid2')
-// getTransportation('testid2')
+getTransportation('testid1', 'Bus5');
 
 // updateTransportationDetails('testid2', 'Bus2', '30', '40' , 'Kanpur', 'Delhi', 'bus')
 
 // createTransportProvider("testid2", "Dinkar", "Jodhpur", "1990")
-// deleteTransportProvider("testid2")
+// deleteTransportProvider("testid1")
