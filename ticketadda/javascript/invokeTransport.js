@@ -356,15 +356,56 @@ async function deleteTransportProvider(providerIDValue) {
 
 }
 
+
+
+async function findAvailableTransport(source, destination) {
+    const gateway = new Gateway();
+
+    try {
+        // Connect to the gateway using a connection profile and wallet
+        const connectionProfilePath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org2.example.com', 'connection-org2.json'); // Replace with the actual path to your connection profile
+        const walletPath = path.resolve(process.cwd(), 'wallet'); // Replace with the actual path to your wallet
+        const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, 'utf8'));
+        const wallet = await Wallets.newFileSystemWallet(walletPath);
+
+        await gateway.connect(ccp, {
+            wallet,
+            identity: 'admin2', // Replace with the actual identity name in your wallet
+            discovery: { enabled: true, asLocalhost: true } // Replace with the appropriate discovery settings
+        });
+
+        // Get the network and contract from the gateway
+        const network = await gateway.getNetwork('mychannel'); // Replace with the actual channel name
+        const contract = network.getContract('ticketadda'); // Replace with the actual chaincode name
+
+        // Invoke the chaincode function to find available transport
+
+        const result = await contract.submitTransaction('findAvailableTransport', source, destination);
+
+        // Parse the result as JSON
+        const availableTransport = JSON.parse(result.toString());
+        console.log('Available Transport:', availableTransport);
+
+        // Disconnect from the gateway
+        gateway.disconnect();
+    } catch (error) {
+        console.error('Failed to invoke chaincode:', error);
+        process.exit(1);
+    }
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////////
 
 
 
 // enrollAdmin2();
-  
-// registerTransporter('Adi', 'Loth', 'testid2', 'Jodhpur', '1990');
+// console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+// registerTransporter('Adi', 'Loth', 'testid1', 'Jodhpur', '1990');
 
-// createModeOfTransport('testid1', 'Bus5', 200, '410' , 'Kanpur', 'Bombay');
+// createModeOfTransport('testid1', 'Bus15', 50, '120' , 'Kanpur', 'Bombay');
+// createModeOfTransport('testid1', 'Bus25', 150, '20' , 'Kanpur', 'Bombay');
+// createModeOfTransport('testid1', 'Bus35', 250, '10' , 'Kanpur', 'Bombay');
 
 // deleteModeOfTransport('testid2')
 // getTransportation('testid1', 'Bus5');
@@ -373,3 +414,5 @@ async function deleteTransportProvider(providerIDValue) {
 
 // createTransportProvider("testid2", "Dinkar", "Jodhpur", "1990")
 // deleteTransportProvider("testid1")
+
+findAvailableTransport("Kanpur", "Bombay") ;

@@ -138,17 +138,15 @@ class TicketAdda extends Contract{
         const transportID = ProviderID + name;
         const exists = await this.transporterExists(ctx, ProviderID);
 
-        console.log('vvvvvvvvvvvvvvvvvvvvvvvvv');
         if (!exists) {
             throw new Error(`The mode of transport ${ProviderID} does not exists`);
         }
-        console.log('vvvvvvvvvvvvvvvvvvvvvvvvv');
         const exists2 = await this.transportExists(ctx, transportID);
         
         if (exists2) {
           throw new Error(`The mode of transport ${transportID} does not exists`);
         }
-        console.log('vvvvvvvvvvvvvvvvvvvvvvvvv');
+
         
         // Create a new mode of transport object
         const modeOfTransport = {
@@ -169,6 +167,43 @@ class TicketAdda extends Contract{
         // Emit an event to indicate that a new mode of transport has been created
         const eventPayload = `New mode of transport created with ID: ${transportID}`;
         await ctx.stub.setEvent('CreateModeOfTransportEvent', Buffer.from(eventPayload));
+
+
+        
+        // To make search using source and destination
+        
+        const compositeKey = ctx.stub.createCompositeKey('transport', [source, destination]);
+        // Convert the transport object to a buffer
+        const transportBuffer2 = Buffer.from(JSON.stringify(modeOfTransport));
+    
+        const existingTransportBuffer = await ctx.stub.getState(compositeKey);
+        if (existingTransportBuffer && existingTransportBuffer.length > 0) {
+          // Deserialize the existing buffer to an array of transport objects
+          const existingTransportObjects = JSON.parse(existingTransportBuffer.toString());
+      
+          if (Array.isArray(existingTransportObjects)) {
+              // Append the new mode of transport object to the existing array
+              existingTransportObjects.push(modeOfTransport);
+      
+              // Serialize the updated array back to a buffer
+              const updatedTransportBuffer = Buffer.from(JSON.stringify(existingTransportObjects));
+      
+              // Save the updated buffer back to the ledger
+              await ctx.stub.putState(compositeKey, updatedTransportBuffer);
+          } else {
+              // If the existing value is not an array, create a new array containing both the existing and new mode of transport objects
+              const updatedTransportObjects = [JSON.parse(existingTransportBuffer.toString()), modeOfTransport];
+      
+              // Serialize the updated array back to a buffer
+              const updatedTransportBuffer = Buffer.from(JSON.stringify(updatedTransportObjects));
+      
+              // Save the updated buffer back to the ledger
+              await ctx.stub.putState(compositeKey, updatedTransportBuffer);
+          }
+          } else {
+              // If no existing value, save the new buffer as the value for the composite key
+              await ctx.stub.putState(compositeKey, transportBuffer);
+          }
     
         // Return the newly created mode of transport object
         return modeOfTransport;
@@ -463,6 +498,25 @@ class TicketAdda extends Contract{
           res = await iterator.next();
         }
         return results;
+      }
+      
+    async findAvailableTransport(ctx, source, destination) {
+      // Retrieve all mode of transport objects from the ledger
+      const compositeKey = ctx.stub.createCompositeKey('transport', [source, destination]);
+
+      // Query the state for the composite key
+      const transportBytes = await ctx.stub.getState(compositeKey);
+  
+      // Check if transport exists in the ledger
+      if (!transportBytes || transportBytes.length === 0) {
+          throw new Error(`Transport not found for date ${date}, source ${source}, destination ${destination}`);
+      }
+  
+      // Parse the transport object from the state
+      const transport = JSON.parse(transportBytes.toString());
+  
+      // Return the transport object
+      return transport;
       }
 }
 

@@ -1,28 +1,24 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useHistory } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import "../assets/static/css/style.css";
 
 function Home() {
   const [passenger, setPassenger] = useState({
     passengerId: "",
-    name: "",
+    firstName: "",
+    lastName: "",
     age: "",
     gender: "",
   });
 
-  const history = useHistory();
-  const handleClick = () => {
-    history.push("./loginTwo.js")
-  };
-
   const handleChange = (event) => {
-    console.log(event.target.value);
     setPassenger({ ...passenger, [event.target.name]: event.target.value });
   };
 
   const handleSubmit = async (event) => {
-    console.log(passenger);
     event.preventDefault();
+    console.log(passenger);
     try {
       const response = await axios.get("http://localhost:5000/login", {
         params: passenger,
@@ -84,13 +80,15 @@ function Home() {
                                 autocomplete="off"
                               />
                             </div>
-                            <button onClick={handleClick}
-                              id="login-button"
-                              class="btn mt-4"
-                              type="login"
-                            >
-                              Login
-                            </button>
+                            <Link to="/search">
+                              <button
+                                id="login-button"
+                                class="btn mt-4"
+                                type="login"
+                              >
+                                Login
+                              </button>
+                            </Link>
                             {/* <!-- <p class="mb-0 mt-4 text-center"><a href="#0" class="link">Forgot your password?</a></p> --> */}
                           </form>
                         </div>
@@ -119,13 +117,26 @@ function Home() {
                             <div class="form-group mt-2">
                               <input
                                 type="text"
-                                name="name"
+                                name="firstName"
                                 class="form-style"
-                                placeholder="Your Name"
-                                id="logname"
+                                placeholder="First Name"
+                                id="logname1"
                                 autocomplete="off"
                                 onChange={handleChange}
-                                value={passenger.name}
+                                value={passenger.firstName}
+                              />
+                            </div>
+
+                            <div class="form-group mt-2">
+                              <input
+                                type="text"
+                                name="lastName"
+                                class="form-style"
+                                placeholder="Last Name"
+                                id="logname2"
+                                autocomplete="off"
+                                onChange={handleChange}
+                                value={passenger.lastName}
                               />
                             </div>
 
@@ -154,7 +165,6 @@ function Home() {
                                 value={passenger.gender}
                               />
                             </div>
-
                             <button
                               id="submit-button"
                               class="btn mt-4"
