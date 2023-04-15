@@ -399,7 +399,7 @@ async function findAvailableTransport(source, destination) {
 
 
 // enrollAdmin2();
-// registerTransporter('Adi', 'Loth', 'id1', 'Jodhpur', '1990');
+registerTransporter('Adi', 'Loth', 'id4', 'Jodhpur', '1990');
 
 // createModeOfTransport('testid1', 'Bu45', 50, '120' , 'Delhi', 'Bombay');
 // createModeOfTransport('testid1', 'Bus25', 150, '20' , 'Kanpur', 'Bombay');
@@ -411,7 +411,7 @@ async function findAvailableTransport(source, destination) {
 // updateTransportationDetails('testid2', 'Bus2', '30', '40' , 'Kanpur', 'Delhi', 'bus')
 
 // createTransportProvider("testid2", "Dinkar", "Jodhpur", "1990")
-// deleteTransportProvider("testid3");
+// deleteTransportProvider("id2");
 
 // findAvailableTransport("Kanpur", "Bombay") ;
 

@@ -195,7 +195,7 @@ app.get("/updateTransport", async (req, res) => {
 });
 
 app.get("/deleteTransport", async (req, res) => {
-  const providerID = req.query.transportID;
+  const providerID = req.query.providerId;
 
   try {
     const result = deleteTransportProvider(providerID);

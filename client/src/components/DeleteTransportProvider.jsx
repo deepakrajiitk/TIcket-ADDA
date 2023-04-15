@@ -1,13 +1,26 @@
 import React, { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import axios from "axios";
+import { Container, Form, Button } from "react-bootstrap";
 
 const DeleteTransportProvider = ({ onDelete }) => {
   const [providerId, setProviderId] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onDelete(providerId);
-    setProviderId("");
+
+    const data1 = {
+      providerId: providerId,
+    };
+  
+    try {
+      console.log(providerId);
+      const response = axios.get("http://localhost:5000/deleteTransport", {
+        params: data1,
+      });
+      // console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
