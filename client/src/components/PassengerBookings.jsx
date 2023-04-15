@@ -17,7 +17,9 @@ const PassengerBookings = () => {
       const response = await axios.get("http://localhost:5000/getDetails", {
         params: data1
       });
-      
+      // console.log(response.data);
+
+  
       setBookings(response.data);
     } catch (error) {
       console.log(error);

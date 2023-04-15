@@ -271,11 +271,11 @@ async function updatePassenger(passengerId, name, age, gender, isPublic) {
             console.log(
                 `An identity for the user "${passengerId}" does not exist in the wallet`
             );
-            return;
+            return `An identity for the user "${passengerId}" does not exist in the wallet`;
         }
 
         const { gateway, contract } = await connectToGateway(passengerId);
-
+        `An identity for the user "${passengerId}" does not exist in the wallet`
         // Submit the transaction to the network
         await contract.submitTransaction(
             "updatePassenger",
@@ -286,11 +286,13 @@ async function updatePassenger(passengerId, name, age, gender, isPublic) {
             isPublic
         );
         console.log(`Passenger ${passengerId} has been updated`);
+        return `Passenger ${passengerId} has been updated`;
 
         // Disconnect from the gateway
         await gateway.disconnect();
     } catch (error) {
-        console.error(`Failed to update passenger: ${error}`);
+        console.log(`Failed to update passenger: ${error}`);
+        return `Failed to update passenger: ${error}`;
     }
 }
 

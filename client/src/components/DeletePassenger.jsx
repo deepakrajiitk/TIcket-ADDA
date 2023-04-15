@@ -13,12 +13,11 @@ const DeletePassenger = () => {
       passengerId: passengerID,
     } 
     try {
-      setResponseMessage("Processing.....");
       const response = await axios.get("http://localhost:5000/deletePassengers", {
         params: data
       });
-      setResponseMessage(response.data);
-      console.log(response.data);
+      console.log("Hellllllllooooooooooooo")
+      console.log(response);
       setPassengerID("");
     } catch (error) {
       console.error(error);

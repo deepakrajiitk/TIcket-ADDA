@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Button, Form } from "react-bootstrap";
+import { Button, Container, Form } from "react-bootstrap";
 
 const ValidateTicket = () => {
   const [bookingID, setBookingID] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -11,11 +12,12 @@ const ValidateTicket = () => {
       bookingID: bookingID,
     }
     try {
-      console.log("abcd");
+
       const response = await axios.get("http://localhost:5000/val_Ticket", {
         params: data
       });
-      console.log(response.data);
+
+      setResponseMessage(response.data)
       setBookingID("");
     } catch (error) {
       console.error(error);
@@ -23,6 +25,7 @@ const ValidateTicket = () => {
   };
 
   return (
+    <Container>
     <Form onSubmit={handleSubmit}>
       <Form.Group controlId="bookingID">
         <Form.Label>Booking ID</Form.Label>
@@ -38,6 +41,15 @@ const ValidateTicket = () => {
         Validate
       </Button>
     </Form>
+    {responseMessage && (
+  <p style={{ marginTop: "1rem" }}>
+    {responseMessage === "Transaction updated: true"
+      ? "Valid Ticket"
+      : "Invalid Ticket"}
+  </p>
+)}
+
+    </Container>
   );
 };
 
