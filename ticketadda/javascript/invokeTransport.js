@@ -30,8 +30,8 @@ async function registerTransporter(firstName, lastName, email, password) {
       // Check to see if we've already enrolled the admin user.
       const adminIdentity = await wallet.get('admin2');
       if (!adminIdentity) {
-        console.log('An identity for the admin user "admin" does not exist in the wallet');
-        console.log('Run the enrollAdmin.js application before retrying');
+        console.log('An identity for the admin user "admin2" does not exist in the wallet');
+        console.log('Run the enrollAdmin2.js application before retrying');
         return;
       }
   
@@ -206,7 +206,7 @@ async function updateTransportationDetails(transportID, name, capacity, speed, s
         const network = await gateway.getNetwork('mychannel'); // Replace with the actual channel name
         const contract = network.getContract('ticketadda'); // Replace with the actual chaincode name
 
-        const result = await contract.submitTransaction('updateTransportationDetails', 'ctxValue', transportID, name, capacity, speed, source, destination, type);
+        const result = await contract.submitTransaction('updateTransportationDetails', transportID, name, capacity, speed, source, destination, type);
         console.log(`Transportation updated: ${result.toString()}`);
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
@@ -243,7 +243,7 @@ async function createTransportProvider(providerID, name, address, contact) {
         const network = await gateway.getNetwork('mychannel'); // Replace with the actual channel name
         const contract = network.getContract('ticketadda'); // Replace with the actual chaincode name
 
-        const result = await contract.submitTransaction('createTransportProvider', 'ctxValue', providerID, name, address, contact);
+        const result = await contract.submitTransaction('createTransportProvider', providerID, name, address, contact);
         console.log(`Transportation provider created: ${result.toString()}`);
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
@@ -297,11 +297,17 @@ async function deleteTransportProvider(providerIDValue) {
 
   
 
-// deleteTransportProvider('RJ09');
+// registerTransporter('Dinkar', 'Tewary', 'testid2', 'pw');
+// createTransportProvider("MRTravels", "jt", "Jodhpur", "1990")
 
-// registerTransporter('Adi', 'Loth', 'testid', 'pw');
 
-// createModeOfTransport('jaintravels', 'Bus1', '20', '40' , 'Kanpur', 'Delhi', 'bus');
+
+createModeOfTransport('testid2', 'Bus1', '20', '40' , 'Kanpur', 'Delhi', 'bus');
 
 // deleteModeOfTransport('jaintravels')
-getTransportation('jaintravels')
+// getTransportation('jaintravels')
+
+// updateTransportationDetails('jaintravels', 'Bus2', '30', '40' , 'Kanpur', 'Delhi', 'bus')
+
+
+// deleteTransportProvider("JainTravels")
