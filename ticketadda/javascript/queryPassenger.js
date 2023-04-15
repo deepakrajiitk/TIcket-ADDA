@@ -44,4 +44,4 @@ async function queryPassenger(appUser, passengerId) {
     }
 }
 
-queryPassenger('deepakraj@example.com', 'deepakraj@example.com');
+queryPassenger('deepakraj@example.com', 'dinkar@gmail.com');

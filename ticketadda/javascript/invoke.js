@@ -6,20 +6,22 @@ const fs = require('fs');
 const { Context } = require('mocha');
 const path = require('path');
 
-async function createPassenger(passengerId, name, age, gender) {
+async function createPassenger(passengerId, name, age, gender, user = "deepakraj@example.com") {
   try {
+    console.log("lakdsf;;;;;;;;;adsffffffffffffdassda")
     // Load connection profile; will be used to locate a gateway
     const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
     const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
 
     // Create a new file system based wallet for managing identities
-    const walletPath = path.join(process.cwd(), 'wallet');
+    const walletPath = path.join(__dirname, 'wallet');
     const wallet = await Wallets.newFileSystemWallet(walletPath);
+    const list = await wallet.list();
 
     // Check to see if we've already enrolled the user
-    const identity = await wallet.get(passengerId);
+    const identity = await wallet.get(user);
     if (!identity) {
-      console.log(`An identity for the user ${passengerId} does not exist in the wallet`);
+      console.log(`An identity for the user ${user} does not exist in the wallet`);
       console.log('Run the registerUser.js application before retrying');
       return;
     }
@@ -28,7 +30,7 @@ async function createPassenger(passengerId, name, age, gender) {
     const gateway = new Gateway();
     await gateway.connect(ccp, {
       wallet,
-      identity: passengerId,
+      identity: user,
       discovery: { enabled: true, asLocalhost: true }
     });
 
@@ -53,5 +55,6 @@ async function createPassenger(passengerId, name, age, gender) {
   }
 }
 
-// Call the createPassenger function
-createPassenger('deepakraj@example.com', 'Deepak Raj', 23, 'male');
+module.exports = {
+  createPassenger
+};
