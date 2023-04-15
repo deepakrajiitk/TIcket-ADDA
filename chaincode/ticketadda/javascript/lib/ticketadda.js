@@ -302,22 +302,22 @@ class TicketAdda extends Contract{
     
         // Define the base price and the price factors
         let basePrice = 50;
-        let capacityFactor = 0.1;
+        let capacityFactor = 1000;
         let speedFactor = 0.05;
-        let typeFactor = 0;
+        let typeFactor = 0.2;
         
         // Determine the type factor based on the type of transport
-        if (modeOfTransport.Type === "Bus") {
-            typeFactor = 0.2;
-        } else if (modeOfTransport.Type === "Train") {
-            typeFactor = 0.3;
-        } else if (modeOfTransport.Type === "Flight") {
-            typeFactor = 0.5;
-        }
+        // if (modeOfTransport.Type === "Bus") {
+        //     typeFactor = 0.2;
+        // } else if (modeOfTransport.Type === "Train") {
+        //     typeFactor = 0.3;
+        // } else if (modeOfTransport.Type === "Flight") {
+        //     typeFactor = 0.5;
+        // }
     
         // Calculate the final ticket price based on the factors
         let ticketPrice = basePrice;
-        ticketPrice += capacityFactor * modeOfTransport.Capacity;
+        ticketPrice += capacityFactor / (modeOfTransport.Capacity - modeOfTransport.SeatsBooked);
         ticketPrice += speedFactor * modeOfTransport.Speed;
         ticketPrice += typeFactor * basePrice;
     
@@ -326,15 +326,15 @@ class TicketAdda extends Contract{
     }
     
       
-    async bookTicket(ctx, passengerID, transportID) {
+    async bookTicket(ctx, passengerID, transportID, noSeats) {
         // Check if the passenger and mode of transport exist
         const passengerExists = await this.passengerExists(ctx, passengerID);
         if (!passengerExists) {
           throw new Error(`The passenger ${passengerID} does not exist`);
         }
       
-        const transporterExists = await this.transporterExists(ctx, transportID);
-        if (!transporterExists) {
+        const transportExists = await this.transportExists(ctx, transportID);
+        if (!transportExists) {
           throw new Error(`The mode of transport ${transportID} does not exist`);
         }
       
@@ -342,12 +342,12 @@ class TicketAdda extends Contract{
         const transportBuffer = await ctx.stub.getState(transportID);
         const modeOfTransport = JSON.parse(transportBuffer.toString());
         const seatsAvailable = modeOfTransport.Capacity - modeOfTransport.SeatsBooked;
-        if (seatsAvailable <= 0) {
+        if (seatsAvailable < noSeats) {
           throw new Error(`There are no available seats on the mode of transport ${transportID}`);
         }
       
         // Increment the number of seats booked on the mode of transport
-        modeOfTransport.SeatsBooked++;
+        modeOfTransport.SeatsBooked += noSeats;
         const updatedTransportBuffer = Buffer.from(JSON.stringify(modeOfTransport));
         await ctx.stub.putState(transportID, updatedTransportBuffer);
       
@@ -362,6 +362,7 @@ class TicketAdda extends Contract{
           Price: null,
           Status: 'Booked',
           DateBooked: new Date().toISOString(),
+          SeatsBooked: noSeats,
         };
       
         // Calculate the ticket price dynamically based on the mode of transport and update the ticket object
@@ -378,15 +379,20 @@ class TicketAdda extends Contract{
       
         // Return the newly created ticket object
         return ticket;
-      }
+    }
     
     async bookingExists(ctx, bookingID) {
       const bookingBuffer = await ctx.stub.getState(bookingID);
       return bookingBuffer && bookingBuffer.length > 0;
     }
-      
     
-    async cancelBooking(ctx, bookingID) {
+    async validateTicket(ctx, bookingID) {
+      const bookingBuffer = await ctx.stub.getState(bookingID);
+      if (bookingBuffer && bookingBuffer.length > 0) return 1;
+      else return 0;
+    }
+    
+    async cancelBooking(ctx, userID, bookingID) {
         // Check if the booking exists
         const exists = await this.bookingExists(ctx, bookingID);
         if (!exists) {
@@ -396,7 +402,12 @@ class TicketAdda extends Contract{
         // Retrieve the current booking object
         const bookingBuffer = await ctx.stub.getState(bookingID);
         const booking = JSON.parse(bookingBuffer.toString());
-    
+        
+        // Check for correct passenger
+        if(booking.PassengerID != userID){
+          throw new Error(`Unauthorised ${bookingID}`);
+        }
+
         // Update the seatsbooked value for the corresponding transportation
         const transportID = booking.TransportID;
         const transportBuffer = await ctx.stub.getState(transportID);
@@ -407,7 +418,7 @@ class TicketAdda extends Contract{
     
         // Delete the booking object from the ledger
         await ctx.stub.deleteState(bookingID);
-    
+        
         // Emit an event to indicate that the booking has been cancelled
         const eventPayload = `Booking cancelled with ID: ${bookingID}`;
         await ctx.stub.setEvent('CancelBookingEvent', Buffer.from(eventPayload));
@@ -422,7 +433,7 @@ class TicketAdda extends Contract{
         const seatsBooked = modeOfTransport.SeatsBooked;
         const availableSeats = modeOfTransport.Capacity - seatsBooked;
         return availableSeats;
-      }
+    }
     
     async getAllBookingsForPassenger(ctx, passengerID) {
         const queryString = {

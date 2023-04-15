@@ -54,13 +54,10 @@ async function createPassenger(passengerId, name, age, gender) {
 
     // Submit the transaction to the network
     await contract.submitTransaction('createPassenger', passengerId, name, age, gender, true);
-    // ===============================Delete later======================================
-    // await contract.submitTransaction('createTransportProvider', 'Bus1', 'Aditya', 'Bus', 'delhi to goa', 100)
     console.log(`Passenger ${passengerId} has been created`);
-    // console.log(`Transporatation has been created`);
 
     // Disconnect from the gateway
-    await gateway.disconnect();
+    gateway.disconnect();
   } catch (error) {
     console.error(`Failed to create passenger: ${error}`);
     process.exit(1);
@@ -76,13 +73,14 @@ async function deletePassenger(passengerId) {
         // Create a new file system wallet
         const walletPath = path.join(process.cwd(), 'wallet');
         const wallet = await Wallets.newFileSystemWallet(walletPath);
-        console.log(`Wallet path: ${walletPath}`);
+        // console.log(`Wallet path: ${walletPath}`);
 
         // Check to see if we've already enrolled the user
         const userIdentity = await wallet.get(passengerId);
         if (!userIdentity) {
-            console.log('An identity for the user "appUser" does not exist in the wallet');
-            return;
+          console.log(`An identity for the user ${userId} does not exist in the wallet`);
+          console.log('Run the registerUser.js application before retrying');
+          return;
         }
 
         // Create a new gateway
@@ -310,9 +308,10 @@ async function updatePassenger(passengerId, name, age, gender) {
 
   
 // Call the createPassenger function
+enrollAdmin();
+registerPassenger('Deepak', 'Raj', 'deepak@gmail', 23, 'Male');
 // enrollAdmin();
-// registerPassenger('Deepak', 'Raj', 'deepak@gmail', 23, 'Male');
 // deletePassenger('deepak@gmail');
 // registerUser();
-queryPassenger('deepak@gmail');
+// queryPassenger('deepak@gmail');
 // updatePassenger('deepakraj@example.com', 'Deepak Raj', 24, 'male');
