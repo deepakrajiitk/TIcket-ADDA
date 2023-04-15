@@ -6,6 +6,7 @@ import HomePage from "./components/HomePage";
 import MyNavbar from "./components/MyNavBar";
 import ProviderPage from "./components/ProviderPage";
 import PassengerPage from "./components/PassengerPage";
+import TicketBooking from "./components/TicketBooking";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route exact path="/passenger" element={<PassengerPage />} />
         <Route exact path="/" element={<HomePage />} />
         <Route exact path="/about" element={<AboutPage />} />
+        <Route exact path="/ticket-booking" element={<TicketBooking />} />
       </Routes>
     </>
   );
