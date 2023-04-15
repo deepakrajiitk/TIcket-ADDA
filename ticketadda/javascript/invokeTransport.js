@@ -339,6 +339,8 @@ async function deleteTransportProvider(providerIDValue) {
         // Disconnect from the gateway
         gateway.disconnect();
     }
+
+    deleteModeOfTransport(providerIDValue)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
