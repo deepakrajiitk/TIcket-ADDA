@@ -5,6 +5,8 @@ import ProviderContact from "./ProviderContact";
 import ProviderServices from "./ProviderService";
 import TransportDeleter from "./DeleteTransport";
 import UpdateTransportationDetails from "./UpdateTransport";
+import CreatePassengerProvider from "./AddTransportProvider";
+import DeleteTransportProvider from "./DeleteTransportProvider";
 
 function ProviderPage() {
   const [selectedMenuItem, setSelectedMenuItem] = useState("addtransport"); // set initial value to "addtransport"
@@ -27,6 +29,12 @@ function ProviderPage() {
           {selectedMenuItem === "deletetransport" && <TransportDeleter />}
           {selectedMenuItem === "updatetransport" && (
             <UpdateTransportationDetails />
+          )}
+          {selectedMenuItem === "addtransportprovider" && (
+            <CreatePassengerProvider />
+          )}
+          {selectedMenuItem === "deletetransportprovider" && (
+            <DeleteTransportProvider />
           )}
         </div>
       </div>
