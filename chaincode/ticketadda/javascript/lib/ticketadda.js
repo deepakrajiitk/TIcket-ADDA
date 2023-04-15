@@ -26,7 +26,7 @@ class TicketAdda extends Contract{
 
     async createPassenger(ctx, passengerID, name, age, gender, isPublic) {
         // Check if the passenger already exists
-        passengerID = 'PAS-'+passengerID
+        passengerID = passengerID
         const exists = await this.passengerExists(ctx, passengerID);
         if (exists) {
             throw new Error(`The passenger ${passengerID} already exists`);
