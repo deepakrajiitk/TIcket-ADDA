@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
+import axios from "axios";
 
 const AddPassengerForm = () => {
   const [passengerID, setPassengerID] = useState("");
@@ -7,17 +8,25 @@ const AddPassengerForm = () => {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [isPublic, setIsPublic] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Do something with the submitted data
-    console.log({
-      passengerID,
-      name,
-      age,
-      gender,
-      isPublic,
-    });
+    try {
+      const response = await axios.post(
+        "https://example.com/api/addPassenger",
+        {
+          passengerID,
+          name,
+          age,
+          gender,
+          isPublic,
+        }
+      );
+      setResponseMessage(response.data.message);
+    } catch (error) {
+      setResponseMessage("Error: " + error.message);
+    }
   };
 
   return (
@@ -80,6 +89,9 @@ const AddPassengerForm = () => {
           Submit
         </Button>
       </Form>
+      {responseMessage && (
+        <p style={{ marginTop: "1rem" }}>{responseMessage}</p>
+      )}
     </Container>
   );
 };

@@ -6,6 +6,7 @@ import AddPassengerForm from "./AddPasenger";
 import ValidateTicket from "./ValidateTicket";
 import TicketAvailabile from "./TicketAvailable";
 import PassengerBookings from "./PassengerBookings";
+import CancelBookingPage from "./CancelBooking";
 
 function PassengerPage() {
   const [selectedMenuItem, setSelectedMenuItem] = useState("addpassenger"); // set initial value to "addpassenger"
@@ -30,6 +31,7 @@ function PassengerPage() {
           {selectedMenuItem === "validateticket" && <ValidateTicket />}
           {selectedMenuItem === "ticketavailable" && <TicketAvailabile />}
           {selectedMenuItem === "passengerbookings" && <PassengerBookings />}
+          {selectedMenuItem === "cancelbooking" && <CancelBookingPage />}
         </div>
       </div>
     </div>

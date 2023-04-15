@@ -71,6 +71,16 @@ function SidebarPassenger(props) {
           Show Passenger Bookings
         </Nav.Link>
       </Nav.Item>
+      <Nav.Item>
+        <Nav.Link
+          className={`text-center ${
+            props.selectedMenuItem === "cancelbooking" ? "active" : ""
+          }`}
+          onClick={() => handleMenuItemClick("cancelbooking")}
+        >
+          Cancel Booking
+        </Nav.Link>
+      </Nav.Item>
     </Nav>
   );
 }
