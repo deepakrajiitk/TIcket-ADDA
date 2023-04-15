@@ -460,7 +460,7 @@ enrollAdmin2();
 // createModeOfTransport('testid1', 'Bus35', 250, '10' , 'Kanpur', 'Bombay');
 
 // deleteModeOfTransport('idxx', 'B1');
-// getTransportation('testid1', 'Bu45');
+getTransportation('testid1', 'Bu45');
 
 // updateTransportationDetails('testid1', 'aa', '30', '40' , 'Kanpur', 'Delhi')
 

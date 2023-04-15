@@ -104,7 +104,7 @@ async function bookTicket(userId, transportId, noSeats) {
         return `Transaction has been submitted with ticket ID: ${resultTicket.ID}`;
     } catch (error) {
         console.log(`Failed to submit transaction: ${error}`);
-        return `Failed to submit transaction: ${error}`;
+        return `${noSeats} seats not available.`;
         // process.exit(1);
     }
 }
@@ -253,7 +253,7 @@ async function getAllBookingsForPassenger(userId) {
 
 // -------------------------------------------------------------------------------------
 
-// bookTicket('ash@gmail', 'testid1', 'Bu45', 10);
+bookTicket("deepk@gmail", "testid1Bu45", 100);
 // calculateTicketPrice('testid1', 'Bu45');
 // validateTicket('254d0e2971819adf5c94d38031c096d4127e2ed784703f308d24a67f51a0f53e')
 // cancelBooking(
