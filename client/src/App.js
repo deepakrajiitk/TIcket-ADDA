@@ -1,23 +1,18 @@
-import { BrowserRouter as Router, Switch, Link, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Home from "./pages/home";
 import Show from "./pages/loginTwo";
-import logo from "./logo.svg";
+// import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
 
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route path="/search">
-          <Show />
-        </Route>
-
-        <Route path="/">
-          <Home />
-        </Route>
-      </Switch>
-    </Router>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/search" element={<Show/>} />
+        <Route exact path="/" element={<Home/>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

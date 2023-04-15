@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import "../assets/static/css/style.css";
 
 function Home() {
   const [passenger, setPassenger] = useState({
@@ -78,13 +80,15 @@ function Home() {
                                 autocomplete="off"
                               />
                             </div>
-                            <button
-                              id="login-button"
-                              class="btn mt-4"
-                              type="login"
-                            >
-                              Login
-                            </button>
+                            <Link to="/search">
+                              <button
+                                id="login-button"
+                                class="btn mt-4"
+                                type="login"
+                              >
+                                Login
+                              </button>
+                            </Link>
                             {/* <!-- <p class="mb-0 mt-4 text-center"><a href="#0" class="link">Forgot your password?</a></p> --> */}
                           </form>
                         </div>
@@ -161,7 +165,6 @@ function Home() {
                                 value={passenger.gender}
                               />
                             </div>
-
                             <button
                               id="submit-button"
                               class="btn mt-4"
