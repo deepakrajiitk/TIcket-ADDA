@@ -57,7 +57,7 @@
     line-height: 1.5;
     color: #212529;
     text-align: left;
-    background-color: #fff; }
+    background-color: #000000; }
   
   [tabindex="-1"]:focus {
     outline: 0 !important; }
@@ -1503,10 +1503,10 @@
     border-color: #95999c; }
   
   .table-hover .table-dark:hover {
-    background-color: #b9bbbe; }
+    background-color: #000000; }
     .table-hover .table-dark:hover > td,
     .table-hover .table-dark:hover > th {
-      background-color: #b9bbbe; }
+      background-color: #000000; }
   
   .table-active,
   .table-active > th,
@@ -1597,7 +1597,7 @@
     font-weight: 400;
     line-height: 1.5;
     color: #495057;
-    background-color: #fff;
+    background-color: #070707;
     background-clip: padding-box;
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
@@ -1616,7 +1616,7 @@
       border: 0; }
     .form-control:focus {
       color: #495057;
-      background-color: #fff;
+      background-color: #000000;
       border-color: #80bdff;
       outline: 0;
       -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
@@ -1634,12 +1634,12 @@
       color: #6c757d;
       opacity: 1; }
     .form-control:disabled, .form-control[readonly] {
-      background-color: #e9ecef;
+      background-color: #000000;
       opacity: 1; }
   
   select.form-control:focus::-ms-value {
     color: #495057;
-    background-color: #fff; }
+    background-color: #000000; }
   
   .form-control-file,
   .form-control-range {
@@ -2554,7 +2554,7 @@
     color: #212529;
     text-align: left;
     list-style: none;
-    background-color: #fff;
+    background-color: #000000;
     background-clip: padding-box;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0.25rem; }
@@ -8137,7 +8137,7 @@
     font-size: 16px;
     line-height: 1.8;
     font-weight: normal;
-    background: #f8f9fd;
+    background: gray;
     color: gray; }
   
   a {
@@ -8156,7 +8156,7 @@
     line-height: 1.5;
     font-weight: 400;
     font-family: "Poppins", Arial, sans-serif;
-    color: #000; }
+    color: black; }
   
   .bg-primary {
     background: #1089ff !important; }
@@ -8172,7 +8172,8 @@
   
   .heading-section {
     font-size: 28px;
-    color: #000; }
+    color: black;
+    font-weight: bold; }
   
   .img {
     background-size: cover;
