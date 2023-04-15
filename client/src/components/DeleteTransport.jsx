@@ -18,7 +18,7 @@ const TransportDeleter = ({ onDelete }) => {
       const response = axios.get("http://localhost:5000/deleteTransport", {
         params: data1,
       });
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       console.error(error);
     }
