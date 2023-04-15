@@ -127,30 +127,23 @@ app.get("/transporter", async (req, res) => {
 
 app.get("/transport", async (req, res) => {
   const transportID = req.query.transportID;
-  const name1 = req.query.name1;
+  const name1 = req.query.name;
   const capacity = req.query.capacity;
   const speed = req.query.speed;
   const source = req.query.source;
   const destination = req.query.destination;
 
   try {
-    const result = createModeOfTransport(
-      transportID,
-      name1,
-      capacity,
-      speed,
-      source,
-      destination
-    );
-    console.log(`Transaction result: ${result.toString()}`);
-    res.status(201).send(`Transaction result: ${result.toString()}`);
+
+    const result = await createModeOfTransport( transportID, name1, capacity, speed, source, destination );
+    // res.status(201).send(`Transaction result: ${result}`);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
     res.status(500).send("Failed to register transport");
   }
 });
 
-app.get("/deleteTransport", async (req, res) => {
+app.get("/deleteModeOfTransport", async (req, res) => {
   const transportID = req.query.transportID;
   try {
     const result = deleteModeOfTransport(transportID);
@@ -203,13 +196,13 @@ app.get("/updateTransport", async (req, res) => {
 });
 
 app.get("/deleteTransport", async (req, res) => {
-  const providerID = req.query.providerID;
+  const providerID = req.query.transportID;
 
   try {
     const result = deleteTransportProvider(providerID);
 
-    console.log(`Transaction result: ${result.toString()}`);
-    res.status(201).send(`Transaction updated: ${result.toString()}`);
+    // console.log(`Transaction result: ${result.toString()}`);
+    // res.status(201).send(`Transaction updated: ${result.toString()}`);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
     res.status(500).send("Failed to delete transporter");

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Container, Form, Button } from "react-bootstrap";
 
 const AddTransportForm = () => {
@@ -8,20 +9,29 @@ const AddTransportForm = () => {
   const [speed, setSpeed] = useState("");
   const [source, setSource] = useState("");
   const [destination, setDestination] = useState("");
-  const [type, setType] = useState("");
+  // const [type, setType] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Do something with the submitted data
-    console.log({
-      transportID,
-      name,
-      capacity,
-      speed,
-      source,
-      destination,
-      type,
-    });
+    
+    // Create an object to hold the data
+    const data1 = {
+      transportID: transportID,
+      name: name,
+      capacity: capacity,
+      speed: speed,
+      source: source,
+      destination: destination,
+    };
+  
+    try {
+      const response = axios.get("http://localhost:5000/transport", {
+        params: data1,
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -85,16 +95,6 @@ const AddTransportForm = () => {
             placeholder="Enter Destination"
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="type">
-          <Form.Label>Type</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter Type"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
           />
         </Form.Group>
 

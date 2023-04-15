@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import axios from "axios";
+import { Container, Form, Button } from "react-bootstrap";
 
 const UpdateTransportationDetails = () => {
   const [transportID, setTransportID] = useState("");
@@ -12,6 +13,25 @@ const UpdateTransportationDetails = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    const data1 = {
+      transportID: transportID,
+      name: name,
+      capacity: capacity,
+      speed: speed,
+      source: source,
+      destination: destination,
+    };
+
+    try {
+      const response = axios.get("http://localhost:5000/updateTransport", {
+        params: data1,
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+
     // Implement your update transportation details logic here
     console.log("Transportation details updated!");
   };

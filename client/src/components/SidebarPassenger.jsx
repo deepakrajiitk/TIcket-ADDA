@@ -41,6 +41,46 @@ function SidebarPassenger(props) {
           Update Passenger
         </Nav.Link>
       </Nav.Item>
+      <Nav.Item>
+        <Nav.Link
+          className={`text-center ${
+            props.selectedMenuItem === "validateticket" ? "active" : ""
+          }`}
+          onClick={() => handleMenuItemClick("validateticket")}
+        >
+          Validate Ticket
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link
+          className={`text-center ${
+            props.selectedMenuItem === "ticketavailable" ? "active" : ""
+          }`}
+          onClick={() => handleMenuItemClick("ticketavailable")}
+        >
+          Show Available Ticket
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link
+          className={`text-center ${
+            props.selectedMenuItem === "passengerbookings" ? "active" : ""
+          }`}
+          onClick={() => handleMenuItemClick("passengerbookings")}
+        >
+          Show Passenger Bookings
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link
+          className={`text-center ${
+            props.selectedMenuItem === "cancelbooking" ? "active" : ""
+          }`}
+          onClick={() => handleMenuItemClick("cancelbooking")}
+        >
+          Cancel Booking
+        </Nav.Link>
+      </Nav.Item>
     </Nav>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Nav } from "react-bootstrap";
+import { Nav, NavItem } from "react-bootstrap";
 
 function Sidebar(props) {
   const handleMenuItemClick = (menuItem) => {
@@ -41,6 +41,26 @@ function Sidebar(props) {
           Update Transport
         </Nav.Link>
       </Nav.Item>
+      <Nav.Item>
+        <Nav.Link
+          className={`text-center ${
+            props.selectedMenuItem === "addtransportprovider" ? "active" : ""
+          }`}
+          onClick={() => handleMenuItemClick("addtransportprovider")}
+        >
+          Add Transport Provider
+        </Nav.Link>
+      </Nav.Item>
+      <NavItem>
+        <Nav.Link
+          className={`text-center ${
+            props.selectedMenuItem === "deletetransportprovider" ? "active" : ""
+          }`}
+          onClick={() => handleMenuItemClick("deletetransportprovider")}
+        >
+          Delete Transport Provider
+        </Nav.Link>
+      </NavItem>
     </Nav>
   );
 }
