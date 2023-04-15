@@ -1,13 +1,27 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Container, Form, Button } from "react-bootstrap";
 
 const PassengerBookings = () => {
   const [passengerId, setPassengerId] = useState("");
   const [bookings, setBookings] = useState([]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    
     // TODO: Fetch bookings for passengerId from server and update state
+    const data1 = {
+      passengerId: passengerId
+    };
+    try {
+      const response = axios.get("http://localhost:5000/getDetails", {
+        params: data1
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+
     setBookings([
       {
         id: 1,

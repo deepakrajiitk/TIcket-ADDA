@@ -1,13 +1,25 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 
-const ValidateTicket = ({ onValidate }) => {
+const ValidateTicket = () => {
   const [bookingID, setBookingID] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onValidate(bookingID);
-    setBookingID("");
+    const data = {
+      bookingID: bookingID,
+    }
+    try {
+      console.log("abcd");
+      const response = await axios.get("http://localhost:5000/val_Ticket", {
+        params: data
+      });
+      console.log(response.data);
+      setBookingID("");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

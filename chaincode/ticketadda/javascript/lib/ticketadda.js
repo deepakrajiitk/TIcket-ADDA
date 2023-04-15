@@ -402,6 +402,7 @@ class TicketAdda extends Contract{
           Status: 'Booked',
           DateBooked: new Date().toISOString(),
           SeatsBooked: noSeats,
+          Type: 'booking'
         };
       
         // Calculate the ticket price dynamically based on the mode of transport and update the ticket object
@@ -482,7 +483,8 @@ class TicketAdda extends Contract{
     async getAllBookingsForPassenger(ctx, passengerID) {
         const queryString = {
           selector: {
-            passengerID: passengerID,
+            Type: "booking",
+            PassengerID: passengerID,
           },
         };
         const iterator = await ctx.stub.getQueryResult(JSON.stringify(queryString));

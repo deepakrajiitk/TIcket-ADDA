@@ -5,6 +5,10 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 5000;
 
+// ADD THIS
+var cors = require("cors");
+app.use(cors());
+
 const {
   deletePassenger,
 } = require("./../ticketadda/javascript/invokePassenger");
@@ -37,6 +41,15 @@ const {
   deleteTransportProvider,
 } = require("./../ticketadda/javascript/invokeTransport");
 
+const { calculateTicketPrice } = require("./../ticketadda/javascript/invoke");
+const { bookTicket } = require("./../ticketadda/javascript/invoke");
+const { validateTicket } = require("./../ticketadda/javascript/invoke");
+const { cancelBooking } = require("./../ticketadda/javascript/invoke");
+const { findAvailableSeats } = require("./../ticketadda/javascript/invoke");
+const {
+  getAllBookingsForPassenger,
+} = require("./../ticketadda/javascript/invoke");
+
 // Configure body-parser middleware to parse JSON
 app.use(bodyParser.json());
 
@@ -48,7 +61,7 @@ app.get("/login", async (req, res) => {
   const gender = req.query.gender;
   const isPublic = req.query.isPublic;
 
-  console.log(passengerId)
+  console.log(passengerId);
   try {
     await registerPassenger(firstName, "", passengerId, age, gender, isPublic);
     res.status(201).send(`Passenger ${passengerId} has been created`);
@@ -134,8 +147,14 @@ app.get("/transport", async (req, res) => {
   const destination = req.query.destination;
 
   try {
-
-    const result = await createModeOfTransport( transportID, name1, capacity, speed, source, destination );
+    const result = await createModeOfTransport(
+      transportID,
+      name1,
+      capacity,
+      speed,
+      source,
+      destination
+    );
     // res.status(201).send(`Transaction result: ${result}`);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
@@ -211,7 +230,7 @@ app.get("/deleteTransport", async (req, res) => {
 
 app.get("/showTransport", async (req, res) => {
   const source = req.query.source;
-  const dest = req.query.destination; 
+  const dest = req.query.destination;
 
   try {
     const result = findAvailableTransport(source, dest);
@@ -221,6 +240,34 @@ app.get("/showTransport", async (req, res) => {
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
     res.status(500).send("Failed to show transport");
+  }
+});
+
+// Invoke
+app.get("/val_Ticket", async (req, res) => {
+  const bookingID = req.query.bookingID;
+  try {
+    const result = await validateTicket(bookingID);
+
+    console.log(`Transaction result: ${result.toString()}`);
+    res.status(201).send(`Transaction updated: ${result.toString()}`);
+  } catch (error) {
+    console.error(`Failed to invoke chaincode:: ${error}`);
+    res.status(500).send("Failed to delete transporter");
+  }
+});
+
+app.get("/getDetails", async (req, res) => {
+  const passengerId = req.query.passengerId;
+
+  try {
+    const result = await getAllBookingsForPassenger(passengerId);
+
+    console.log(`Bookings: ${result.toString()}`);
+    res.status(201).send(`Bookings: ${result.toString()}`);
+  } catch (error) {
+    console.error(`Failed to invoke chaincode:: ${error}`);
+    res.status(500).send("Failed to delete transporter");
   }
 });
 
