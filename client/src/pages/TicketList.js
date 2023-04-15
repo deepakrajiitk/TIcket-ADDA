@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import './style_ticket.css'
+import '../assets/static/css/style_ticket.css'
 
 
 const handleBuyTicket = (ticketId) => {
