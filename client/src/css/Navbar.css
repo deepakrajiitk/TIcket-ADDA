@@ -1,0 +1,18 @@
+.navbar-custom {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.navbar a:hover {
+  color: #3498db;
+}
+
+.navbar a {
+  font-size: 1.5rem;
+  text-transform: capitalize;
+}
+
+.navbar-brand {
+  font-size: 2.9rem;
+  color: #565387;
+}

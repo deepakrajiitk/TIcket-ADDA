@@ -1,0 +1,40 @@
+.homepage-image {
+  padding-top: 120px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.homepage-text {
+  padding-top: 150px;
+  padding-left: 100px;
+  padding-right: 100px;
+  text-align: left;
+  color: #333;
+}
+
+.homepage-text h2 {
+  font-weight: bold;
+}
+
+.site-name {
+  color: #6c63ff;
+  font-weight: bold;
+}
+
+.homepage-buttons {
+  padding-top: 30px;
+  text-align: left;
+}
+
+.homepage-buttons button {
+  font-size: 1.5rem;
+  /* font-weight: bold; */
+  padding: 10px 30px;
+  margin-right: 10px;
+}
+
+.button {
+  font-size: 14px;
+  padding: 6px 16px;
+  border-width: 3px;
+}

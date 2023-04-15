@@ -385,9 +385,10 @@ async function findAvailableTransport(source, destination) {
         // Parse the result as JSON
         const availableTransport = JSON.parse(result.toString());
         console.log('Available Transport:', availableTransport);
-
         // Disconnect from the gateway
         gateway.disconnect();
+        return availableTransport;
+
     } catch (error) {
         console.error('Failed to invoke chaincode:', error);
         process.exit(1);
@@ -415,4 +416,4 @@ async function findAvailableTransport(source, destination) {
 // createTransportProvider("testid2", "Dinkar", "Jodhpur", "1990")
 // deleteTransportProvider("testid1")
 
-findAvailableTransport("Kanpur", "Bombay") ;
+// findAvailableTransport("Kanpur", "Bombay") ;

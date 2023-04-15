@@ -215,6 +215,21 @@ app.get("/deleteTransport", async (req, res) => {
   }
 });
 
+app.get("/showTransport", async (req, res) => {
+  const source = req.query.source;
+  const dest = req.query.destination; 
+
+  try {
+    const result = findAvailableTransport(source, dest);
+
+    console.log(`Available Transport: ${result.toString()}`);
+    res.status(201).send(`Available Transport: ${result.toString()}`);
+  } catch (error) {
+    console.error(`Failed to invoke chaincode:: ${error}`);
+    res.status(500).send("Failed to show transport");
+  }
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

@@ -4,7 +4,6 @@ import './style_ticket.css'
 
 const handleBuyTicket = (ticketId) => {
     // handle logic to buy ticket with the given ticketId
-
   }
 
 function Table(props) {

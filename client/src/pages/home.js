@@ -30,6 +30,8 @@ function Home() {
   };
 
   return (
+
+    
     <div>
       <a href="https://front.codes/" class="logo">
         <img src="https://assets.codepen.io/1462889/fcy.png" alt="" />
@@ -80,6 +82,7 @@ function Home() {
                                 autocomplete="off"
                               />
                             </div>
+                  
                             <Link to="/search">
                               <button
                                 id="login-button"
@@ -89,6 +92,8 @@ function Home() {
                                 Login
                               </button>
                             </Link>
+                            
+                            
                             {/* <!-- <p class="mb-0 mt-4 text-center"><a href="#0" class="link">Forgot your password?</a></p> --> */}
                           </form>
                         </div>
