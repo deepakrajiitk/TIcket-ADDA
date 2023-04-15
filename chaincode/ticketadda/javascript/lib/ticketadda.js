@@ -341,13 +341,18 @@ class TicketAdda extends Contract{
         // Check if there are available seats on the mode of transport
         const transportBuffer = await ctx.stub.getState(transportID);
         const modeOfTransport = JSON.parse(transportBuffer.toString());
-        const seatsAvailable = modeOfTransport.Capacity - modeOfTransport.SeatsBooked;
-        if (seatsAvailable < noSeats) {
-          throw new Error(`There are no available seats on the mode of transport ${transportID}`);
+        let tempSeatsBooked = parseInt(modeOfTransport.SeatsBooked);
+        let tempCapacity = parseInt(modeOfTransport.Capacity);
+        let tempnoSeats = parseInt(noSeats);
+
+        const seatsAvailable = tempCapacity - tempSeatsBooked;
+        if (seatsAvailable < tempnoSeats) {
+          throw new Error(`There are no available seats on the mode of transport ${typeof noSeats}`);
         }
       
         // Increment the number of seats booked on the mode of transport
-        modeOfTransport.SeatsBooked += noSeats;
+        tempSeatsBooked += tempnoSeats;
+        modeOfTransport.SeatsBooked = tempSeatsBooked;
         const updatedTransportBuffer = Buffer.from(JSON.stringify(modeOfTransport));
         await ctx.stub.putState(transportID, updatedTransportBuffer);
       
@@ -418,6 +423,10 @@ class TicketAdda extends Contract{
     
         // Delete the booking object from the ledger
         await ctx.stub.deleteState(bookingID);
+
+        // Check if the state has been deleted
+        const deletedBuffer = await ctx.stub.getState(bookingID);
+        console.log(`Deleted buffer: ${deletedBuffer}`);
         
         // Emit an event to indicate that the booking has been cancelled
         const eventPayload = `Booking cancelled with ID: ${bookingID}`;
