@@ -421,7 +421,9 @@ async function updatePassenger(passengerId, name, age, gender, isPublic) {
 enrollAdmin();
 // registerPassenger("Deepak", "Raj", "deepak@gmail", 23, "Male", true);
 // enrollAdmin();
-// deletePassenger('deek@gmail');
+// registerPassenger("Deepak", "Raj", "deek@gmail", 23, "Male", true);
+// enrollAdmin();
+deletePassenger('deek@gmail');
 // registerUser();
 // queryPassenger('adi@gmail.com');
 // updatePassenger('deepakraj@example.com', 'Deepak Raj', 24, 'male');

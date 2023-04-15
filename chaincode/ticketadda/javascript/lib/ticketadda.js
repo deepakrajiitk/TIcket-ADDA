@@ -115,7 +115,7 @@ class TicketAdda extends Contract{
           } 
           else return true;
         }
-        else return false;
+        return false;
       }
             
     async transportExists(ctx, transportID) {
@@ -139,12 +139,12 @@ class TicketAdda extends Contract{
         const exists = await this.transporterExists(ctx, ProviderID);
 
         if (!exists) {
-            throw new Error(`The mode of transport ${ProviderID} does not exists`);
+            throw new Error(`Transporter ${ProviderID} does not exists`);
         }
         const exists2 = await this.transportExists(ctx, transportID);
         
         if (exists2) {
-          throw new Error(`The mode of transport ${transportID} does not exists`);
+          throw new Error(`The mode of transport ${transportID} already exists`);
         }
 
         
@@ -212,7 +212,7 @@ class TicketAdda extends Contract{
 
     async deleteModeOfTransport(ctx, transportID) {
         // Check if the mode of transport exists
-        const exists = await this.transporterExists(ctx, transportID);
+        const exists = await this.transportExists(ctx, transportID);
         if (!exists) {
           throw new Error(`The mode of transport ${transportID} does not exist`);
         }
@@ -282,11 +282,11 @@ class TicketAdda extends Contract{
 
     async createTransportProvider(ctx, providerID, name, address, contact) {
         // Check if the transportation provider already exists
+        
         const exists = await this.transporterExists(ctx, providerID);
         if (exists) {
             throw new Error(`The transportation provider ${providerID} already exists`);
-        }
-    
+        }    
         // Create a new transportation provider object
         const transportProvider = {
             ID: providerID,
