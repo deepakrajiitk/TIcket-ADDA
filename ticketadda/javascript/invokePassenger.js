@@ -67,9 +67,6 @@ async function createPassenger(passengerId, name, age, gender) {
   }
 }
 
-// Call the createPassenger function
-// createPassenger(arg1, arg2, arg3, arg4);
-
 async function deletePassenger(passengerId) {
     try {
         // Load the network configuration
@@ -156,47 +153,7 @@ async function enrollAdmin() {
     }
 }
 
-async function getPassengerDetails(passengerID) {
-    // Load connection profile; will be used to locate a gateway
-    const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
-    const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
-  
-    // Create a new file system based wallet for managing identities.
-    const walletPath = path.join(process.cwd(), 'wallet');
-    const wallet = await Wallets.newFileSystemWallet(walletPath);
-  
-    // Check to see if we've already enrolled the user.
-    const identity = await wallet.get(passengerID);
-    if (!identity) {
-      console.log(`An identity for the user ${passengerID} does not exist in the wallet`);
-      console.log('Run the registerUser.js application before retrying');
-      return;
-    }
-  
-    // Create a new gateway for connecting to our peer node.
-    const gateway = new Gateway();
-    await gateway.connect(ccp, {
-      wallet,
-      identity: passengerID,
-      discovery: { enabled: true, asLocalhost: true }
-    });
-  
-    // Get the network (channel) our contract is deployed to.
-    const network = await gateway.getNetwork(channelName);
-  
-    // Get the contract from the network.
-    const contract = network.getContract(chaincodeName);
-  
-    // Invoke the getPassengerDetails function of the contract, passing in the passenger ID as a parameter.
-    // const passengerId = 'PASSENGER001';
-    const result = await contract.evaluateTransaction('getPassengerDetails', passengerID);
-    console.log(`Transaction returned: ${result.toString()}`);
-  
-    // Disconnect from the gateway.
-    gateway.disconnect();
-}
-
-async function queryPassenger(appUser, passengerId) {
+async function queryPassenger(passengerId) {
     try {
         // load the network configuration
         const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
@@ -208,9 +165,9 @@ async function queryPassenger(appUser, passengerId) {
         console.log(`Wallet path: ${walletPath}`);
 
         // Check to see if we've already enrolled the user.
-        const identity = await wallet.get(userId);
+        const identity = await wallet.get(passengerId);
         if (!identity) {
-            console.log('An identity for the user "appUser" does not exist in the wallet');
+            console.log(`An identity for the user ${passengerId} does not exist in the wallet`);
             console.log('Run the registerUser.js application before retrying');
             return;
         }
@@ -218,7 +175,7 @@ async function queryPassenger(appUser, passengerId) {
 
         // Create a new gateway for connecting to our peer node.
         const gateway = new Gateway();
-        await gateway.connect(ccp, { wallet, identity: appUser, discovery: { enabled: true, asLocalhost: true } });
+        await gateway.connect(ccp, { wallet, identity: passengerId, discovery: { enabled: true, asLocalhost: true } });
 
         // Get the network (channel) our contract is deployed to.
         const network = await gateway.getNetwork('mychannel');
@@ -236,7 +193,7 @@ async function queryPassenger(appUser, passengerId) {
     }
 }
 
-async function registerPassenger(firstName, lastName, email, password) {
+async function registerPassenger(firstName, lastName, email, age, gender) {
     try {
       // Load the network configuration
       const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
@@ -300,6 +257,8 @@ async function registerPassenger(firstName, lastName, email, password) {
       console.error(`Failed to register user "${email}": ${error}`);
       process.exit(1);
     }
+
+    createPassenger(email, firstName, age, gender);
 }
 
 async function updatePassenger(passengerId, name, age, gender) {
@@ -349,74 +308,11 @@ async function updatePassenger(passengerId, name, age, gender) {
     }
 }
 
-async function registerUser() {
-    try {
-        // load the network configuration
-        const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
-        const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
-
-        // Create a new CA client for interacting with the CA.
-        const caURL = ccp.certificateAuthorities['ca.org1.example.com'].url;
-        const ca = new FabricCAServices(caURL);
-
-        // Create a new file system based wallet for managing identities.
-        const walletPath = path.join(process.cwd(), 'wallet');
-        const wallet = await Wallets.newFileSystemWallet(walletPath);
-        console.log(`Wallet path: ${walletPath}`);
-
-        // Check to see if we've already enrolled the user.
-        const userIdentity = await wallet.get('appUser');
-        if (userIdentity) {
-            console.log('An identity for the user "appUser" already exists in the wallet');
-            return;
-        }
-
-        // Check to see if we've already enrolled the admin user.
-        const adminIdentity = await wallet.get('admin');
-        if (!adminIdentity) {
-            console.log('An identity for the admin user "admin" does not exist in the wallet');
-            console.log('Run the enrollAdmin.js application before retrying');
-            return;
-        }
-
-        // build a user object for authenticating with the CA
-        const provider = wallet.getProviderRegistry().getProvider(adminIdentity.type);
-        const adminUser = await provider.getUserContext(adminIdentity, 'admin');
-
-        // Register the user, enroll the user, and import the new identity into the wallet.
-        const secret = await ca.register({
-            affiliation: 'org1.department1',
-            enrollmentID: 'appUser',
-            role: 'client'
-        }, adminUser);
-        const enrollment = await ca.enroll({
-            enrollmentID: 'appUser',
-            enrollmentSecret: secret
-        });
-        const x509Identity = {
-            credentials: {
-                certificate: enrollment.certificate,
-                privateKey: enrollment.key.toBytes(),
-            },
-            mspId: 'Org1MSP',
-            type: 'X.509',
-        };
-        await wallet.put('appUser', x509Identity);
-        console.log('Successfully registered and enrolled admin user "appUser" and imported it into the wallet');
-
-    } catch (error) {
-        console.error(`Failed to register user "appUser": ${error}`);
-        process.exit(1);
-    }
-}
-
   
 // Call the createPassenger function
 // enrollAdmin();
-// registerPassenger('Deepak', 'Raj', 'testid1', 'password');
-createPassenger('testid1', 'Deepak', 23, 'male');
-// deletePassenger('deepakraj@example.com');
-// getPassengerDetails('deepakraj@example.com');
+// registerPassenger('Deepak', 'Raj', 'deepak@gmail', 23, 'Male');
+// deletePassenger('deepak@gmail');
 // registerUser();
-// queryPassenger('deepakraj@example.com', 'deepakraj@example.com');
+queryPassenger('deepak@gmail');
 // updatePassenger('deepakraj@example.com', 'Deepak Raj', 24, 'male');
