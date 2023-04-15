@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Container, Form, Button } from "react-bootstrap";
 
 const AddPassengerForm = () => {
@@ -10,14 +11,25 @@ const AddPassengerForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Do something with the submitted data
-    console.log({
-      passengerID,
-      name,
-      age,
-      gender,
-      isPublic,
-    });
+    
+    const data = {
+      passengerId: passengerID,
+      name: name,
+      age: age,
+      gender: gender,
+      isPublic: isPublic
+    }
+    try {
+      const response = axios.get("http://localhost:5000/login", {
+        params: data
+      });
+      console.log(response.data);
+      setPassengerID("");
+      setName("");
+      setAge("");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

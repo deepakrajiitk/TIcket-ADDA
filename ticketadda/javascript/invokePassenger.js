@@ -18,7 +18,7 @@ const userId = "appUser";
 // const arg3 = args[4];
 // const arg4 = args[5];
 
-async function createPassenger(passengerId, name, age, gender) {
+async function createPassenger(passengerId, name, age, gender, isPublic) {
     try {
         // Load connection profile; will be used to locate a gateway
         const ccpPath = path.resolve(
@@ -68,7 +68,7 @@ async function createPassenger(passengerId, name, age, gender) {
             name,
             age,
             gender,
-            true
+            isPublic
         );
         console.log(`Passenger ${passengerId} has been created`);
 
@@ -104,17 +104,21 @@ async function deletePassenger(passengerId) {
         const userIdentity = await wallet.get(passengerId);
         if (!userIdentity) {
             console.log(
-                `An identity for the user ${userId} does not exist in the wallet`
+                `An identity for the user ${passengerId} does not exist in the wallet`
             );
             console.log("Run the registerUser.js application before retrying");
             return;
         }
 
+        // Create a new CA client for interacting with the CA.
+        const caURL = ccp.certificateAuthorities["ca.org1.example.com"].url;
+        const ca = new FabricCAServices(caURL);
+
         // Create a new gateway
         const gateway = new Gateway();
         await gateway.connect(ccp, {
             wallet,
-            identity: userIdentity,
+            identity: "admin",
             discovery: { enabled: true, asLocalhost: true },
         });
 
@@ -125,6 +129,8 @@ async function deletePassenger(passengerId) {
         // Call the deletePassenger method
         // const passengerId = 'passenger1';
         await contract.submitTransaction("deletePassenger", passengerId);
+        
+        await wallet.remove(passengerId);
 
         console.log(`Successfully deleted passenger ${passengerId}`);
 
@@ -258,7 +264,7 @@ async function queryPassenger(passengerId) {
     }
 }
 
-async function registerPassenger(firstName, lastName, email, age, gender) {
+async function registerPassenger(firstName, lastName, email, age, gender, isPublic) {
     try {
         // Load the network configuration
         const ccpPath = path.resolve(
@@ -337,15 +343,16 @@ async function registerPassenger(firstName, lastName, email, age, gender) {
         console.log(
             `Successfully registered and enrolled user "${email}" and imported it into the wallet`
         );
+        createPassenger(email, firstName, age, gender, isPublic);
+
     } catch (error) {
         console.error(`Failed to register user "${email}": ${error}`);
         process.exit(1);
     }
 
-    createPassenger(email, firstName, age, gender);
 }
 
-async function updatePassenger(passengerId, name, age, gender) {
+async function updatePassenger(passengerId, name, age, gender, isPublic) {
     try {
         // Load connection profile; will be used to locate a gateway
         const ccpPath = path.resolve(
@@ -395,7 +402,7 @@ async function updatePassenger(passengerId, name, age, gender) {
             name,
             age,
             gender,
-            true
+            isPublic
         );
         // ===============================Delete later======================================
         // await contract.submitTransaction('createTransportProvider', 'Bus1', 'Aditya', 'Bus', 'delhi to goa', 100)
@@ -412,11 +419,11 @@ async function updatePassenger(passengerId, name, age, gender) {
 
 // Call the createPassenger function
 // enrollAdmin();
-// registerPassenger("Deepak", "Raj", "deepak@gmail", 23, "Male");
+// registerPassenger("Deepak", "Raj", "deek@gmail", 23, "Male", true);
 // enrollAdmin();
-// deletePassenger('deepak@gmail');
+deletePassenger('deek@gmail');
 // registerUser();
-queryPassenger('adi@gmail.com');
+// queryPassenger('adi@gmail.com');
 // updatePassenger('deepakraj@example.com', 'Deepak Raj', 24, 'male');
 
 module.exports = {

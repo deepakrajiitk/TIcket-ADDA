@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Form, Button } from "react-bootstrap";
 
 const UpdatePassenger = () => {
@@ -10,8 +11,25 @@ const UpdatePassenger = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Implement your update passenger logic here
-    console.log("Passenger details updated!");
+    
+    const data = {
+      passengerId: passengerID,
+      name: name,
+      age: age,
+      gender: gender,
+      isPublic: isAnonymous
+    }
+    try {
+      const response = axios.get("http://localhost:5000/updatePassengers", {
+        params: data
+      });
+      console.log(response.data);
+      setPassengerID("");
+      setName("");
+      setAge("");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
