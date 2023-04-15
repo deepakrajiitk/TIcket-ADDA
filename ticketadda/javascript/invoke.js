@@ -141,7 +141,7 @@ async function cancelBooking(userId, ticketId) {
         const gateway = new Gateway();
         await gateway.connect(ccp, {
             wallet,
-            identity: identity,
+            identity: userId,
             discovery: { enabled: true, asLocalhost: true },
         });
 
@@ -197,8 +197,8 @@ async function findAvailableSeats(providerId, transportId) {
 
 // -------------------------------------------------------------------------------------
 
-// bookTicket('deepak@gmail', 'testid1', 'Bus5', 1);
+// bookTicket('deepak@gmail', 'testid1', 'Bus5', 10);
 // calculateTicketPrice('testid1', 'Bus5');
-// validateTicket('e516c2e63777ec7c71f5a8546f0f69a6f40486807f1d84dcfc9913655eef84ed')
-// cancelBooking('deepak@gmail', 'e516c2e63777ec7c71f5a8546f0f69a6f40486807f1d84dcfc9913655eef84ed')
-findAvailableSeats('testid1', 'Bus5')
+// validateTicket('4d5bb6df0c0c654a0f0ca8896cb190097acc816dfe746731670aacfaa55d6df4')
+cancelBooking('deepak@gmail', 'ee66c305fc5d15bea6f91e5b926fb3f9865e6cd7910951a247b38c324b195691')
+// findAvailableSeats('testid1', 'Bus5')
