@@ -56,7 +56,7 @@ async function calculateTicketPrice(providerId, transportId) {
     }
 }
 
-async function bookTicket(userId, providerID, transportId, noSeats) {
+async function bookTicket(userId, transportId, noSeats) {
     try {
         // Create a new file system wallet for managing identities
 
@@ -70,7 +70,7 @@ async function bookTicket(userId, providerID, transportId, noSeats) {
                 `An identity for the user ${userId} does not exist in the wallet`
             );
             console.log("Run the registerUser.js application before retrying");
-            return;
+            return `An identity for the user ${userId} does not exist in the wallet`;
         }
 
         // Create a new gateway for connecting to our peer node
@@ -91,7 +91,7 @@ async function bookTicket(userId, providerID, transportId, noSeats) {
         const result = await contract.submitTransaction(
             "bookTicket",
             userId,
-            providerID + transportId,
+            transportId,
             noSeats
         );
 
@@ -101,8 +101,10 @@ async function bookTicket(userId, providerID, transportId, noSeats) {
             `Transaction has been submitted with ticket ID: ${resultTicket.ID}`
         );
         gateway.disconnect();
+        return `Transaction has been submitted with ticket ID: ${resultTicket.ID}`;
     } catch (error) {
-        console.error(`Failed to submit transaction: ${error}`);
+        console.log(`Failed to submit transaction: ${error}`);
+        return `Failed to submit transaction: ${error}`;
         // process.exit(1);
     }
 }

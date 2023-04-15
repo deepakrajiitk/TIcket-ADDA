@@ -300,8 +300,24 @@ app.get("/cancel_booking", async (req, res) => {
     console.error(`Failed to invoke chaincode:: ${error}`);
     res.status(500).send("Failed to delete transporter");
   }
-});  
- 
+}); 
+
+app.get("/bookTicket", async (req, res) => {
+  const passengerID = req.query.passengerID;
+  const noSeats = req.query.noSeats;
+  const transportID = req.query.transportID
+
+  try {
+    const result = await bookTicket(passengerID, transportID, noSeats);
+
+    console.log(result);
+    res.status(201).send(result);
+  } catch (error) {
+    console.error(`Failed to invoke chaincode:: ${error}`);
+    res.status(500).send("Failed to delete transporter");
+  }
+}); 
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
