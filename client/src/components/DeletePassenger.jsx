@@ -1,13 +1,25 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 
-const DeletePassenger = ({ onDelete }) => {
+const DeletePassenger = () => {
   const [passengerID, setPassengerID] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onDelete(passengerID);
-    setPassengerID("");
+    
+    const data = {
+      passengerId: passengerID,
+    }
+    try {
+      const response = axios.get("http://localhost:5000/deletePassengers", {
+        params: data
+      });
+      console.log(response.data);
+      setPassengerID("");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

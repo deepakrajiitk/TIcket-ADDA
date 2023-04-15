@@ -69,6 +69,7 @@ function Home() {
                                 placeholder="Your Email"
                                 id="logemail"
                                 autocomplete="off"
+                                // value={}
                               />
                             </div>
 

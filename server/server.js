@@ -43,14 +43,14 @@ app.use(bodyParser.json());
 // Create a new passenger
 app.get("/login", async (req, res) => {
   const passengerId = req.query.passengerId;
-  const firstName = req.query.firstName;
-  const lastName = req.query.lastName;
+  const firstName = req.query.name;
   const age = req.query.age;
   const gender = req.query.gender;
+  const isPublic = req.query.isPublic;
 
-
+  console.log(passengerId)
   try {
-    await registerPassenger(firstName, lastName, passengerId, age, gender);
+    await registerPassenger(firstName, "", passengerId, age, gender, isPublic);
     res.status(201).send(`Passenger ${passengerId} has been created`);
   } catch (error) {
     console.error(`Failed to create passenger: ${error}`);
@@ -87,8 +87,9 @@ app.get("/updatePassengers", async (req, res) => {
   const name = req.query.name;
   const age = req.query.age;
   const gender = req.query.gender;
+  const isPublic = req.query.isPublic;
   try {
-    await updatePassenger(passengerId, name, age, gender);
+    await updatePassenger(passengerId, name, age, gender, isPublic);
     res.status(201).send(`Passenger ${passengerId} has been updated`);
   } catch (error) {
     console.error(`Failed to update passenger: ${error}`);

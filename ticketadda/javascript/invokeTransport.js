@@ -398,6 +398,11 @@ async function findAvailableTransport(source, destination) {
 
 
 
+<<<<<<< HEAD
+enrollAdmin2();
+// console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+// registerTransporter('Adi', 'Loth', 'testid1', 'Jodhpur', '1990');
+=======
 // enrollAdmin2();
 registerTransporter('Adi', 'Loth', 'id4', 'Jodhpur', '1990');
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Container, Form, Button } from "react-bootstrap";
 import axios from "axios";
 
@@ -12,20 +13,24 @@ const AddPassengerForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    
+    const data = {
+      passengerId: passengerID,
+      name: name,
+      age: age,
+      gender: gender,
+      isPublic: isPublic
+    }
     try {
-      const response = await axios.post(
-        "https://example.com/api/addPassenger",
-        {
-          passengerID,
-          name,
-          age,
-          gender,
-          isPublic,
-        }
-      );
-      setResponseMessage(response.data.message);
+      const response = axios.get("http://localhost:5000/login", {
+        params: data
+      });
+      console.log(response.data);
+      setPassengerID("");
+      setName("");
+      setAge("");
     } catch (error) {
-      setResponseMessage("Error: " + error.message);
+      console.error(error);
     }
   };
 
