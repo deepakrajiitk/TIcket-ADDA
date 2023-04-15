@@ -7,7 +7,7 @@ const port = 5000;
 
 // ADD THIS
 var cors = require("cors");
-app.use(cors());
+app.use(cors()); 
 
 const {
   deletePassenger,
@@ -21,6 +21,7 @@ const {
 const {
   updatePassenger,
 } = require("./../ticketadda/javascript/invokePassenger");
+
 
 const {
   registerTransporter,
@@ -40,6 +41,10 @@ const {
 const {
   deleteTransportProvider,
 } = require("./../ticketadda/javascript/invokeTransport");
+const {
+  findAvailableTransport,
+} = require("./../ticketadda/javascript/invokeTransport");
+
 
 const { calculateTicketPrice } = require("./../ticketadda/javascript/invoke");
 const { bookTicket } = require("./../ticketadda/javascript/invoke");
@@ -54,20 +59,28 @@ const {
 app.use(bodyParser.json());
 
 // Create a new passenger
-app.get("/login", async (req, res) => {
+app.get("/addpassenger", async (req, res) => {
   const passengerId = req.query.passengerId;
-  const firstName = req.query.name;
+  const firstName = req.query.firstName;
+  const lastName = req.query.lastName;
   const age = req.query.age;
   const gender = req.query.gender;
   const isPublic = req.query.isPublic;
 
   console.log(passengerId);
   try {
-    await registerPassenger(firstName, "", passengerId, age, gender, isPublic);
-    res.status(201).send(`Passenger ${passengerId} has been created`);
+    const responseMessage = await registerPassenger(
+      firstName,
+      lastName,
+      passengerId,
+      age,
+      gender,
+      isPublic
+    );
+    res.status(201).send(responseMessage);
   } catch (error) {
     console.error(`Failed to create passenger: ${error}`);
-    res.status(500).send("Failed to create passenger");
+    res.status(500).send(error);
   }
 });
 
@@ -230,7 +243,7 @@ app.get("/deleteTransport", async (req, res) => {
   }
 });
 
-app.get("/showTransport", async (req, res) => {
+app.get("/AvailableTransport", async (req, res) => { 
   const source = req.query.source;
   const dest = req.query.destination;
 

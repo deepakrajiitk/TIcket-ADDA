@@ -4,32 +4,39 @@ import { Container, Form, Button } from "react-bootstrap";
 
 const AddPassengerForm = () => {
   const [passengerID, setPassengerID] = useState("");
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [age, setAge] = useState("");
-  const [gender, setGender] = useState("");
-  const [isPublic, setIsPublic] = useState("");
+  const [gender, setGender] = useState("male");
+  const [isPublic, setIsPublic] = useState("yes");
   const [responseMessage, setResponseMessage] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
     const data = {
       passengerId: passengerID,
-      name: name,
+      firstName: firstName,
+      lastName: lastName,
       age: age,
       gender: gender,
-      isPublic: isPublic
-    }
+      isPublic: isPublic === "yes",
+    };
     try {
-      const response = axios.get("http://localhost:5000/login", {
-        params: data
+      setResponseMessage("Processing.....");
+      console.log(passengerID, firstName, lastName, age, gender, true);
+      const response = await axios.get("http://localhost:5000/addpassenger", {
+        params: data,
       });
       console.log(response.data);
+      setResponseMessage(response.data);
       setPassengerID("");
-      setName("");
+      setFirstName("");
+      setLastName("");
       setAge("");
     } catch (error) {
-      console.error(error);
+      console.error(error, "----------------------------------");
+      // setResponseMessage(error.data);
     }
   };
 
@@ -46,17 +53,24 @@ const AddPassengerForm = () => {
             onChange={(e) => setPassengerID(e.target.value)}
           />
         </Form.Group>
-
-        <Form.Group controlId="name">
-          <Form.Label>Name</Form.Label>
+        <Form.Group controlId="firstName">
+          <Form.Label>First Name</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Enter Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
           />
         </Form.Group>
-
+        <Form.Group controlId="lastName">
+          <Form.Label>Last Name</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </Form.Group>
         <Form.Group controlId="age">
           <Form.Label>Age</Form.Label>
           <Form.Control
@@ -66,7 +80,6 @@ const AddPassengerForm = () => {
             onChange={(e) => setAge(e.target.value)}
           />
         </Form.Group>
-
         <Form.Group controlId="gender">
           <Form.Label>Gender</Form.Label>
           <Form.Control
@@ -79,16 +92,17 @@ const AddPassengerForm = () => {
             <option value="other">Other</option>
           </Form.Control>
         </Form.Group>
-
         <Form.Group controlId="isPublic">
-          <Form.Check
-            type="checkbox"
-            label="Is Public"
-            checked={isPublic}
-            onChange={(e) => setIsPublic(e.target.checked)}
-          />
+          <Form.Label>Is Public?</Form.Label>
+          <Form.Control
+            as="select"
+            value={isPublic}
+            onChange={(e) => setIsPublic(e.target.value)}
+          >
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </Form.Control>
         </Form.Group>
-
         <Button variant="primary" type="submit">
           Submit
         </Button>

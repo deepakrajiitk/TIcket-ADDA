@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Container, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+
 
 const TicketAvailability = () => {
   const [source, setSource] = useState("");
@@ -33,6 +35,20 @@ const TicketAvailability = () => {
 
   const handleSearch = (event) => {
     event.preventDefault();
+
+    const data1 = {
+      source: source,
+      destination: destination,
+    };
+  
+    try {
+      const response = axios.get("http://localhost:5000/AvailableTransport", {
+        params: data1,
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
     // Perform search for available tickets
   };
 
