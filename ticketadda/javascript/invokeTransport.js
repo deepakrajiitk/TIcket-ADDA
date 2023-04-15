@@ -5,7 +5,55 @@ const FabricCAServices = require('fabric-ca-client');
 const fs = require('fs');
 const path = require('path');
 
-async function registerTransporter(firstName, lastName, email, password) {
+
+async function enrollAdmin2() {
+    try {
+        // load the network configuration
+        const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org2.example.com', 'connection-org2.json');
+        const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
+
+        // Create a new CA client for interacting with the CA.
+        const caInfo = ccp.certificateAuthorities['ca.org2.example.com'];
+        const caTLSCACerts = caInfo.tlsCACerts.pem;
+        const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: false }, caInfo.caName);
+
+        // Create a new file system based wallet for managing identities.
+        const walletPath = path.join(process.cwd(), 'wallet');
+        const wallet = await Wallets.newFileSystemWallet(walletPath);
+        console.log(`Wallet path: ${walletPath}`);
+
+        // Check to see if we've already enrolled the admin user.
+        const identity = await wallet.get('admin2');
+        if (identity) {
+            console.log('An identity for the admin user "admin2" already exists in the wallet');
+            return;
+        }
+
+        // Enroll the admin user, and import the new identity into the wallet.
+        const enrollment = await ca.enroll({ enrollmentID: 'admin', enrollmentSecret: 'adminpw' });
+
+        const x509Identity = {
+            credentials: {
+                certificate: enrollment.certificate,
+                privateKey: enrollment.key.toBytes(),
+            },
+            mspId: 'Org2MSP',
+            type: 'X.509',
+        };
+        await wallet.put('admin2', x509Identity);
+        console.log('Successfully enrolled admin user "admin2" and imported it into the wallet');
+
+    } catch (error) {
+        console.error(`Failed to enroll admin2 user "admin2": ${error}`);
+        process.exit(1);
+    }
+}
+/////////////////////////////////////////////////////
+
+
+
+
+async function registerTransporter(firstName, lastName, email, address, contactNumber) {
     try {
       // Load the network configuration
       const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org2.example.com', 'connection-org2.json');
@@ -24,7 +72,7 @@ async function registerTransporter(firstName, lastName, email, password) {
       const userIdentity = await wallet.get(email);
       if (userIdentity) {
         console.log(`An identity for the user "${email}" already exists in the wallet`);
-        return;
+        // return;
       }
   
       // Check to see if we've already enrolled the admin user.
@@ -71,6 +119,11 @@ async function registerTransporter(firstName, lastName, email, password) {
       console.error(`Failed to register user "${email}": ${error}`);
       process.exit(1);
     }
+
+
+    createTransportProvider(email, firstName , address, contactNumber)
+
+
   }
 
 
@@ -232,17 +285,15 @@ async function createTransportProvider(providerID, name, address, contact) {
         const walletPath = path.resolve(process.cwd(), 'wallet'); // Replace with the actual path to your wallet
         const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, 'utf8'));
         const wallet = await Wallets.newFileSystemWallet(walletPath);
-        
         await gateway.connect(ccp, {
             wallet,
             identity: 'admin2', // Replace with the actual identity name in your wallet
             discovery: { enabled: true, asLocalhost: true } // Replace with the appropriate discovery settings
         });
-
         // Get the network and contract from the gateway
         const network = await gateway.getNetwork('mychannel'); // Replace with the actual channel name
         const contract = network.getContract('ticketadda'); // Replace with the actual chaincode name
-
+        
         const result = await contract.submitTransaction('createTransportProvider', providerID, name, address, contact);
         console.log(`Transportation provider created: ${result.toString()}`);
     } catch (error) {
@@ -294,17 +345,16 @@ async function deleteTransportProvider(providerIDValue) {
 
 
 
-
+// enrollAdmin2();
   
+registerTransporter('Aditya', 'Loth', 'testid1', 'Jodhpur', '1990');
 
-// registerTransporter('Dinkar', 'Tewary', 'testid2', 'pw');
-
-// createModeOfTransport('testid2', 'Bus1', '20', '40' , 'Kanpur', 'Delhi', 'bus');
+// createModeOfTransport('testid2', 'Bus3', '200', '410' , 'Kanpur', 'Bombay', 'bus');
 
 // deleteModeOfTransport('testid2')
 // getTransportation('testid2')
 
-// updateTransportationDetails('jaintravels', 'Bus2', '30', '40' , 'Kanpur', 'Delhi', 'bus')
+// updateTransportationDetails('testid2', 'Bus2', '30', '40' , 'Kanpur', 'Delhi', 'bus')
 
-createTransportProvider("MRTravels", "jt", "Jodhpur", "1990")
-// deleteTransportProvider("JainTravels")
+// createTransportProvider("testid2", "Dinkar", "Jodhpur", "1990")
+// deleteTransportProvider("testid2")

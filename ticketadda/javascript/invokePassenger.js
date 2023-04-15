@@ -412,11 +412,11 @@ async function registerUser() {
 
   
 // Call the createPassenger function
-// enrollAdmin()
-// registerPassenger('Deepak', 'Raj', 'deepakraj@example.com', 'password');
-// createPassenger('deepakraj@example.com', 'Deepak', 23, 'male');
+// enrollAdmin();
+// registerPassenger('Deepak', 'Raj', 'testid1', 'password');
+createPassenger('testid1', 'Deepak', 23, 'male');
 // deletePassenger('deepakraj@example.com');
 // getPassengerDetails('deepakraj@example.com');
 // registerUser();
-queryPassenger('deepakraj@example.com', 'deepakraj@example.com');
+// queryPassenger('deepakraj@example.com', 'deepakraj@example.com');
 // updatePassenger('deepakraj@example.com', 'Deepak Raj', 24, 'male');
