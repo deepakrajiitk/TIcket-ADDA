@@ -199,7 +199,7 @@ class TicketAdda extends Contract{
         return transport;
       }
     
-    async updateTransportationDetails(ctx, transportID, name, capacity, speed, source, destination, type) {
+    async updateTransportationDetails(ctx, transportID, name, capacity, speed, source, destination) {
         // Check if the mode of transport exists
         const exists = await this.transporterExists(ctx, transportID);
         if (!exists) {
@@ -225,9 +225,6 @@ class TicketAdda extends Contract{
         }
         if (destination) {
             modeOfTransport.Destination = destination;
-        }
-        if (type) {
-            modeOfTransport.Type = type;
         }
     
         // Convert the updated mode of transport object to a buffer and save to the ledger

@@ -114,6 +114,8 @@ async function registerTransporter(firstName, lastName, email, address, contactN
       };
       await wallet.put(email, x509Identity);
       console.log(`Successfully registered and enrolled user "${email}" and imported it into the wallet`);
+
+      createTransportProvider(email, firstName , address, contactNumber);
   
     } catch (error) {
       console.error(`Failed to register user "${email}": ${error}`);
@@ -121,7 +123,7 @@ async function registerTransporter(firstName, lastName, email, address, contactN
     }
 
 
-    createTransportProvider(email, firstName , address, contactNumber)
+
 
 
   }
@@ -154,6 +156,8 @@ async function createModeOfTransport( transportID, name, capacity, speed, source
         // Invoke the createModeOfTransport function on the chaincode
         const result = await contract.submitTransaction('createModeOfTransport', transportID, name, capacity, speed, source ,destination);
         console.log(`Transaction result: ${result.toString()}`);
+
+        return result;
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
     } finally {
@@ -191,6 +195,8 @@ async function deleteModeOfTransport(transportIDValue) {
         // Invoke the deleteModeOfTransport function on the chaincode
         const result = await contract.submitTransaction('deleteModeOfTransport', transportIDValue);
         console.log(`Transaction result: ${result.toString()}`);
+
+        return result;
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
     } finally {
@@ -229,6 +235,8 @@ async function getTransportation(_transportID, busID) {
         // Invoke the getTransportation function on the chaincode
         const result = await contract.evaluateTransaction('getTransportation',  transportID);
         console.log(`Transportation: ${result.toString()}`);
+
+        return result;
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
     } finally {
@@ -240,7 +248,7 @@ async function getTransportation(_transportID, busID) {
 ////////////////////////////////////////////////////
 
 
-async function updateTransportationDetails(transportID, name, capacity, speed, source, destination, type) {
+async function updateTransportationDetails(transportID, name, capacity, speed, source, destination) {
     // Create a new gateway instance
     const gateway = new Gateway();
 
@@ -261,8 +269,10 @@ async function updateTransportationDetails(transportID, name, capacity, speed, s
         const network = await gateway.getNetwork('mychannel'); // Replace with the actual channel name
         const contract = network.getContract('ticketadda'); // Replace with the actual chaincode name
 
-        const result = await contract.submitTransaction('updateTransportationDetails', transportID, name, capacity, speed, source, destination, type);
+        const result = await contract.submitTransaction('updateTransportationDetails', transportID, name, capacity, speed, source, destination);
         console.log(`Transportation updated: ${result.toString()}`);
+
+        return result;
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
     } finally {
@@ -335,6 +345,8 @@ async function deleteTransportProvider(providerIDValue) {
         // Invoke the deleteTransportProvider function on the chaincode
         const result = await contract.submitTransaction('deleteTransportProvider', providerIDValue);
         console.log(`Transaction result: ${result.toString()}`);
+
+        return result;
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
     } finally {

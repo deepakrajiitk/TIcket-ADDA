@@ -185,6 +185,8 @@ async function queryPassenger(passengerId) {
         const result = await contract.evaluateTransaction('getPassengerDetails', passengerId);
         console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
 
+        return result.toString();
+
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         process.exit(1);
