@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import "../../public/assets/static/css/style_loginTwo.css";
+import "../assets/static/css/style_loginTwo.css";
 
 function Show() {
   return (

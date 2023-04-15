@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useHistory } from 'react-router-dom';
 
 function Home() {
   const [passenger, setPassenger] = useState({
@@ -8,6 +9,11 @@ function Home() {
     age: "",
     gender: "",
   });
+
+  const history = useHistory();
+  const handleClick = () => {
+    history.push("./loginTwo.js")
+  };
 
   const handleChange = (event) => {
     console.log(event.target.value);
@@ -78,7 +84,7 @@ function Home() {
                                 autocomplete="off"
                               />
                             </div>
-                            <button
+                            <button onClick={handleClick}
                               id="login-button"
                               class="btn mt-4"
                               type="login"
