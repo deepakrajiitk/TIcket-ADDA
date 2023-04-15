@@ -99,7 +99,7 @@ async function createModeOfTransport( transportID, name, capacity, speed, source
         const contract = network.getContract('ticketadda'); // Replace with the actual chaincode name
 
         // Invoke the createModeOfTransport function on the chaincode
-        const result = await contract.submitTransaction('createModeOfTransport', transportID,name, capacity, speed, source ,destination ,typeValue);
+        const result = await contract.submitTransaction('createModeOfTransport', transportID, name, capacity, speed, source ,destination ,typeValue);
         console.log(`Transaction result: ${result.toString()}`);
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
@@ -298,16 +298,13 @@ async function deleteTransportProvider(providerIDValue) {
   
 
 // registerTransporter('Dinkar', 'Tewary', 'testid2', 'pw');
-// createTransportProvider("MRTravels", "jt", "Jodhpur", "1990")
 
+// createModeOfTransport('testid2', 'Bus1', '20', '40' , 'Kanpur', 'Delhi', 'bus');
 
-
-createModeOfTransport('testid2', 'Bus1', '20', '40' , 'Kanpur', 'Delhi', 'bus');
-
-// deleteModeOfTransport('jaintravels')
-// getTransportation('jaintravels')
+// deleteModeOfTransport('testid2')
+// getTransportation('testid2')
 
 // updateTransportationDetails('jaintravels', 'Bus2', '30', '40' , 'Kanpur', 'Delhi', 'bus')
 
-
+createTransportProvider("MRTravels", "jt", "Jodhpur", "1990")
 // deleteTransportProvider("JainTravels")
