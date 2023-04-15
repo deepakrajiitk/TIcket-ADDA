@@ -138,17 +138,15 @@ class TicketAdda extends Contract{
         const transportID = ProviderID + name;
         const exists = await this.transporterExists(ctx, ProviderID);
 
-        console.log('vvvvvvvvvvvvvvvvvvvvvvvvv');
         if (!exists) {
             throw new Error(`The mode of transport ${ProviderID} does not exists`);
         }
-        console.log('vvvvvvvvvvvvvvvvvvvvvvvvv');
         const exists2 = await this.transportExists(ctx, transportID);
         
         if (exists2) {
           throw new Error(`The mode of transport ${transportID} does not exists`);
         }
-        console.log('vvvvvvvvvvvvvvvvvvvvvvvvv');
+
         
         // Create a new mode of transport object
         const modeOfTransport = {
@@ -169,6 +167,15 @@ class TicketAdda extends Contract{
         // Emit an event to indicate that a new mode of transport has been created
         const eventPayload = `New mode of transport created with ID: ${transportID}`;
         await ctx.stub.setEvent('CreateModeOfTransportEvent', Buffer.from(eventPayload));
+
+
+        // To make search using source and destination
+        const compositeKey = ctx.stub.createCompositeKey('transport', [source, destination]);
+        // Convert the transport object to a buffer
+        const transportBuffer2 = Buffer.from(JSON.stringify(modeOfTransport));
+    
+        // Store the transport object in the ledger
+        await ctx.stub.putState(compositeKey, transportBuffer2);
     
         // Return the newly created mode of transport object
         return modeOfTransport;
@@ -463,6 +470,35 @@ class TicketAdda extends Contract{
           res = await iterator.next();
         }
         return results;
+      }
+      
+    async findAvailableTransport(ctx, source, destination) {
+      // Retrieve all mode of transport objects from the ledger
+        console.log('aaaaaaaaaaaaaaaaaa');
+        const allTransportBuffer = await ctx.stub.getStateByType('transport');
+        const allTransport = [];
+
+        console.log('aaaaaaaaaaaaaaaaaa');
+        while (true) {
+            const transport = await allTransportBuffer.next();
+            if (transport.value && transport.value.value.toString()) {
+                const transportData = JSON.parse(transport.value.value.toString());
+                allTransport.push(transportData);
+            }
+            if (transport.done) {
+                await allTransportBuffer.close();
+                break;
+            }
+            }
+
+        console.log('aaaaaaaaaaaaaaaaaa');
+
+        // Filter the mode of transport objects based on the given date, source, and destination
+        const availableTransport = allTransport.filter(transport => {
+            return transport.Date === date && transport.Source === source && transport.Destination === destination;
+            });
+
+        return availableTransport;
       }
 }
 

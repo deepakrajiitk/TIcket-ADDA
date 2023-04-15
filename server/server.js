@@ -43,15 +43,14 @@ app.use(bodyParser.json());
 // Create a new passenger
 app.get("/login", async (req, res) => {
   const passengerId = req.query.passengerId;
-  const name = req.query.name;
+  const firstName = req.query.firstName;
+  const lastName = req.query.lastName;
   const age = req.query.age;
   const gender = req.query.gender;
-  const firstname = "who ";
 
-  console.log("------------------------", name);
 
   try {
-    await registerPassenger(firstname, name, passengerId, age, gender);
+    await registerPassenger(firstName, lastName, passengerId, age, gender);
     res.status(201).send(`Passenger ${passengerId} has been created`);
   } catch (error) {
     console.error(`Failed to create passenger: ${error}`);

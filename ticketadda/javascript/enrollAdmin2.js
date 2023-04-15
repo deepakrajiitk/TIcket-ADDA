@@ -54,4 +54,4 @@ async function enrollAdmin2() {
     }
 }
 
-// enrollAdmin2();
+enrollAdmin2();

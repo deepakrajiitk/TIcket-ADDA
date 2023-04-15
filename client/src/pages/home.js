@@ -4,19 +4,19 @@ import axios from "axios";
 function Home() {
   const [passenger, setPassenger] = useState({
     passengerId: "",
-    name: "",
+    firstName: "",
+    lastName: "",
     age: "",
     gender: "",
   });
 
   const handleChange = (event) => {
-    console.log(event.target.value);
     setPassenger({ ...passenger, [event.target.name]: event.target.value });
   };
 
   const handleSubmit = async (event) => {
-    console.log(passenger);
     event.preventDefault();
+    console.log(passenger);
     try {
       const response = await axios.get("http://localhost:5000/login", {
         params: passenger,
@@ -113,13 +113,26 @@ function Home() {
                             <div class="form-group mt-2">
                               <input
                                 type="text"
-                                name="name"
+                                name="firstName"
                                 class="form-style"
-                                placeholder="Your Name"
-                                id="logname"
+                                placeholder="First Name"
+                                id="logname1"
                                 autocomplete="off"
                                 onChange={handleChange}
-                                value={passenger.name}
+                                value={passenger.firstName}
+                              />
+                            </div>
+
+                            <div class="form-group mt-2">
+                              <input
+                                type="text"
+                                name="lastName"
+                                class="form-style"
+                                placeholder="Last Name"
+                                id="logname2"
+                                autocomplete="off"
+                                onChange={handleChange}
+                                value={passenger.lastName}
                               />
                             </div>
 
