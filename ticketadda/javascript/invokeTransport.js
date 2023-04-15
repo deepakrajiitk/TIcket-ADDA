@@ -350,7 +350,7 @@ async function deleteTransportProvider(providerIDValue) {
 
 // enrollAdmin2();
   
-// registerTransporter('Aditya', 'Loth', 'testid1', 'Jodhpur', '1990');
+registerTransporter('Adi', 'Loth', 'testid2', 'Jodhpur', '1990');
 
 // createModeOfTransport('testid1', 'Bus5', 200, '410' , 'Kanpur', 'Bombay');
 
