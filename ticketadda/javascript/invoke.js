@@ -200,5 +200,5 @@ async function findAvailableSeats(providerId, transportId) {
 // bookTicket('deepak@gmail', 'testid1', 'Bus5', 10);
 // calculateTicketPrice('testid1', 'Bus5');
 // validateTicket('4d5bb6df0c0c654a0f0ca8896cb190097acc816dfe746731670aacfaa55d6df4')
-cancelBooking('deepak@gmail', 'ee66c305fc5d15bea6f91e5b926fb3f9865e6cd7910951a247b38c324b195691')
+// cancelBooking('deepak@gmail', 'ee66c305fc5d15bea6f91e5b926fb3f9865e6cd7910951a247b38c324b195691')
 // findAvailableSeats('testid1', 'Bus5')
