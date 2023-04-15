@@ -1,8 +1,20 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./../css/homepage.css";
 import { Container, Row, Col, Image, Button } from "react-bootstrap";
 
 function HomePage() {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    // define function to handle button click event
+    navigate("/provider");
+  };
+
+  const handlePassengerClick = () => {
+    navigate("/passenger");
+  };
+
   return (
     <div>
       <Container fluid>
@@ -23,10 +35,18 @@ function HomePage() {
                 confidence, knowing that your trip is in good hands.
               </p>
               <div className="homepage-buttons">
-                <Button variant="outline-primary" className="mr-2">
+                <Button
+                  variant="outline-primary"
+                  className="mr-2"
+                  onClick={handlePassengerClick}
+                >
                   Enter as Passenger
                 </Button>
-                <Button variant="outline-primary" className="ml-2">
+                <Button
+                  variant="outline-primary"
+                  className="ml-2"
+                  onClick={handleClick}
+                >
                   Enter as Provider
                 </Button>
               </div>

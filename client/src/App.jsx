@@ -5,14 +5,16 @@ import AboutPage from "./components/AboutPage";
 import HomePage from "./components/HomePage";
 import MyNavbar from "./components/MyNavBar";
 import ProviderPage from "./components/ProviderPage";
+import PassengerPage from "./components/PassengerPage";
 
 function App() {
   return (
     <>
       <MyNavbar />
       <Routes>
-        <Route exact path="/" element={<ProviderPage />} />
-        {/* <Route exact path="/" element={<HomePage />} /> */}
+        <Route exact path="/provider" element={<ProviderPage />} />
+        <Route exact path="/passenger" element={<PassengerPage />} />
+        <Route exact path="/" element={<HomePage />} />
         <Route exact path="/about" element={<AboutPage />} />
       </Routes>
     </>

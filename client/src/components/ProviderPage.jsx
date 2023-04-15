@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Sidebar from "./Sidebar";
+import Sidebar from "./SidebarTranport";
 import AddTransportForm from "./AddTransport";
 import ProviderContact from "./ProviderContact";
 import ProviderServices from "./ProviderService";
@@ -7,7 +7,7 @@ import TransportDeleter from "./DeleteTransport";
 import UpdateTransportationDetails from "./UpdateTransport";
 
 function ProviderPage() {
-  const [selectedMenuItem, setSelectedMenuItem] = useState("info");
+  const [selectedMenuItem, setSelectedMenuItem] = useState("addtransport"); // set initial value to "addtransport"
 
   const handleMenuItemClick = (menuItem) => {
     setSelectedMenuItem(menuItem);
