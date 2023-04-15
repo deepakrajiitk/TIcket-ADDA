@@ -23,16 +23,14 @@ const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
 const walletPath = path.join(__dirname, "wallet");
 const gateway = new Gateway();
 
-
 async function calculateTicketPrice(providerId, transportId) {
     try {
-
         // create a new file system wallet
-        
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         // create a new gateway for connecting to our peer node
-        
+
         await gateway.connect(ccp, {
             wallet,
             identity: providerId,
@@ -60,9 +58,8 @@ async function calculateTicketPrice(providerId, transportId) {
 
 async function bookTicket(userId, providerID, transportId, noSeats) {
     try {
-
         // Create a new file system wallet for managing identities
-        
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         const list = await wallet.list();
 
@@ -77,7 +74,7 @@ async function bookTicket(userId, providerID, transportId, noSeats) {
         }
 
         // Create a new gateway for connecting to our peer node
-        
+
         await gateway.connect(ccp, {
             wallet,
             identity: userId,
@@ -111,13 +108,12 @@ async function bookTicket(userId, providerID, transportId, noSeats) {
 }
 
 async function validateTicket(ticketId) {
-
     // Create a new file system wallet for managing identities
-    
+
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
     // Create a new gateway for connecting to our peer node
-    
+
     await gateway.connect(ccp, {
         wallet,
         identity: "admin2", // Replace with the actual identity name in your wallet
@@ -146,9 +142,8 @@ async function validateTicket(ticketId) {
 
 async function cancelBooking(userId, ticketId) {
     try {
-
         // Create a new file system wallet for managing identities
-        
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         // Check to see if we've already enrolled the user
@@ -158,11 +153,11 @@ async function cancelBooking(userId, ticketId) {
                 `An identity for the user ${userId} does not exist in the wallet`
             );
             console.log("Run the registerUser.js application before retrying");
-            return;
+            return `An identity for the user ${userId} does not exist in the wallet`;
         }
 
         // Create a new gateway for connecting to our peer node
-        
+
         await gateway.connect(ccp, {
             wallet,
             identity: userId,
@@ -179,22 +174,22 @@ async function cancelBooking(userId, ticketId) {
 
         // disconnect the gateway
         gateway.disconnect();
+        return `Successfully cancelled booking ${ticketId}`;
     } catch (error) {
-        console.error(`Failed to cancel booking: ${error}`);
+        console.log(`Failed to cancel booking: ${error}`);
+        return `Failed to cancel booking: ${error}`;
         // process.exit(1);
     }
 }
 
 async function findAvailableSeats(providerId, transportId) {
     try {
-
-
         // create a new file system wallet
-        
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         // create a new gateway for connecting to our peer node
-        
+
         await gateway.connect(ccp, {
             wallet,
             identity: providerId,
@@ -222,14 +217,12 @@ async function findAvailableSeats(providerId, transportId) {
 
 async function getAllBookingsForPassenger(userId) {
     try {
-
-
         // create a new file system wallet
-        
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         // create a new gateway for connecting to our peer node
-        
+
         await gateway.connect(ccp, {
             wallet,
             identity: userId,
@@ -262,7 +255,7 @@ async function getAllBookingsForPassenger(userId) {
 // calculateTicketPrice('testid1', 'Bu45');
 // validateTicket('254d0e2971819adf5c94d38031c096d4127e2ed784703f308d24a67f51a0f53e')
 // cancelBooking(
-//     "ash@gmail",
+//     "deepak@gmail",
 //     "254d0e2971819adf5c94d38031c096d4127e2ed784703f308d24a67f51a0f53e"
 // );
 // findAvailableSeats('testid1', 'Bu45')

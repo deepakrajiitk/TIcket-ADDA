@@ -4,17 +4,20 @@ import { Button, Form } from "react-bootstrap";
 
 const DeletePassenger = () => {
   const [passengerID, setPassengerID] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     const data = {
       passengerId: passengerID,
-    }
+    } 
     try {
-      const response = axios.get("http://localhost:5000/deletePassengers", {
+      setResponseMessage("Processing.....");
+      const response = await axios.get("http://localhost:5000/deletePassengers", {
         params: data
       });
+      setResponseMessage(response.data);
       console.log(response.data);
       setPassengerID("");
     } catch (error) {
@@ -37,6 +40,9 @@ const DeletePassenger = () => {
       <Button variant="danger" type="submit">
         Delete
       </Button>
+      {responseMessage && (
+        <p style={{ marginTop: "1rem" }}>{responseMessage}</p>
+      )}
     </Form>
   );
 };
