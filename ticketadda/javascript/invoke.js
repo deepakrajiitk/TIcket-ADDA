@@ -172,7 +172,7 @@ async function cancelBooking(userId, ticketId) {
 
         // call the calculateTicketPrice function
         await contract.evaluateTransaction("cancelBooking", userId, ticketId);
-        console.log(`Successfully cancelled booking ${ticketId}`);
+        console.log(`Successfully cancelled booking --- ${ticketId}`);
 
         // disconnect the gateway
         gateway.disconnect();
