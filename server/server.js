@@ -87,8 +87,8 @@ app.get("/addpassenger", async (req, res) => {
 app.get("/deletePassengers", async (req, res) => {
   const passengerId = req.query.passengerId;
   try {
-    await deletePassenger(passengerId);
-    res.status(201).send(`Passenger ${passengerId} has been deleted`);
+    const response = await deletePassenger(passengerId);
+    res.status(201).send(response);
   } catch (error) {
     console.error(`Failed to delete passenger: ${error}`);
     res.status(500).send("Failed to delete passenger");
@@ -115,8 +115,8 @@ app.get("/updatePassengers", async (req, res) => {
   const gender = req.query.gender;
   const isPublic = req.query.isPublic;
   try {
-    await updatePassenger(passengerId, name, age, gender, isPublic);
-    res.status(201).send(`Passenger ${passengerId} has been updated`);
+    const response = await updatePassenger(passengerId, name, age, gender, isPublic);
+    res.status(201).send(response);
   } catch (error) {
     console.error(`Failed to update passenger: ${error}`);
     res.status(500).send("Failed to update passenger");
@@ -169,7 +169,7 @@ app.get("/transport", async (req, res) => {
 app.get("/deleteModeOfTransport", async (req, res) => {
   const transportID = req.query.transportID;
   const transporterID = req.query.transporterID;
-  
+
   try {
     await deleteModeOfTransport(transporterID, transportID);
     // console.log(`Transaction result: ${result.toString()}`);
@@ -254,7 +254,6 @@ app.get("/val_Ticket", async (req, res) => {
   const bookingID = req.query.bookingID;
   try {
     const result = await validateTicket(bookingID);
-
     console.log(`Transaction result: ${result.toString()}`);
     res.status(201).send(`Transaction updated: ${result.toString()}`);
   } catch (error) {
@@ -268,14 +267,46 @@ app.get("/getDetails", async (req, res) => {
 
   try {
     const result = await getAllBookingsForPassenger(passengerId);
+    // const final_res = JSON.parse(result);
 
-    console.log(`Bookings: ${result.toString()}`);
-    res.status(201).send(`Bookings: ${result.toString()}`);
+    // console.log(result[0]);
+    res.status(201).send(result);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
     res.status(500).send("Failed to delete transporter");
   }
-});
+}); 
+ 
+app.get("/cancel_booking", async (req, res) => {
+  const passengerID = req.query.passengerID;
+  const bookingID = req.query.bookingID;
+
+  try {
+    const result = await cancelBooking(passengerID, bookingID);
+
+    console.log(result);
+    res.status(201).send(result);
+  } catch (error) {
+    console.error(`Failed to invoke chaincode:: ${error}`);
+    res.status(500).send("Failed to delete transporter");
+  }
+}); 
+
+app.get("/bookTicket", async (req, res) => {
+  const passengerID = req.query.passengerID;
+  const noSeats = req.query.noSeats;
+  const transportID = req.query.transportID
+
+  try {
+    const result = await bookTicket(passengerID, transportID, noSeats);
+
+    console.log(result);
+    res.status(201).send(result);
+  } catch (error) {
+    console.error(`Failed to invoke chaincode:: ${error}`);
+    res.status(500).send("Failed to delete transporter");
+  }
+}); 
 
 // Start the server
 app.listen(port, () => {

@@ -5,20 +5,24 @@ const FabricCAServices = require("fabric-ca-client");
 const fs = require("fs");
 const path = require("path");
 
+// load the network configuration
+const connectionProfilePath = path.resolve(
+    __dirname,
+    "..",
+    "..",
+    "test-network",
+    "organizations",
+    "peerOrganizations",
+    "org2.example.com",
+    "connection-org2.json"
+);
+
+const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, "utf8"));
+const walletPath = path.resolve(__dirname, "wallet");
+
 async function enrollAdmin2() {
     try {
         // load the network configuration
-        const ccpPath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org2.example.com",
-            "connection-org2.json"
-        );
-        const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
 
         // Create a new CA client for interacting with the CA.
         const caInfo = ccp.certificateAuthorities["ca.org2.example.com"];
@@ -30,7 +34,6 @@ async function enrollAdmin2() {
         );
 
         // Create a new file system based wallet for managing identities.
-        const walletPath = path.join(__dirname, "wallet");
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         console.log(`Wallet path: ${walletPath}`);
 
@@ -77,24 +80,12 @@ async function registerTransporter(
 ) {
     try {
         // Load the network configuration
-        const ccpPath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org2.example.com",
-            "connection-org2.json"
-        );
-        const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
 
         // Create a new CA client for interacting with the CA.
         const caURL = ccp.certificateAuthorities["ca.org2.example.com"].url;
         const ca = new FabricCAServices(caURL);
 
         // Create a new file system based wallet for managing identities.
-        const walletPath = path.join(__dirname, "wallet");
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         console.log(`Wallet path: ${walletPath}`);
 
@@ -180,18 +171,9 @@ async function createModeOfTransport(
 
     try {
         // Connect to the gateway using a connection profile and wallet
-        const connectionProfilePath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org2.example.com",
-            "connection-org2.json"
-        ); // Replace with the actual path to your connection profile
-        const walletPath = path.resolve(__dirname, "wallet"); // Replace with the actual path to your wallet
-        const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, "utf8"));
+        // Replace with the actual path to your connection profile
+        // Replace with the actual path to your wallet
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         await gateway.connect(ccp, {
@@ -235,18 +217,9 @@ async function deleteModeOfTransport(transporterID, busID) {
 
     try {
         // Connect to the gateway using a connection profile and wallet
-        const connectionProfilePath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org2.example.com",
-            "connection-org2.json"
-        ); // Replace with the actual path to your connection profile
-        const walletPath = path.resolve(__dirname, "wallet"); // Replace with the actual path to your wallet
-        const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, "utf8"));
+        // Replace with the actual path to your connection profile
+        // Replace with the actual path to your wallet
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         await gateway.connect(ccp, {
@@ -285,18 +258,9 @@ async function getTransportation(_transportID, busID) {
 
     try {
         // Connect to the gateway using a connection profile and wallet
-        const connectionProfilePath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org2.example.com",
-            "connection-org2.json"
-        ); // Replace with the actual path to your connection profile
-        const walletPath = path.resolve(__dirname, "wallet"); // Replace with the actual path to your wallet
-        const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, "utf8"));
+        // Replace with the actual path to your connection profile
+        // Replace with the actual path to your wallet
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         await gateway.connect(ccp, {
@@ -340,18 +304,9 @@ async function updateTransportationDetails(
 
     try {
         // Connect to the gateway using a connection profile and wallet
-        const connectionProfilePath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org2.example.com",
-            "connection-org2.json"
-        ); // Replace with the actual path to your connection profile
-        const walletPath = path.resolve(__dirname, "wallet"); // Replace with the actual path to your wallet
-        const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, "utf8"));
+        // Replace with the actual path to your connection profile
+        // Replace with the actual path to your wallet
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         await gateway.connect(ccp, {
@@ -393,18 +348,9 @@ async function createTransportProvider(providerID, name, address, contact) {
 
     try {
         // Connect to the gateway using a connection profile and wallet
-        const connectionProfilePath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org2.example.com",
-            "connection-org2.json"
-        ); // Replace with the actual path to your connection profile
-        const walletPath = path.resolve(__dirname, "wallet"); // Replace with the actual path to your wallet
-        const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, "utf8"));
+        // Replace with the actual path to your connection profile
+        // Replace with the actual path to your wallet
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         await gateway.connect(ccp, {
             wallet,
@@ -443,18 +389,9 @@ async function deleteTransportProvider(providerIDValue) {
 
     try {
         // Connect to the gateway using a connection profile and wallet
-        const connectionProfilePath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org2.example.com",
-            "connection-org2.json"
-        ); // Replace with the actual path to your connection profile
-        const walletPath = path.resolve(__dirname, "wallet"); // Replace with the actual path to your wallet
-        const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, "utf8"));
+        // Replace with the actual path to your connection profile
+        // Replace with the actual path to your wallet
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         await gateway.connect(ccp, {
@@ -490,18 +427,9 @@ async function findAvailableTransport(source, destination) {
 
     try {
         // Connect to the gateway using a connection profile and wallet
-        const connectionProfilePath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org2.example.com",
-            "connection-org2.json"
-        ); // Replace with the actual path to your connection profile
-        const walletPath = path.resolve(__dirname, "wallet"); // Replace with the actual path to your wallet
-        const ccp = JSON.parse(fs.readFileSync(connectionProfilePath, "utf8"));
+        // Replace with the actual path to your connection profile
+        // Replace with the actual path to your wallet
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         await gateway.connect(ccp, {
@@ -547,9 +475,9 @@ async function findAvailableTransport(source, destination) {
 // createModeOfTransport('testid1', 'Bus35', 250, '10' , 'Kanpur', 'Bombay');
 
 // deleteModeOfTransport('idxx', 'B1');
-// getTransportation('testid1', 'Adi');
+getTransportation('testid1', 'Bu45');
 
-// updateTransportationDetails('idxx', 'aa', '30', '40' , 'Kanpur', 'Delhi')
+// updateTransportationDetails('testid1', 'aa', '30', '40' , 'Kanpur', 'Delhi')
 
 // deleteTransportProvider("id2");
 

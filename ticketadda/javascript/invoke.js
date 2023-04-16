@@ -7,27 +7,30 @@ const path = require("path");
 const channelName = "mychannel";
 const chaincodeName = "ticketadda";
 
+// load the network configuration
+const ccpPath = path.resolve(
+    __dirname,
+    "..",
+    "..",
+    "test-network",
+    "organizations",
+    "peerOrganizations",
+    "org1.example.com",
+    "connection-org1.json"
+);
+
+const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
+const walletPath = path.join(__dirname, "wallet");
+const gateway = new Gateway();
+
 async function calculateTicketPrice(providerId, transportId) {
     try {
-        // load the network configuration
-        const ccpPath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org1.example.com",
-            "connection-org1.json"
-        );
-        const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
-
         // create a new file system wallet
-        const walletPath = path.join(__dirname, "wallet");
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         // create a new gateway for connecting to our peer node
-        const gateway = new Gateway();
+
         await gateway.connect(ccp, {
             wallet,
             identity: providerId,
@@ -49,27 +52,14 @@ async function calculateTicketPrice(providerId, transportId) {
         await gateway.disconnect();
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
-        process.exit(1);
+        // process.exit(1);
     }
 }
 
-async function bookTicket(userId, providerID, transportId, noSeats) {
+async function bookTicket(userId, transportId, noSeats) {
     try {
-        // Load connection profile; will be used to locate a gateway
-        const ccpPath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org1.example.com",
-            "connection-org1.json"
-        );
-        const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
-
         // Create a new file system wallet for managing identities
-        const walletPath = path.join(__dirname, "wallet");
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         const list = await wallet.list();
 
@@ -80,11 +70,11 @@ async function bookTicket(userId, providerID, transportId, noSeats) {
                 `An identity for the user ${userId} does not exist in the wallet`
             );
             console.log("Run the registerUser.js application before retrying");
-            return;
+            return `An identity for the user ${userId} does not exist in the wallet`;
         }
 
         // Create a new gateway for connecting to our peer node
-        const gateway = new Gateway();
+
         await gateway.connect(ccp, {
             wallet,
             identity: userId,
@@ -101,7 +91,7 @@ async function bookTicket(userId, providerID, transportId, noSeats) {
         const result = await contract.submitTransaction(
             "bookTicket",
             userId,
-            providerID + transportId,
+            transportId,
             noSeats
         );
 
@@ -111,32 +101,21 @@ async function bookTicket(userId, providerID, transportId, noSeats) {
             `Transaction has been submitted with ticket ID: ${resultTicket.ID}`
         );
         gateway.disconnect();
+        return `Transaction has been submitted with ticket ID: ${resultTicket.ID}`;
     } catch (error) {
-        console.error(`Failed to submit transaction: ${error}`);
-        process.exit(1);
+        console.log(`Failed to submit transaction: ${error}`);
+        return `${noSeats} seats not available.`;
+        // process.exit(1);
     }
 }
 
 async function validateTicket(ticketId) {
-    // Load connection profile; will be used to locate a gateway
-    const ccpPath = path.resolve(
-        __dirname,
-        "..",
-        "..",
-        "test-network",
-        "organizations",
-        "peerOrganizations",
-        "org1.example.com",
-        "connection-org1.json"
-    );
-    const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
-
     // Create a new file system wallet for managing identities
-    const walletPath = path.join(__dirname, "wallet");
+
     const wallet = await Wallets.newFileSystemWallet(walletPath);
 
     // Create a new gateway for connecting to our peer node
-    const gateway = new Gateway();
+
     await gateway.connect(ccp, {
         wallet,
         identity: "admin2", // Replace with the actual identity name in your wallet
@@ -165,21 +144,8 @@ async function validateTicket(ticketId) {
 
 async function cancelBooking(userId, ticketId) {
     try {
-        // Load connection profile; will be used to locate a gateway
-        const ccpPath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org1.example.com",
-            "connection-org1.json"
-        );
-        const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
-
         // Create a new file system wallet for managing identities
-        const walletPath = path.join(__dirname, "wallet");
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         // Check to see if we've already enrolled the user
@@ -189,11 +155,11 @@ async function cancelBooking(userId, ticketId) {
                 `An identity for the user ${userId} does not exist in the wallet`
             );
             console.log("Run the registerUser.js application before retrying");
-            return;
+            return `An identity for the user ${userId} does not exist in the wallet`;
         }
 
         // Create a new gateway for connecting to our peer node
-        const gateway = new Gateway();
+
         await gateway.connect(ccp, {
             wallet,
             identity: userId,
@@ -210,33 +176,22 @@ async function cancelBooking(userId, ticketId) {
 
         // disconnect the gateway
         gateway.disconnect();
+        return `Successfully cancelled booking ${ticketId}`;
     } catch (error) {
-        console.error(`Failed to cancel booking: ${error}`);
-        process.exit(1);
+        console.log(`Failed to cancel booking: ${error}`);
+        return `Failed to cancel booking: ${error}`;
+        // process.exit(1);
     }
 }
 
 async function findAvailableSeats(providerId, transportId) {
     try {
-        // load the network configuration
-        const ccpPath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org1.example.com",
-            "connection-org1.json"
-        );
-        const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
-
         // create a new file system wallet
-        const walletPath = path.join(__dirname, "wallet");
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         // create a new gateway for connecting to our peer node
-        const gateway = new Gateway();
+
         await gateway.connect(ccp, {
             wallet,
             identity: providerId,
@@ -258,31 +213,18 @@ async function findAvailableSeats(providerId, transportId) {
         await gateway.disconnect();
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
-        process.exit(1);
+        // process.exit(1);
     }
 }
 
 async function getAllBookingsForPassenger(userId) {
     try {
-        // load the network configuration
-        const ccpPath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org1.example.com",
-            "connection-org1.json"
-        );
-        const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
-
         // create a new file system wallet
-        const walletPath = path.join(__dirname, "wallet");
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         // create a new gateway for connecting to our peer node
-        const gateway = new Gateway();
+
         await gateway.connect(ccp, {
             wallet,
             identity: userId,
@@ -298,25 +240,28 @@ async function getAllBookingsForPassenger(userId) {
             "getAllBookingsForPassenger",
             userId
         );
-        console.log(`Bookings: ${result.toString()}`);
-
+        const final_res = JSON.parse(result);
+        // console.log(final_res)
         // disconnect the gateway
         gateway.disconnect();
-        return result;
+        return final_res;
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
-        process.exit(1);
+        // process.exit(1);
     }
 }
 
 // -------------------------------------------------------------------------------------
 
-// bookTicket('deepak@gmail', 'testid1', 'Bus45', 10);
-// calculateTicketPrice('testid1', 'Bus5');
-// validateTicket('4d5bb6df0c0c654a0f0ca8896cb190097acc816dfe746731670aacfaa55d6df4')
-// cancelBooking('deepak@gmail', 'ee66c305fc5d15bea6f91e5b926fb3f9865e6cd7910951a247b38c324b195691')
-// findAvailableSeats('testid1', 'Bus45')
-// getAllBookingsForPassenger('deepak@gmail')
+bookTicket("deepk@gmail", "testid1Bu45", 100);
+// calculateTicketPrice('testid1', 'Bu45');
+// validateTicket('254d0e2971819adf5c94d38031c096d4127e2ed784703f308d24a67f51a0f53e')
+// cancelBooking(
+//     "deepak@gmail",
+//     "254d0e2971819adf5c94d38031c096d4127e2ed784703f308d24a67f51a0f53e"
+// );
+// findAvailableSeats('testid1', 'Bu45')
+// getAllBookingsForPassenger('ash@gmail')
 
 module.exports = {
     calculateTicketPrice,

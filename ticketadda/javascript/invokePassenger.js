@@ -178,7 +178,7 @@ async function deletePassenger(passengerId) {
             console.log(
                 `An identity for the user "${passengerId}" does not exist in the wallet`
             );
-            return;
+            return `An identity for the user "${passengerId}" does not exist in the wallet`;
         }
 
         const { gateway, contract } = await connectToGateway(passengerId);
@@ -194,8 +194,11 @@ async function deletePassenger(passengerId) {
 
         // Disconnect from the gateway
         gateway.disconnect();
+        return `Successfully deleted passenger ${passengerId}`
     } catch (error) {
         console.error(`Failed to delete passenger: ${error}`);
+        return `Failed to delete passenger: ${error}`
+
     }
 }
 
@@ -268,11 +271,11 @@ async function updatePassenger(passengerId, name, age, gender, isPublic) {
             console.log(
                 `An identity for the user "${passengerId}" does not exist in the wallet`
             );
-            return;
+            return `An identity for the user "${passengerId}" does not exist in the wallet`;
         }
 
         const { gateway, contract } = await connectToGateway(passengerId);
-
+        `An identity for the user "${passengerId}" does not exist in the wallet`
         // Submit the transaction to the network
         await contract.submitTransaction(
             "updatePassenger",
@@ -283,11 +286,13 @@ async function updatePassenger(passengerId, name, age, gender, isPublic) {
             isPublic
         );
         console.log(`Passenger ${passengerId} has been updated`);
+        return `Passenger ${passengerId} has been updated`;
 
         // Disconnect from the gateway
         await gateway.disconnect();
     } catch (error) {
-        console.error(`Failed to update passenger: ${error}`);
+        console.log(`Failed to update passenger: ${error}`);
+        return `Failed to update passenger: ${error}`;
     }
 }
 
@@ -334,14 +339,13 @@ async function enrollAdmin() {
 }
 
 // Call the createPassenger function
-enrollAdmin();
 // registerPassenger("Deepak", "Raj", "deepsd@gmail", 23, "Male", true);
-enrollAdmin();
+// enrollAdmin();
 // registerPassenger("Deepak", "Raj", "deepak@gmail", 23, "Male", true);
 // enrollAdmin();
 // registerPassenger("Deepak", "Raj", "deek@gmail", 23, "Male", true);
 // enrollAdmin();
-deletePassenger("deek@gmail");
+deletePassenger("sajha");
 // registerUser();
 // queryPassenger("deek@gmail");
 // updatePassenger("deek@gmail", "Deepak Kumar", 24, "male");

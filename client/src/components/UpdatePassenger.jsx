@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import axios from "axios";
 import { Form, Button } from "react-bootstrap";
 
@@ -8,8 +8,9 @@ const UpdatePassenger = () => {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [responseMessage, setResponseMessage] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     
     const data = {
@@ -20,19 +21,22 @@ const UpdatePassenger = () => {
       isPublic: isAnonymous
     }
     try {
-      const response = axios.get("http://localhost:5000/updatePassengers", {
+      const response = await axios.get("http://localhost:5000/updatePassengers", {
         params: data
       });
       console.log(response.data);
-      setPassengerID("");
-      setName("");
-      setAge("");
+      setPassengerID(passengerID)
+      setName(name);
+      setAge(age);
+      setGender(gender)
+      setResponseMessage(response.data)
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
+    <Fragment>
     <Form onSubmit={handleSubmit}>
       <Form.Group controlId="formPassengerID">
         <Form.Label>Passenger ID</Form.Label>
@@ -91,6 +95,10 @@ const UpdatePassenger = () => {
         Update Passenger
       </Button>
     </Form>
+    {
+      <p style={{ marginTop: "1rem" }}>{responseMessage}</p>
+    }
+    </Fragment>
   );
 };
 
