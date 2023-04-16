@@ -115,8 +115,8 @@ app.get("/updatePassengers", async (req, res) => {
   const gender = req.query.gender;
   const isPublic = req.query.isPublic;
   try {
-    await updatePassenger(passengerId, name, age, gender, isPublic);
-    res.status(201).send(`Passenger ${passengerId} has been updated`);
+    const response = await updatePassenger(passengerId, name, age, gender, isPublic);
+    res.status(201).send(response);
   } catch (error) {
     console.error(`Failed to update passenger: ${error}`);
     res.status(500).send("Failed to update passenger");
@@ -263,7 +263,6 @@ app.get("/val_Ticket", async (req, res) => {
   const bookingID = req.query.bookingID;
   try {
     const result = await validateTicket(bookingID);
-
     console.log(`Transaction result: ${result.toString()}`);
     res.status(201).send(`Transaction updated: ${result.toString()}`);
   } catch (error) {

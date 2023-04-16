@@ -5,17 +5,18 @@ import { Button, Form } from "react-bootstrap";
 const DeletePassenger = () => {
   const [passengerID, setPassengerID] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     const data = {
       passengerId: passengerID,
     }
     try {
-      const response = axios.get("http://localhost:5000/deletePassengers", {
+      const response = await axios.get("http://localhost:5000/deletePassengers", {
         params: data
       });
-      console.log(response.data);
+      console.log("Hellllllllooooooooooooo")
+      console.log(response);
       setPassengerID("");
     } catch (error) {
       console.error(error);
