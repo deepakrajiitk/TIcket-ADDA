@@ -141,7 +141,6 @@ async function registerTransporter(
   
     } catch (error) {
         console.error(`Failed to register user "${email}": ${error}`);
-        process.exit(1);
     }
 
 

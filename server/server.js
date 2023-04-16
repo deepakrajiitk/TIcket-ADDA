@@ -126,9 +126,9 @@ app.get("/transporter", async (req, res) => {
 
   try {
     await registerTransporter( firstName, lastName, email, address,  contactNumber);
-    res.status(201).send(`Successfully registered and enrolled user "${email}" and imported it into the wallet`);
+    res.status(201).send(`Successfully registered and enrolled "${firstName}" with ID "${email}" and imported it into the wallet`);
   } catch (error) {
-    console.error(`Failed to register user "${email}": ${error}`);
+    console.error(`Failed to register tranporter "${email}": ${error}`);
     res.status(500).send("Failed to register transporter");
   }
 });
@@ -150,10 +150,10 @@ app.get("/transport", async (req, res) => {
       source,
       destination
     );
-    // res.status(201).send(`Transaction result: ${result}`);
+    res.status(201).send(`Successeful added mode of transport with ID: ${transportID+name1}`);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
-    res.status(500).send("Failed to register transport");
+    res.status(500).send("Failed to register mode of transport");
   }
 });
 
@@ -164,7 +164,7 @@ app.get("/deleteModeOfTransport", async (req, res) => {
   try {
     await deleteModeOfTransport(transporterID, transportID);
     // console.log(`Transaction result: ${result.toString()}`);
-    // res.status(201).send(`Transaction result: ${result.toString()}`);
+    res.status(201).send(`Mode of transport with id ${transportID} deleted}`);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
     res.status(500).send("Failed to delete transport");
