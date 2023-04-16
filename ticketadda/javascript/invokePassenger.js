@@ -136,14 +136,6 @@ async function enrollUserToWallet(email, firstName, lastName) {
     }
 }
 
-// const args = process.argv;
-
-// // Extract the arguments
-// const arg1 = args[2]; // First argument
-// const arg2 = args[3];
-// const arg3 = args[4];
-// const arg4 = args[5];
-
 async function createPassenger(passengerId, name, age, gender, isPublic) {
     try {
         const { gateway, contract } = await connectToGateway(passengerId);
@@ -194,11 +186,10 @@ async function deletePassenger(passengerId) {
 
         // Disconnect from the gateway
         gateway.disconnect();
-        return `Successfully deleted passenger ${passengerId}`
+        return `Successfully deleted passenger ${passengerId}`;
     } catch (error) {
         console.error(`Failed to delete passenger: ${error}`);
-        return `Failed to delete passenger: ${error}`
-
+        return `Failed to delete passenger: ${error}`;
     }
 }
 
@@ -275,7 +266,7 @@ async function updatePassenger(passengerId, name, age, gender, isPublic) {
         }
 
         const { gateway, contract } = await connectToGateway(passengerId);
-        `An identity for the user "${passengerId}" does not exist in the wallet`
+        `An identity for the user "${passengerId}" does not exist in the wallet`;
         // Submit the transaction to the network
         await contract.submitTransaction(
             "updatePassenger",

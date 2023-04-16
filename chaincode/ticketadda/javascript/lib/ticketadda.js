@@ -24,8 +24,9 @@ class TicketAdda extends Contract {
         passengerID = passengerID;
         const exists = await this.passengerExists(ctx, passengerID);
         if (exists) {
-            throw new Error(`The passenger ${passengerID} already exists`);
+            return "The passenger" + passengerID + "already exists";
         }
+
 
         // Create a new passenger object
         const passenger = {
@@ -37,12 +38,19 @@ class TicketAdda extends Contract {
             type: "passenger",
         };
 
+
         // Convert the passenger object to a buffer and save to the ledger
         const passengerBuffer = Buffer.from(JSON.stringify(passenger));
         await ctx.stub.putState(passengerID, passengerBuffer);
 
+
         // Emit an event to indicate that a new passenger has been created
         const eventPayload = `New passenger created with ID: ${passengerID}`;
+        await ctx.stub.setEvent(
+            "CreatePassengerEvent",
+            Buffer.from(eventPayload)
+        );
+
         await ctx.stub.setEvent(
             "CreatePassengerEvent",
             Buffer.from(eventPayload)
@@ -56,11 +64,13 @@ class TicketAdda extends Contract {
         // Check if the passenger exists
         const exists = await this.passengerExists(ctx, passengerID);
         if (!exists) {
-            throw new Error(`The passenger ${passengerID} does not exist`);
+            return "The passenger" + passengerID + "does not exist";
         }
+
 
         // Delete the passenger from the ledger
         await ctx.stub.deleteState(passengerID);
+
 
         // Emit an event to indicate that a passenger has been deleted
         const eventPayload = `Passenger deleted with ID: ${passengerID}`;
@@ -74,8 +84,9 @@ class TicketAdda extends Contract {
         // Check if the passenger exists
         const passengerBuffer = await ctx.stub.getState(passengerID);
         if (!passengerBuffer || passengerBuffer.length === 0) {
-            throw new Error(`Passenger ${passengerID} does not exist`);
+            return "Passenger" + passengerID + "does not exist";
         }
+
 
         // Update the passenger object
         const passenger = JSON.parse(passengerBuffer.toString());
@@ -83,6 +94,7 @@ class TicketAdda extends Contract {
         passenger.Age = age;
         passenger.Gender = gender;
         passenger.IsAnonymous = isAnonymous;
+
 
         // Convert the passenger object to a buffer and save to the ledger
         const updatedPassengerBuffer = Buffer.from(JSON.stringify(passenger));
@@ -102,7 +114,7 @@ class TicketAdda extends Contract {
     async getPassengerDetails(ctx, passengerID) {
         const passengerAsBytes = await ctx.stub.getState(passengerID); // get the passenger from chaincode state
         if (!passengerAsBytes || passengerAsBytes.length === 0) {
-            throw new Error(`${passengerID} does not exist`);
+            return passengerID + "does not exist";
         }
         const passenger = JSON.parse(passengerAsBytes.toString());
         return passenger;
@@ -119,6 +131,7 @@ class TicketAdda extends Contract {
         }
         return false;
     }
+
 
     async transportExists(ctx, transportID) {
         const transportBuffer = await ctx.stub.getState(transportID);
@@ -145,15 +158,15 @@ class TicketAdda extends Contract {
         const exists = await this.transporterExists(ctx, ProviderID);
 
         if (!exists) {
-            throw new Error(`Transporter ${ProviderID} does not exists`);
+            return "Transporter" + ProviderID + "does not exists";
         }
         const exists2 = await this.transportExists(ctx, transportID);
 
+
         if (exists2) {
-            throw new Error(
-                `The mode of transport ${transportID} already exists`
-            );
+            return "The mode of transport" + transportID + "already exists";
         }
+
 
         // Create a new mode of transport object
         const modeOfTransport = {
@@ -167,9 +180,11 @@ class TicketAdda extends Contract {
             SeatsBooked: 0,
         };
 
+
         // Convert the mode of transport object to a buffer and save to the ledger
         const transportBuffer = Buffer.from(JSON.stringify(modeOfTransport));
         await ctx.stub.putState(transportID, transportBuffer);
+
 
         // Emit an event to indicate that a new mode of transport has been created
         const eventPayload = `New mode of transport created with ID: ${transportID}`;
@@ -186,6 +201,7 @@ class TicketAdda extends Contract {
         ]);
         // Convert the transport object to a buffer
         const transportBuffer2 = Buffer.from(JSON.stringify(modeOfTransport));
+
 
         const existingTransportBuffer = await ctx.stub.getState(compositeKey);
         if (existingTransportBuffer && existingTransportBuffer.length > 0) {
@@ -233,9 +249,7 @@ class TicketAdda extends Contract {
         // Check if the mode of transport exists
         const exists = await this.transportExists(ctx, transportID);
         if (!exists) {
-            throw new Error(
-                `The mode of transport ${transportID} does not exist`
-            );
+            return "The mode of transport with id " + transportID + " does not exist";
         }
 
         // Delete the mode of transport from the ledger
@@ -247,12 +261,15 @@ class TicketAdda extends Contract {
             "DeleteModeOfTransportEvent",
             Buffer.from(eventPayload)
         );
+
+        return "Mode of transport with ID: "+ transportID + " has been deleted";
+
     }
 
     async getTransportation(ctx, transportID) {
         const transportAsBytes = await ctx.stub.getState(transportID); // get the transportation from chaincode state
         if (!transportAsBytes || transportAsBytes.length === 0) {
-            throw new Error(`${transportID} does not exist`);
+            return transportID, "does not exist";
         }
         const transport = JSON.parse(transportAsBytes.toString());
         return transport;
@@ -270,9 +287,7 @@ class TicketAdda extends Contract {
         // Check if the mode of transport exists
         const exists = await this.transporterExists(ctx, transportID);
         if (!exists) {
-            throw new Error(
-                `The mode of transport ${transportID} does not exist`
-            );
+            return "The mode of transport" + transportID + "does not exist";
         }
 
         // Retrieve the current mode of transport object
@@ -297,6 +312,7 @@ class TicketAdda extends Contract {
         }
 
         // Convert the updated mode of transport object to a buffer and save to the ledger
+
         const updatedTransportBuffer = Buffer.from(
             JSON.stringify(modeOfTransport)
         );
@@ -323,8 +339,8 @@ class TicketAdda extends Contract {
 
         const exists = await this.transporterExists(ctx, providerID);
         if (exists) {
-            throw new Error(
-                `The transportation provider ${providerID} already exists`
+            return (
+                "The transportation provider " + providerID, +" already exists"
             );
         }
         // Create a new transportation provider object
@@ -356,7 +372,9 @@ class TicketAdda extends Contract {
         // const exists = await this.transportProviderExists(ctx, providerID);
         const exists = await this.transporterExists(ctx, providerID);
         if (!exists) {
-           return "The transportation provider " +providerID+" does not exist";
+            return (
+                "The transportation provider" + providerID + "does not exist"
+            );
         }
 
         // Delete the transportation provider from the ledger
@@ -373,9 +391,7 @@ class TicketAdda extends Contract {
         // Retrieve the mode of transport from the ledger
         const transportBuffer = await ctx.stub.getState(transportID);
         if (!transportBuffer || transportBuffer.length === 0) {
-            throw new Error(
-                `The mode of transport ${transportID} does not exist`
-            );
+            return "The mode of transport" + transportID + "does not exist";
         }
 
         // Parse the mode of transport object
@@ -387,14 +403,6 @@ class TicketAdda extends Contract {
         let speedFactor = 0.05;
         let typeFactor = 0.2;
 
-        // Determine the type factor based on the type of transport
-        // if (modeOfTransport.Type === "Bus") {
-        //     typeFactor = 0.2;
-        // } else if (modeOfTransport.Type === "Train") {
-        //     typeFactor = 0.3;
-        // } else if (modeOfTransport.Type === "Flight") {
-        //     typeFactor = 0.5;
-        // }
 
         // Calculate the final ticket price based on the factors
         let ticketPrice = basePrice;
@@ -412,14 +420,12 @@ class TicketAdda extends Contract {
         // Check if the passenger and mode of transport exist
         const passengerExists = await this.passengerExists(ctx, passengerID);
         if (!passengerExists) {
-            throw new Error(`The passenger ${passengerID} does not exist`);
+            return "The passenger" + passengerID + "does not exist";
         }
 
         const transportExists = await this.transportExists(ctx, transportID);
         if (!transportExists) {
-            throw new Error(
-                `The mode of transport ${transportID} does not exist`
-            );
+            return "The mode of transport" + transportID + "does not exist";
         }
 
         // Check if there are available seats on the mode of transport
@@ -430,11 +436,13 @@ class TicketAdda extends Contract {
         let tempnoSeats = parseInt(noSeats);
 
         const seatsAvailable = tempCapacity - tempSeatsBooked;
-        if (seatsAvailable < tempnoSeats) {
-            throw new Error(
-                `There are no available seats on the mode of transport ${typeof noSeats}`
+        if (seatsAvailable < tempnoSeats)
+            return (
+                "There are no available seats on the mode of transport " +
+                transportID +
+                " available tickets are " +
+                seatsAvailable
             );
-        }
 
         // Increment the number of seats booked on the mode of transport
         tempSeatsBooked += tempnoSeats;
@@ -491,7 +499,7 @@ class TicketAdda extends Contract {
         // Check if the booking exists
         const exists = await this.bookingExists(ctx, bookingID);
         if (!exists) {
-            throw new Error(`The booking ${bookingID} does not exist`);
+            return "The booking " + bookingID + " does not exist";
         }
 
         // Retrieve the current booking object
@@ -500,7 +508,7 @@ class TicketAdda extends Contract {
 
         // Check for correct passenger
         if (booking.PassengerID != userID) {
-            throw new Error(`Unauthorised ${bookingID}`);
+            return "Unauthorised " + userID;
         }
 
         // Update the seatsbooked value for the corresponding transportation
@@ -529,7 +537,7 @@ class TicketAdda extends Contract {
     async findAvailableSeats(ctx, transportID) {
         const transportBuffer = await ctx.stub.getState(transportID);
         if (!transportBuffer || transportBuffer.length === 0) {
-            throw new Error(`Mode of transport ${transportID} does not exist`);
+            return "Mode of transport " + transportID + "does not exist";
         }
         const modeOfTransport = JSON.parse(transportBuffer.toString());
         const seatsBooked = modeOfTransport.SeatsBooked;
@@ -569,9 +577,7 @@ class TicketAdda extends Contract {
 
         // Check if transport exists in the ledger
         if (!transportBytes || transportBytes.length === 0) {
-            throw new Error(
-                `Transport not found for date ${date}, source ${source}, destination ${destination}`
-            );
+            return {};
         }
 
         // Parse the transport object from the state

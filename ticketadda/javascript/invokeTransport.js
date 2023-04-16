@@ -87,24 +87,22 @@ async function registerTransporter(
 
         // Create a new file system based wallet for managing identities.
         const wallet = await Wallets.newFileSystemWallet(walletPath);
-        console.log(`Wallet path: ${walletPath}`);
+        // console.log(`Wallet path: ${walletPath}`);
 
         // Check to see if we've already enrolled the user.
         const userIdentity = await wallet.get(email);
         if (userIdentity) {
             const resp = `An identity for the user "${email}" already exists in the wallet`;
-            console.log(resp
-            );
+            console.log(resp);
             return resp;
         }
 
         // Check to see if we've already enrolled the admin user.
         const adminIdentity = await wallet.get("admin2");
         if (!adminIdentity) {
-            const resp = 'An identity for the admin user "admin2" does not exist in the wallet';
-            console.log(
-                resp
-            );
+            const resp =
+                'An identity for the admin user "admin2" does not exist in the wallet';
+            console.log(resp);
             // console.log("Run the enrollAdmin2.js application before retrying");
             return resp;
         }
@@ -147,10 +145,14 @@ async function registerTransporter(
             `Successfully registered and enrolled user "${email}" and imported it into the wallet`
         );
 
-        const resp = await createTransportProvider(email, firstName, address, contactNumber);
+        const resp = await createTransportProvider(
+            email,
+            firstName,
+            address,
+            contactNumber
+        );
 
         return resp.toString();
-
     } catch (error) {
         console.error(`Failed to register user "${email}": ${error}`);
     }
@@ -197,12 +199,13 @@ async function createModeOfTransport(
             destination
         );
 
-        const resp = `Transaction result: ${result.toString()}`; 
+        const resp = `Transaction result: ${result.toString()}`;
         console.log(resp);
 
         return resp;
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
+        return error;
     } finally {
         // Disconnect from the gateway
         gateway.disconnect();
@@ -217,8 +220,6 @@ async function deleteModeOfTransport(transporterID, busID) {
 
     try {
         // Connect to the gateway using a connection profile and wallet
-        // Replace with the actual path to your connection profile
-        // Replace with the actual path to your wallet
 
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
@@ -233,6 +234,7 @@ async function deleteModeOfTransport(transporterID, busID) {
         const contract = network.getContract("ticketadda"); // Replace with the actual chaincode name
 
         // Invoke the deleteModeOfTransport function on the chaincode
+        const transportIDValue = transporterID + busID;
         const result = await contract.submitTransaction(
             "deleteModeOfTransport",
             transportIDValue
@@ -258,8 +260,6 @@ async function getTransportation(_transportID, busID) {
 
     try {
         // Connect to the gateway using a connection profile and wallet
-        // Replace with the actual path to your connection profile
-        // Replace with the actual path to your wallet
 
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
@@ -411,11 +411,9 @@ async function deleteTransportProvider(providerIDValue) {
         );
         // console.log(result);
         return result;
-
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
         return error;
-    
     } finally {
         // Disconnect from the gateway
         gateway.disconnect();
@@ -450,38 +448,41 @@ async function findAvailableTransport(source, destination) {
             destination
         );
 
+        if (result.toString() === "{}") {
+            return result.toString();
+        }
+
         // Parse the result as JSON
         const availableTransport = JSON.parse(result.toString());
-        console.log("Available Transport:", availableTransport);
         // Disconnect from the gateway
         gateway.disconnect();
         return availableTransport;
     } catch (error) {
         console.error("Failed to invoke chaincode:", error);
-        process.exit(1);
     }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-// enrollAdmin2();
+enrollAdmin2();
 // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-// registerTransporter('Adi', 'Loth', 'id33', 'Jodhpur', '1990');
+// registerTransporter("Adi", "Loth", "testid1", "Jodhpur", "1990");
 // enrollAdmin2();
-// registerTransporter('Adi', 'Loth', 'id4', 'Jodhpur', '1990');
+// registerTransporter("Adi", "Loth", "id867kj4", "Jodhpur", "1990");
 
-// createModeOfTransport('testid1', 'Bu45', 50, '120' , 'Delhi', 'Bombay');
-// createModeOfTransport('testid1', 'Bus25', 150, '20' , 'Kanpur', 'Bombay');
-// createModeOfTransport('testid1', 'Bus35', 250, '10' , 'Kanpur', 'Bombay');
+// createModeOfTransport("testid1", "Bu45", 50, "120", "Delhi", "Bombay");
+// createModeOfTransport("testid1", "Bus29", 150, "20", "Kanpur", "Bombay");
+// createModeOfTransport("testid1", "Bus35", 250, "10", "Kanpur", "Bombay");
 
 // deleteModeOfTransport('idxx', 'B1');
-getTransportation('testid1', 'Bu45');
+// getTransportation("testid1", "Bu45");
 
 // updateTransportationDetails('testid1', 'aa', '30', '40' , 'Kanpur', 'Delhi')
 
 // deleteTransportProvider("id2");
+// findAvailableTransport("Kanpurd", "Bombay");
 
-// findAvailableTransport("Kanpur", "Bombay") ;
+// findAvailableTransport("Kanpur", "Bombay");
 
 module.exports = {
     registerTransporter,
