@@ -335,13 +335,13 @@ async function enrollAdmin() {
 
 // Call the createPassenger function
 enrollAdmin();
-// registerPassenger("Deepak", "Raj", "deepsd@gmail", 23, "Male", true);
-enrollAdmin();
+registerPassenger("ash", "patel", "ash@gmail", 23, "Male", true);
+// enrollAdmin();
 // registerPassenger("Deepak", "Raj", "deepak@gmail", 23, "Male", true);
 // enrollAdmin();
 // registerPassenger("Deepak", "Raj", "deek@gmail", 23, "Male", true);
 // enrollAdmin();
-deletePassenger("deek@gmail");
+// deletePassenger("deek@gmail");
 // registerUser();
 // queryPassenger("deek@gmail");
 // updatePassenger("deek@gmail", "Deepak Kumar", 24, "male");
