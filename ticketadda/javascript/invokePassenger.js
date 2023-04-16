@@ -238,24 +238,25 @@ async function registerPassenger(
     isPublic
 ) {
     try {
+        let response = "";
         // Check to see if the user is already enrolled.
         const userEnrolled = await checkIfUserEnrolled(email);
         if (userEnrolled) {
-            console.log(
-                `An identity for the user "${email}" already exists in the wallet`
-            );
-            return;
+            response = `An identity for the user "${email}" already exists in the wallet`;
+        } else {
+            // Enroll the user to the wallet.
+            await enrollUserToWallet(email, firstName, lastName);
+
+            // Create the passenger record.
+            await createPassenger(email, firstName, age, gender, isPublic);
+
+            response = `User "${email}" registered successfully.`;
         }
-
-        // Enroll the user to the wallet.
-        await enrollUserToWallet(email, firstName, lastName);
-
-        // Create the passenger record.
-        await createPassenger(email, firstName, age, gender, isPublic);
-
-        console.log(`User "${email}" registered successfully.`);
+        console.log(response);
+        return response;
     } catch (error) {
         console.error(`Failed to register user "${email}": ${error}`);
+        throw error;
     }
 }
 
@@ -333,7 +334,7 @@ async function enrollAdmin() {
 }
 
 // Call the createPassenger function
-// enrollAdmin();
+enrollAdmin();
 // registerPassenger("Deepak", "Raj", "deepsd@gmail", 23, "Male", true);
 // enrollAdmin();
 // deletePassenger("deek@gmail");
