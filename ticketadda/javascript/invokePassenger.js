@@ -136,14 +136,6 @@ async function enrollUserToWallet(email, firstName, lastName) {
     }
 }
 
-// const args = process.argv;
-
-// // Extract the arguments
-// const arg1 = args[2]; // First argument
-// const arg2 = args[3];
-// const arg3 = args[4];
-// const arg4 = args[5];
-
 async function createPassenger(passengerId, name, age, gender, isPublic) {
     try {
         const { gateway, contract } = await connectToGateway(passengerId);
@@ -332,19 +324,6 @@ async function enrollAdmin() {
         console.error(`Failed to enroll admin user "admin": ${error}`);
     }
 }
-
-// Call the createPassenger function
-enrollAdmin();
-// registerPassenger("Deepak", "Raj", "deepsd@gmail", 23, "Male", true);
-enrollAdmin();
-// registerPassenger("Deepak", "Raj", "deepak@gmail", 23, "Male", true);
-// enrollAdmin();
-// registerPassenger("Deepak", "Raj", "deek@gmail", 23, "Male", true);
-// enrollAdmin();
-deletePassenger("deek@gmail");
-// registerUser();
-// queryPassenger("deek@gmail");
-// updatePassenger("deek@gmail", "Deepak Kumar", 24, "male");
 
 module.exports = {
     createPassenger,

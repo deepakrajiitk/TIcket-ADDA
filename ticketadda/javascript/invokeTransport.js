@@ -96,7 +96,7 @@ async function registerTransporter(
         // Create a new file system based wallet for managing identities.
         const walletPath = path.join(__dirname, "wallet");
         const wallet = await Wallets.newFileSystemWallet(walletPath);
-        console.log(`Wallet path: ${walletPath}`);
+        // console.log(`Wallet path: ${walletPath}`);
 
         // Check to see if we've already enrolled the user.
         const userIdentity = await wallet.get(email);
@@ -121,9 +121,10 @@ async function registerTransporter(
         const provider = wallet
             .getProviderRegistry()
             .getProvider(adminIdentity.type);
-        const adminUser = await provider.getUserContext(adminIdentity, "admin");
-
-        createTransportProvider(email, firstName, address, contactNumber);
+        const adminUser = await provider.getUserContext(
+            adminIdentity,
+            "admin2"
+        );
         // Register the user, enroll the user, and import the new identity into the wallet.
         const secret = await ca.register(
             {
@@ -159,7 +160,6 @@ async function registerTransporter(
         await createTransportProvider(email, firstName, address, contactNumber);
     } catch (error) {
         console.error(`Failed to register user "${email}": ${error}`);
-        process.exit(1);
     }
 }
 
@@ -510,29 +510,31 @@ async function findAvailableTransport(source, destination) {
             destination
         );
 
+        if (result.toString() === "{}") {
+            return result.toString();
+        }
+
         // Parse the result as JSON
         const availableTransport = JSON.parse(result.toString());
-        console.log("Available Transport:", availableTransport);
         // Disconnect from the gateway
         gateway.disconnect();
         return availableTransport;
     } catch (error) {
         console.error("Failed to invoke chaincode:", error);
-        process.exit(1);
     }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-enrollAdmin2();
-// console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-// registerTransporter('Adi', 'Loth', 'testid1', 'Jodhpur', '1990');
 // enrollAdmin2();
-// registerTransporter('Adi', 'Loth', 'id4', 'Jodhpur', '1990');
+// console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+// registerTransporter("Adi", "Loth", "testid1", "Jodhpur", "1990");
+// enrollAdmin2();
+// registerTransporter("Adi", "Loth", "id867kj4", "Jodhpur", "1990");
 
-// createModeOfTransport('testid1', 'Bu45', 50, '120' , 'Delhi', 'Bombay');
-// createModeOfTransport('testid1', 'Bus25', 150, '20' , 'Kanpur', 'Bombay');
-// createModeOfTransport('testid1', 'Bus35', 250, '10' , 'Kanpur', 'Bombay');
+// createModeOfTransport("testid1", "Bu45", 50, "120", "Delhi", "Bombay");
+// createModeOfTransport("testid1", "Bus29", 150, "20", "Kanpur", "Bombay");
+// createModeOfTransport("testid1", "Bus35", 250, "10", "Kanpur", "Bombay");
 
 // deleteModeOfTransport('idxx', 'B1');
 // getTransportation('testid1', 'Adi');
@@ -540,8 +542,9 @@ enrollAdmin2();
 // updateTransportationDetails('idxx', 'aa', '30', '40' , 'Kanpur', 'Delhi')
 
 // deleteTransportProvider("id2");
+findAvailableTransport("Kanpurd", "Bombay");
 
-// findAvailableTransport("Kanpur", "Bombay") ;
+// findAvailableTransport("Kanpur", "Bombay");
 
 module.exports = {
     registerTransporter,
