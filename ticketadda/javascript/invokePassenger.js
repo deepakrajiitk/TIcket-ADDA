@@ -3,308 +3,88 @@
 const FabricCAServices = require("fabric-ca-client");
 const { Gateway, Wallets } = require("fabric-network");
 const fs = require("fs");
-const { Context } = require("mocha");
 const path = require("path");
 
 const channelName = "mychannel";
 const chaincodeName = "ticketadda";
-const userId = "appUser";
 
-// const args = process.argv;
+// Load the network configuration
+const ccpPath = path.resolve(
+    __dirname,
+    "..",
+    "..",
+    "test-network",
+    "organizations",
+    "peerOrganizations",
+    "org1.example.com",
+    "connection-org1.json"
+);
+const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
 
-// // Extract the arguments
-// const arg1 = args[2]; // First argument
-// const arg2 = args[3];
-// const arg3 = args[4];
-// const arg4 = args[5];
+// Create a new CA client for interacting with the CA.
+const caURL = ccp.certificateAuthorities["ca.org1.example.com"].url;
+const ca = new FabricCAServices(caURL);
 
-async function createPassenger(passengerId, name, age, gender, isPublic) {
+async function getWallet() {
     try {
-        // Load connection profile; will be used to locate a gateway
-        const ccpPath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org1.example.com",
-            "connection-org1.json"
-        );
-        const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
-
-        // Create a new file system based wallet for managing identities
+        // Create a new file system based wallet for managing identities.
         const walletPath = path.join(__dirname, "wallet");
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-        // Check to see if we've already enrolled the user
-        const identity = await wallet.get(passengerId);
-        if (!identity) {
-            console.log(
-                `An identity for the user ${passengerId} does not exist in the wallet`
-            );
-            console.log("Run the registerUser.js application before retrying");
-            return;
-        }
-
-        // Create a new gateway for connecting to our peer node
-        const gateway = new Gateway();
-        await gateway.connect(ccp, {
-            wallet,
-            identity: passengerId,
-            discovery: { enabled: true, asLocalhost: true },
-        });
-
-        // Get the network (channel) our contract is deployed to
-        const network = await gateway.getNetwork("mychannel");
-
-        // Get the contract from the network
-        const contract = network.getContract("ticketadda");
-
-        // Submit the transaction to the network
-        await contract.submitTransaction(
-            "createPassenger",
-            passengerId,
-            name,
-            age,
-            gender,
-            isPublic
-        );
-        console.log(`Passenger ${passengerId} has been created`);
-
-        // Disconnect from the gateway
-        gateway.disconnect();
-    } catch (error) {
-        console.error(`Failed to create passenger: ${error}`);
-        process.exit(1);
-    }
-}
-
-async function deletePassenger(passengerId) {
-    try {
-        // Load the network configuration
-        const ccpPath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org1.example.com",
-            "connection-org1.json"
-        );
-        const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
-
-        // Create a new file system wallet
-        const walletPath = path.join(__dirname, "wallet");
-        const wallet = await Wallets.newFileSystemWallet(walletPath);
         // console.log(`Wallet path: ${walletPath}`);
 
-        // Check to see if we've already enrolled the user
-        const userIdentity = await wallet.get(passengerId);
-        if (!userIdentity) {
-            console.log(
-                `An identity for the user ${passengerId} does not exist in the wallet`
-            );
-            console.log("Run the registerUser.js application before retrying");
-            return;
-        }
-
-        // Create a new CA client for interacting with the CA.
-        const caURL = ccp.certificateAuthorities["ca.org1.example.com"].url;
-        const ca = new FabricCAServices(caURL);
-
-        // Create a new gateway
-        const gateway = new Gateway();
-        await gateway.connect(ccp, {
-            wallet,
-            identity: "admin",
-            discovery: { enabled: true, asLocalhost: true },
-        });
-
-        // Get the network and contract
-        const network = await gateway.getNetwork("mychannel");
-        const contract = network.getContract("ticketadda");
-
-        // Call the deletePassenger method
-        // const passengerId = 'passenger1';
-        await contract.submitTransaction("deletePassenger", passengerId);
-        
-        await wallet.remove(passengerId);
-
-        console.log(`Successfully deleted passenger ${passengerId}`);
-
-        // Disconnect from the gateway
-        gateway.disconnect();
+        return wallet;
     } catch (error) {
-        console.error(`Failed to delete passenger: ${error}`);
-        process.exit(1);
+        throw new Error(`Failed to create wallet: ${error}`);
     }
 }
 
-async function enrollAdmin() {
+async function checkIfUserEnrolled(user) {
     try {
-        // load the network configuration
-        const ccpPath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org1.example.com",
-            "connection-org1.json"
-        );
-        const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
-
-        // Create a new CA client for interacting with the CA.
-        const caInfo = ccp.certificateAuthorities["ca.org1.example.com"];
-        const caTLSCACerts = caInfo.tlsCACerts.pem;
-        const ca = new FabricCAServices(
-            caInfo.url,
-            { trustedRoots: caTLSCACerts, verify: false },
-            caInfo.caName
-        );
-
-        // Create a new file system based wallet for managing identities.
-        const walletPath = path.join(__dirname, "wallet");
-        const wallet = await Wallets.newFileSystemWallet(walletPath);
-        console.log(`Wallet path: ${walletPath}`);
-
-        // Check to see if we've already enrolled the admin user.
-        const identity = await wallet.get("admin");
-        if (identity) {
-            console.log(
-                'An identity for the admin user "admin" already exists in the wallet'
-            );
-            return;
+        const wallet = await getWallet();
+        const userIdentity = await wallet.get(user);
+        if (userIdentity) {
+            return true;
         }
-
-        // Enroll the admin user, and import the new identity into the wallet.
-        const enrollment = await ca.enroll({
-            enrollmentID: "admin",
-            enrollmentSecret: "adminpw",
-        });
-        const x509Identity = {
-            credentials: {
-                certificate: enrollment.certificate,
-                privateKey: enrollment.key.toBytes(),
-            },
-            mspId: "Org1MSP",
-            type: "X.509",
-        };
-        await wallet.put("admin", x509Identity);
-        console.log(
-            'Successfully enrolled admin user "admin" and imported it into the wallet'
-        );
+        return false;
     } catch (error) {
-        console.error(`Failed to enroll admin user "admin": ${error}`);
-        process.exit(1);
+        throw new Error(
+            `Failed to check if user "${user}" is enrolled: ${error}`
+        );
     }
 }
 
-async function queryPassenger(passengerId) {
+async function connectToGateway(user) {
     try {
-        // load the network configuration
-        const ccpPath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org1.example.com",
-            "connection-org1.json"
-        );
-        const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
-
-        // Create a new file system based wallet for managing identities.
-        const walletPath = path.join(__dirname, "wallet");
-        const wallet = await Wallets.newFileSystemWallet(walletPath);
-        console.log(`Wallet path: ${walletPath}`);
-
-        // Check to see if we've already enrolled the user.
-        const identity = await wallet.get(passengerId);
-        if (!identity) {
-            console.log(
-                `An identity for the user ${passengerId} does not exist in the wallet`
-            );
-            console.log("Run the registerUser.js application before retrying");
-            return;
-        }
-        console.log("current user has identity in wallet");
-
+        const wallet = await getWallet();
         // Create a new gateway for connecting to our peer node.
         const gateway = new Gateway();
         await gateway.connect(ccp, {
             wallet,
-            identity: passengerId,
+            identity: user,
             discovery: { enabled: true, asLocalhost: true },
         });
 
         // Get the network (channel) our contract is deployed to.
-        const network = await gateway.getNetwork("mychannel");
+        const network = await gateway.getNetwork(channelName);
 
         // Get the contract from the network.
-        const contract = network.getContract("ticketadda");
+        const contract = network.getContract(chaincodeName);
 
-        // Evaluate the specified transaction.
-        const result = await contract.evaluateTransaction(
-            "getPassengerDetails",
-            passengerId
-        );
-        console.log(
-            `Transaction has been evaluated, result is: ${result.toString()}`
-        );
-
-        return result.toString();
+        return { gateway, contract };
     } catch (error) {
-        console.error(`Failed to evaluate transaction: ${error}`);
-        process.exit(1);
+        throw new Error(`Failed to connect to gateway: ${error}`);
     }
 }
 
-async function registerPassenger(firstName, lastName, email, age, gender, isPublic) {
+async function enrollUserToWallet(email, firstName, lastName) {
     try {
-        // Load the network configuration
-        const ccpPath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org1.example.com",
-            "connection-org1.json"
-        );
-        const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
-
-        // Create a new CA client for interacting with the CA.
-        const caURL = ccp.certificateAuthorities["ca.org1.example.com"].url;
-        const ca = new FabricCAServices(caURL);
-
-        // Create a new file system based wallet for managing identities.
-        const walletPath = path.join(__dirname, "wallet");
-        const wallet = await Wallets.newFileSystemWallet(walletPath);
-        console.log(`Wallet path: ${walletPath}`);
-
-        // Check to see if we've already enrolled the user.
-        const userIdentity = await wallet.get(email);
-        if (userIdentity) {
-            console.log(
-                `An identity for the user "${email}" already exists in the wallet`
-            );
-            return;
-        }
+        const wallet = await getWallet();
 
         // Check to see if we've already enrolled the admin user.
         const adminIdentity = await wallet.get("admin");
         if (!adminIdentity) {
-            console.log(
-                'An identity for the admin user "admin" does not exist in the wallet'
-            );
-            console.log("Run the enrollAdmin.js application before retrying");
-            return;
+            throw new Error(`Admin user "admin" is not enrolled`);
         }
 
         // Build a user object for authenticating with the CA
@@ -327,10 +107,16 @@ async function registerPassenger(firstName, lastName, email, age, gender, isPubl
             },
             adminUser
         );
+
         const enrollment = await ca.enroll({
             enrollmentID: email,
             enrollmentSecret: secret,
         });
+
+        if (!enrollment) {
+            throw new Error(`Failed to enroll user "${email}"`);
+        }
+
         const x509Identity = {
             credentials: {
                 certificate: enrollment.certificate,
@@ -339,61 +125,152 @@ async function registerPassenger(firstName, lastName, email, age, gender, isPubl
             mspId: "Org1MSP",
             type: "X.509",
         };
-        await wallet.put(email, x509Identity);
-        console.log(
-            `Successfully registered and enrolled user "${email}" and imported it into the wallet`
-        );
-        createPassenger(email, firstName, age, gender, isPublic);
 
+        await wallet.put(email, x509Identity);
+
+        console.log(
+            `Successfully enrolled user "${email}" and imported it into the wallet`
+        );
+    } catch (error) {
+        throw new Error(`${error}`);
+    }
+}
+
+// const args = process.argv;
+
+// // Extract the arguments
+// const arg1 = args[2]; // First argument
+// const arg2 = args[3];
+// const arg3 = args[4];
+// const arg4 = args[5];
+
+async function createPassenger(passengerId, name, age, gender, isPublic) {
+    try {
+        const { gateway, contract } = await connectToGateway(passengerId);
+
+        // Submit the transaction to the network
+        const resultBuffer = await contract.submitTransaction(
+            "createPassenger",
+            passengerId,
+            name,
+            age,
+            gender,
+            isPublic
+        );
+        const resultString = resultBuffer.toString();
+
+        console.log(`Passenger ${passengerId} has been created`);
+
+        // Disconnect from the gateway
+        await gateway.disconnect();
+
+        return resultString;
+    } catch (error) {
+        console.error(`Failed to create passenger: ${error}`);
+    }
+}
+
+async function deletePassenger(passengerId) {
+    try {
+        // Check to see if the user is already enrolled.
+        const userEnrolled = await checkIfUserEnrolled(passengerId);
+        if (!userEnrolled) {
+            console.log(
+                `An identity for the user "${passengerId}" does not exist in the wallet`
+            );
+            return;
+        }
+
+        const { gateway, contract } = await connectToGateway(passengerId);
+
+        // Call the deletePassenger method
+        // const passengerId = 'passenger1';
+        await contract.submitTransaction("deletePassenger", passengerId);
+        const wallet = await getWallet();
+
+        await wallet.remove(passengerId);
+
+        console.log(`Successfully deleted passenger ${passengerId}`);
+
+        // Disconnect from the gateway
+        gateway.disconnect();
+    } catch (error) {
+        console.error(`Failed to delete passenger: ${error}`);
+    }
+}
+
+async function queryPassenger(passengerId) {
+    try {
+        // Check to see if the user is already enrolled.
+        const userEnrolled = await checkIfUserEnrolled(passengerId);
+        if (!userEnrolled) {
+            console.log(
+                `An identity for the user "${passengerId}" does not exist in the wallet`
+            );
+            return;
+        }
+
+        const { gateway, contract } = await connectToGateway(passengerId);
+
+        // Evaluate the specified transaction.
+        const result = await contract.evaluateTransaction(
+            "getPassengerDetails",
+            passengerId
+        );
+        console.log(
+            `Transaction has been evaluated, result is: ${result.toString()}`
+        );
+
+        await gateway.disconnect();
+
+        return result.toString();
+    } catch (error) {
+        console.error(`Failed to evaluate transaction: ${error}`);
+    }
+}
+
+async function registerPassenger(
+    firstName,
+    lastName,
+    email,
+    age,
+    gender,
+    isPublic
+) {
+    try {
+        // Check to see if the user is already enrolled.
+        const userEnrolled = await checkIfUserEnrolled(email);
+        if (userEnrolled) {
+            console.log(
+                `An identity for the user "${email}" already exists in the wallet`
+            );
+            return;
+        }
+
+        // Enroll the user to the wallet.
+        await enrollUserToWallet(email, firstName, lastName);
+
+        // Create the passenger record.
+        await createPassenger(email, firstName, age, gender, isPublic);
+
+        console.log(`User "${email}" registered successfully.`);
     } catch (error) {
         console.error(`Failed to register user "${email}": ${error}`);
-        process.exit(1);
     }
-
 }
 
 async function updatePassenger(passengerId, name, age, gender, isPublic) {
     try {
-        // Load connection profile; will be used to locate a gateway
-        const ccpPath = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "test-network",
-            "organizations",
-            "peerOrganizations",
-            "org1.example.com",
-            "connection-org1.json"
-        );
-        const ccp = JSON.parse(fs.readFileSync(ccpPath, "utf8"));
-
-        // Create a new file system based wallet for managing identities
-        const walletPath = path.join(__dirname, "wallet");
-        const wallet = await Wallets.newFileSystemWallet(walletPath);
-
-        // Check to see if we've already enrolled the user
-        const identity = await wallet.get(passengerId);
-        if (!identity) {
+        // Check to see if the user is already enrolled.
+        const userEnrolled = await checkIfUserEnrolled(passengerId);
+        if (!userEnrolled) {
             console.log(
-                `An identity for the user ${passengerId} does not exist in the wallet`
+                `An identity for the user "${passengerId}" does not exist in the wallet`
             );
-            console.log("Run the registerUser.js application before retrying");
             return;
         }
 
-        // Create a new gateway for connecting to our peer node
-        const gateway = new Gateway();
-        await gateway.connect(ccp, {
-            wallet,
-            identity: passengerId,
-            discovery: { enabled: true, asLocalhost: true },
-        });
-
-        // Get the network (channel) our contract is deployed to
-        const network = await gateway.getNetwork("mychannel");
-
-        // Get the contract from the network
-        const contract = network.getContract("ticketadda");
+        const { gateway, contract } = await connectToGateway(passengerId);
 
         // Submit the transaction to the network
         await contract.submitTransaction(
@@ -404,27 +281,65 @@ async function updatePassenger(passengerId, name, age, gender, isPublic) {
             gender,
             isPublic
         );
-        // ===============================Delete later======================================
-        // await contract.submitTransaction('createTransportProvider', 'Bus1', 'Aditya', 'Bus', 'delhi to goa', 100)
         console.log(`Passenger ${passengerId} has been updated`);
-        // console.log(`Transporatation has been created`);
 
         // Disconnect from the gateway
         await gateway.disconnect();
     } catch (error) {
         console.error(`Failed to update passenger: ${error}`);
-        process.exit(1);
+    }
+}
+
+async function enrollAdmin() {
+    try {
+        // Create a new CA client for interacting with the CA.
+        const caInfo = ccp.certificateAuthorities["ca.org1.example.com"];
+        const caTLSCACerts = caInfo.tlsCACerts.pem;
+        const ca = new FabricCAServices(
+            caInfo.url,
+            { trustedRoots: caTLSCACerts, verify: false },
+            caInfo.caName
+        );
+        // Check to see if we've already enrolled the admin user.
+        const identity = await checkIfUserEnrolled("admin");
+        if (identity) {
+            console.log(
+                'An identity for the admin user "admin" already exists in the wallet'
+            );
+            return;
+        }
+
+        // Enroll the admin user, and import the new identity into the wallet.
+        const enrollment = await ca.enroll({
+            enrollmentID: "admin",
+            enrollmentSecret: "adminpw",
+        });
+        const x509Identity = {
+            credentials: {
+                certificate: enrollment.certificate,
+                privateKey: enrollment.key.toBytes(),
+            },
+            mspId: "Org1MSP",
+            type: "X.509",
+        };
+        const wallet = await getWallet();
+        await wallet.put("admin", x509Identity);
+        console.log(
+            'Successfully enrolled admin user "admin" and imported it into the wallet'
+        );
+    } catch (error) {
+        console.error(`Failed to enroll admin user "admin": ${error}`);
     }
 }
 
 // Call the createPassenger function
 // enrollAdmin();
-// registerPassenger("Deepak", "Raj", "deek@gmail", 23, "Male", true);
+// registerPassenger("Deepak", "Raj", "deepsd@gmail", 23, "Male", true);
 // enrollAdmin();
-deletePassenger('deek@gmail');
+// deletePassenger("deek@gmail");
 // registerUser();
-// queryPassenger('adi@gmail.com');
-// updatePassenger('deepakraj@example.com', 'Deepak Raj', 24, 'male');
+// queryPassenger("deek@gmail");
+// updatePassenger("deek@gmail", "Deepak Kumar", 24, "male");
 
 module.exports = {
     createPassenger,
