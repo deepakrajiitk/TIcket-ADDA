@@ -4,13 +4,14 @@ import { Button, Form } from "react-bootstrap";
 
 const DeletePassenger = () => {
   const [passengerID, setPassengerID] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     const data = {
       passengerId: passengerID,
-    }
+    } 
     try {
       const response = await axios.get("http://localhost:5000/deletePassengers", {
         params: data
@@ -38,6 +39,9 @@ const DeletePassenger = () => {
       <Button variant="danger" type="submit">
         Delete
       </Button>
+      {responseMessage && (
+        <p style={{ marginTop: "1rem" }}>{responseMessage}</p>
+      )}
     </Form>
   );
 };

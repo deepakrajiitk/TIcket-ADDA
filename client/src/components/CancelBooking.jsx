@@ -5,8 +5,9 @@ import { Button, Form } from "react-bootstrap";
 const CancelBookingPage = () => {
   const [passengerID, setPassengerID] = useState("");
   const [bookingID, setBookingID] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const data1 = {
@@ -14,10 +15,12 @@ const CancelBookingPage = () => {
       bookingID: bookingID
     };
     try {
-      const response = axios.get("http://localhost:5000/cancel_booking", {
+      setResponseMessage("Processing.....");
+      const response = await axios.get("http://localhost:5000/cancel_booking", {
         params: data1
       });
       console.log(response.data);
+      setResponseMessage(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -48,6 +51,9 @@ const CancelBookingPage = () => {
       <Button variant="danger" type="submit">
         Cancel Booking
       </Button>
+      {responseMessage && (
+        <p style={{ marginTop: "1rem" }}>{responseMessage}</p>
+      )}
     </Form>
   );
 };

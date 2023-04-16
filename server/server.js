@@ -87,8 +87,8 @@ app.get("/addpassenger", async (req, res) => {
 app.get("/deletePassengers", async (req, res) => {
   const passengerId = req.query.passengerId;
   try {
-    await deletePassenger(passengerId);
-    res.status(201).send(`Passenger ${passengerId} has been deleted`);
+    const response = await deletePassenger(passengerId);
+    res.status(201).send(response);
   } catch (error) {
     console.error(`Failed to delete passenger: ${error}`);
     res.status(500).send("Failed to delete passenger");
@@ -293,13 +293,13 @@ app.get("/cancel_booking", async (req, res) => {
   try {
     const result = await cancelBooking(passengerID, bookingID);
 
-    console.log(`Bookings: ${result.toString()}`);
-    res.status(201).send(`Bookings: ${result.toString()}`);
+    console.log(result);
+    res.status(201).send(result);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
     res.status(500).send("Failed to delete transporter");
   }
-}); 
+});  
  
 // Start the server
 app.listen(port, () => {

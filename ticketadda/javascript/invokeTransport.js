@@ -5,7 +5,6 @@ const FabricCAServices = require("fabric-ca-client");
 const fs = require("fs");
 const path = require("path");
 
-
 // load the network configuration
 const connectionProfilePath = path.resolve(
     __dirname,
@@ -24,7 +23,6 @@ const walletPath = path.resolve(__dirname, "wallet");
 async function enrollAdmin2() {
     try {
         // load the network configuration
-        
 
         // Create a new CA client for interacting with the CA.
         const caInfo = ccp.certificateAuthorities["ca.org2.example.com"];
@@ -82,7 +80,6 @@ async function registerTransporter(
 ) {
     try {
         // Load the network configuration
-        
 
         // Create a new CA client for interacting with the CA.
         const caURL = ccp.certificateAuthorities["ca.org2.example.com"].url;
@@ -171,9 +168,9 @@ async function createModeOfTransport(
 
     try {
         // Connect to the gateway using a connection profile and wallet
-         // Replace with the actual path to your connection profile
-         // Replace with the actual path to your wallet
-        
+        // Replace with the actual path to your connection profile
+        // Replace with the actual path to your wallet
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         await gateway.connect(ccp, {
@@ -213,9 +210,9 @@ async function deleteModeOfTransport(transporterID, busID) {
 
     try {
         // Connect to the gateway using a connection profile and wallet
-         // Replace with the actual path to your connection profile
-         // Replace with the actual path to your wallet
-        
+        // Replace with the actual path to your connection profile
+        // Replace with the actual path to your wallet
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         await gateway.connect(ccp, {
@@ -254,9 +251,9 @@ async function getTransportation(_transportID, busID) {
 
     try {
         // Connect to the gateway using a connection profile and wallet
-         // Replace with the actual path to your connection profile
-         // Replace with the actual path to your wallet
-        
+        // Replace with the actual path to your connection profile
+        // Replace with the actual path to your wallet
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         await gateway.connect(ccp, {
@@ -300,9 +297,9 @@ async function updateTransportationDetails(
 
     try {
         // Connect to the gateway using a connection profile and wallet
-         // Replace with the actual path to your connection profile
-         // Replace with the actual path to your wallet
-        
+        // Replace with the actual path to your connection profile
+        // Replace with the actual path to your wallet
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         await gateway.connect(ccp, {
@@ -344,9 +341,9 @@ async function createTransportProvider(providerID, name, address, contact) {
 
     try {
         // Connect to the gateway using a connection profile and wallet
-         // Replace with the actual path to your connection profile
-         // Replace with the actual path to your wallet
-        
+        // Replace with the actual path to your connection profile
+        // Replace with the actual path to your wallet
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         await gateway.connect(ccp, {
             wallet,
@@ -382,9 +379,9 @@ async function deleteTransportProvider(providerIDValue) {
 
     try {
         // Connect to the gateway using a connection profile and wallet
-         // Replace with the actual path to your connection profile
-         // Replace with the actual path to your wallet
-        
+        // Replace with the actual path to your connection profile
+        // Replace with the actual path to your wallet
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         await gateway.connect(ccp, {
@@ -417,9 +414,9 @@ async function findAvailableTransport(source, destination) {
 
     try {
         // Connect to the gateway using a connection profile and wallet
-         // Replace with the actual path to your connection profile
-         // Replace with the actual path to your wallet
-        
+        // Replace with the actual path to your connection profile
+        // Replace with the actual path to your wallet
+
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
         await gateway.connect(ccp, {
@@ -453,8 +450,6 @@ async function findAvailableTransport(source, destination) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-
-
 
 enrollAdmin2();
 // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
