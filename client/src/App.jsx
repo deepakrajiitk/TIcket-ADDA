@@ -7,6 +7,8 @@ import MyNavbar from "./components/MyNavBar";
 import ProviderPage from "./components/ProviderPage";
 import PassengerPage from "./components/PassengerPage";
 import TicketBooking from "./components/TicketBooking";
+import PassengerLogin from "./components/loginPage";
+import LoginSignup from "./components/loginSignup"
 
 function App() {
   return (
@@ -18,7 +20,9 @@ function App() {
         <Route exact path="/" element={<HomePage />} />
         <Route exact path="/about" element={<AboutPage />} />
         <Route exact path="/ticket-booking" element={<TicketBooking />} />
+         <Route exact path = "/loginPass" element = {<PassengerLogin/>}/>
       </Routes>
+      {/* <PassengerLogin/> */}
     </>
   );
 }
