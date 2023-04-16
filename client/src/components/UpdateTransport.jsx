@@ -37,6 +37,7 @@ const UpdateTransportationDetails = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
+      <h1>Update transport details</h1>
       <Form.Group controlId="formTransportID">
         <Form.Label>Transport ID</Form.Label>
         <Form.Control

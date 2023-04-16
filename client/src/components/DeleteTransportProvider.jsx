@@ -25,6 +25,7 @@ const DeleteTransportProvider = ({ onDelete }) => {
 
   return (
     <Form onSubmit={handleSubmit}>
+      <h1> Delete Transport Provider</h1>
       <Form.Group controlId="providerId">
         <Form.Label>Provider ID</Form.Label>
         <Form.Control
