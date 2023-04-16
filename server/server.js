@@ -89,7 +89,7 @@ app.get("/deletePassengers", async (req, res) => {
     res.status(201).send(response);
   } catch (error) {
     console.error(`Failed to delete passenger: ${error}`);
-    res.status(500).send("Failed to delete passenger");
+    res.status(201).send("Failed to delete passenger");
   }
 });
 
@@ -102,7 +102,7 @@ app.get("/queryPassengers", async (req, res) => {
       .send(`Transaction has been evaluated, result is: ${result.toString()}`);
   } catch (error) {
     console.error(`Failed to query passenger: ${error}`);
-    res.status(500).send("Failed to query passenger");
+    res.status(201).send("Failed to query passenger");
   }
 });
 
@@ -117,7 +117,7 @@ app.get("/updatePassengers", async (req, res) => {
     res.status(201).send(response);
   } catch (error) {
     console.error(`Failed to update passenger: ${error}`);
-    res.status(500).send("Failed to update passenger");
+    res.status(201).send("Failed to update passenger");
   }
 });
 
@@ -145,7 +145,7 @@ app.get("/transporter", async (req, res) => {
       );
   } catch (error) {
     console.error(`Failed to register tranporter "${email}": ${error}`);
-    res.status(500).send("Failed to register transporter");
+    res.status(201).send("Failed to register transporter");
   }
 });
 
@@ -167,10 +167,10 @@ app.get("/transport", async (req, res) => {
       destination
     );
     // console.log(result);
-    res.status(201).send(`Successeful added mode of transport with ID: ${transportID+name1}`);
+    res.status(201).send(result);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
-    res.status(500).send("Failed to register mode of transport");
+    res.status(201).send("Failed to register mode of transport");
   }
 });
 
@@ -179,12 +179,12 @@ app.get("/deleteModeOfTransport", async (req, res) => {
   const transporterID = req.query.transporterID;
 
   try {
-    await deleteModeOfTransport(transporterID, transportID);
+    const result = await deleteModeOfTransport(transporterID, transportID);
     // console.log(`Transaction result: ${result.toString()}`);
-    res.status(201).send(`Mode of transport with id ${transportID} deleted}`);
+    res.status(201).send(`Transaction result: ${result.toString()}`);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
-    res.status(500).send("Failed to delete transport");
+    res.status(201).send("Failed to delete transport");
   }
 });
 
@@ -198,7 +198,7 @@ app.get("/getTransport", async (req, res) => {
     res.status(201).send(`Transaction result: ${result.toString()}`);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
-    res.status(500).send("Failed to get details");
+    res.status(201).send("Failed to get details");
   }
 });
 

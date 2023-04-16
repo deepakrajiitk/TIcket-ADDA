@@ -153,23 +153,6 @@ class TicketAdda extends Contract {
         source,
         destination
     ) {
-        if (transportBuffer && transportBuffer.length > 0) {
-            const transport = JSON.parse(transportBuffer.toString());
-            if (transport.type != "transport") {
-                return false;
-            } else return true;
-        } else return false;
-    }
-
-    async createModeOfTransport(
-        ctx,
-        ProviderID,
-        name,
-        capacity,
-        speed,
-        source,
-        destination
-    ) {
         // Check if the mode of transport already exists
         const transportID = ProviderID + name;
         const exists = await this.transporterExists(ctx, ProviderID);
@@ -266,7 +249,7 @@ class TicketAdda extends Contract {
         // Check if the mode of transport exists
         const exists = await this.transportExists(ctx, transportID);
         if (!exists) {
-            return "The mode of transport" + transportID + "does not exist";
+            return "The mode of transport with id " + transportID + " does not exist";
         }
 
         // Delete the mode of transport from the ledger
@@ -278,6 +261,9 @@ class TicketAdda extends Contract {
             "DeleteModeOfTransportEvent",
             Buffer.from(eventPayload)
         );
+
+        return "Mode of transport with ID: "+ transportID + " has been deleted";
+
     }
 
     async getTransportation(ctx, transportID) {

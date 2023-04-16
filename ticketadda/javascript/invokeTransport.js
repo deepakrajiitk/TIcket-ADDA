@@ -205,6 +205,7 @@ async function createModeOfTransport(
         return resp;
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
+        return error;
     } finally {
         // Disconnect from the gateway
         gateway.disconnect();
@@ -233,6 +234,7 @@ async function deleteModeOfTransport(transporterID, busID) {
         const contract = network.getContract("ticketadda"); // Replace with the actual chaincode name
 
         // Invoke the deleteModeOfTransport function on the chaincode
+        const transportIDValue = transporterID + busID;
         const result = await contract.submitTransaction(
             "deleteModeOfTransport",
             transportIDValue
