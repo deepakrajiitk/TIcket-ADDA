@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Container, Form, Button } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 
@@ -7,12 +8,28 @@ const TicketBooking = () => {
   const searchParams = new URLSearchParams(location.search);
   const transportId = searchParams.get("transportId");
 
-  const [passengerId, setPassengerId] = useState("");
+  const [passengerID, setPassengerId] = useState("");
   const [noSeats, setNoSeats] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // TODO: handle booking logic
+    const data = {
+      transportID : transportId,
+      passengerID: passengerID,
+      noSeats: noSeats
+    } 
+    try {
+      setResponseMessage("Processing.....");
+      const response = await axios.get("http://localhost:5000/bookTicket", {
+        params: data
+      });
+      setResponseMessage(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -29,7 +46,7 @@ const TicketBooking = () => {
           <Form.Control
             type="text"
             placeholder="Enter Passenger ID"
-            value={passengerId}
+            value={passengerID}
             onChange={(e) => setPassengerId(e.target.value)}
           />
         </Form.Group>
@@ -48,6 +65,9 @@ const TicketBooking = () => {
           Book Ticket
         </Button>
       </Form>
+      {responseMessage && (
+        <p style={{ marginTop: "1rem" }}>{responseMessage}</p>
+      )}
     </Container>
   );
 };

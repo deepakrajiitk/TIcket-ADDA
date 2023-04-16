@@ -85,8 +85,8 @@ app.get("/addpassenger", async (req, res) => {
 app.get("/deletePassengers", async (req, res) => {
   const passengerId = req.query.passengerId;
   try {
-    await deletePassenger(passengerId);
-    res.status(201).send(`Passenger ${passengerId} has been deleted`);
+    const response = await deletePassenger(passengerId);
+    res.status(201).send(response);
   } catch (error) {
     console.error(`Failed to delete passenger: ${error}`);
     res.status(500).send("Failed to delete passenger");
@@ -113,8 +113,8 @@ app.get("/updatePassengers", async (req, res) => {
   const gender = req.query.gender;
   const isPublic = req.query.isPublic;
   try {
-    await updatePassenger(passengerId, name, age, gender, isPublic);
-    res.status(201).send(`Passenger ${passengerId} has been updated`);
+    const response = await updatePassenger(passengerId, name, age, gender, isPublic);
+    res.status(201).send(response);
   } catch (error) {
     console.error(`Failed to update passenger: ${error}`);
     res.status(500).send("Failed to update passenger");
@@ -131,6 +131,7 @@ app.get("/transporter", async (req, res) => {
   const contactNumber = req.query.contact;
 
   try {
+<<<<<<< HEAD
     await registerTransporter(
       firstName,
       lastName,
@@ -143,8 +144,12 @@ app.get("/transporter", async (req, res) => {
       .send(
         `Successfully registered and enrolled user "${email}" and imported it into the wallet`
       );
+=======
+    const result = await registerTransporter( firstName, lastName, email, address,  contactNumber);
+    res.status(201).send(result);
+>>>>>>> ad9b52b123587d98cd0b3c03b320624f1a3a8dbd
   } catch (error) {
-    console.error(`Failed to register user "${email}": ${error}`);
+    console.error(`Failed to register tranporter "${email}": ${error}`);
     res.status(500).send("Failed to register transporter");
   }
 });
@@ -166,10 +171,11 @@ app.get("/transport", async (req, res) => {
       source,
       destination
     );
-    // res.status(201).send(`Transaction result: ${result}`);
+    // console.log(result);
+    res.status(201).send(`Successeful added mode of transport with ID: ${transportID+name1}`);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
-    res.status(500).send("Failed to register transport");
+    res.status(500).send("Failed to register mode of transport");
   }
 });
 
@@ -180,7 +186,7 @@ app.get("/deleteModeOfTransport", async (req, res) => {
   try {
     await deleteModeOfTransport(transporterID, transportID);
     // console.log(`Transaction result: ${result.toString()}`);
-    // res.status(201).send(`Transaction result: ${result.toString()}`);
+    res.status(201).send(`Mode of transport with id ${transportID} deleted}`);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
     res.status(500).send("Failed to delete transport");
@@ -210,8 +216,8 @@ app.get("/updateTransport", async (req, res) => {
   const destination = req.query.destination;
 
   try {
-    const result = updateTransportationDetails(
-      transportID,
+    const result = await updateTransportationDetails(
+      transportID, 
       name1,
       capacity,
       speed,
@@ -220,24 +226,24 @@ app.get("/updateTransport", async (req, res) => {
     );
 
     console.log(`Transaction result: ${result.toString()}`);
-    res.status(201).send(`Transaction updated: ${result.toString()}`);
+    res.status(201).send(`Transportation updated: ${result.toString()}`);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
-    res.status(500).send("Failed to update details");
+    res.status(201).send("Failed to update details");
   }
-});
+}); 
 
 app.get("/deleteTransport", async (req, res) => {
   const providerID = req.query.providerId;
 
   try {
-    const result = deleteTransportProvider(providerID);
+    const result = await deleteTransportProvider(providerID);
 
-    // console.log(`Transaction result: ${result.toString()}`);
-    // res.status(201).send(`Transaction updated: ${result.toString()}`);
+    // console.log(`Transaction result: ${result}`);
+    res.status(201).send(`Transaction: ${result}`);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
-    res.status(500).send("Failed to delete transporter");
+    res.status(201).send("Failed to delete transporter");
   }
 });
 
@@ -261,7 +267,6 @@ app.get("/val_Ticket", async (req, res) => {
   const bookingID = req.query.bookingID;
   try {
     const result = await validateTicket(bookingID);
-
     console.log(`Transaction result: ${result.toString()}`);
     res.status(201).send(`Transaction updated: ${result.toString()}`);
   } catch (error) {
@@ -275,14 +280,46 @@ app.get("/getDetails", async (req, res) => {
 
   try {
     const result = await getAllBookingsForPassenger(passengerId);
+    // const final_res = JSON.parse(result);
 
-    console.log(`Bookings: ${result.toString()}`);
-    res.status(201).send(`Bookings: ${result.toString()}`);
+    // console.log(result[0]);
+    res.status(201).send(result);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
     res.status(500).send("Failed to delete transporter");
   }
-});
+}); 
+ 
+app.get("/cancel_booking", async (req, res) => {
+  const passengerID = req.query.passengerID;
+  const bookingID = req.query.bookingID;
+
+  try {
+    const result = await cancelBooking(passengerID, bookingID);
+
+    console.log(result);
+    res.status(201).send(result);
+  } catch (error) {
+    console.error(`Failed to invoke chaincode:: ${error}`);
+    res.status(500).send("Failed to delete transporter");
+  }
+}); 
+
+app.get("/bookTicket", async (req, res) => {
+  const passengerID = req.query.passengerID;
+  const noSeats = req.query.noSeats;
+  const transportID = req.query.transportID
+
+  try {
+    const result = await bookTicket(passengerID, transportID, noSeats);
+
+    console.log(result);
+    res.status(201).send(result);
+  } catch (error) {
+    console.error(`Failed to invoke chaincode:: ${error}`);
+    res.status(500).send("Failed to delete transporter");
+  }
+}); 
 
 // Start the server
 app.listen(port, () => {

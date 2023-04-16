@@ -14,32 +14,17 @@ const PassengerBookings = () => {
       passengerId: passengerId
     };
     try {
-      const response = axios.get("http://localhost:5000/getDetails", {
+      const response = await axios.get("http://localhost:5000/getDetails", {
         params: data1
       });
-      console.log(response.data);
+      // console.log(response.data);
+
+  
+      setBookings(response.data);
     } catch (error) {
       console.log(error);
     }
 
-    setBookings([
-      {
-        id: 1,
-        transportId: "TR-123",
-        passengerId: passengerId,
-        price: 50.0,
-        departureTime: "2023-04-18T10:00:00Z",
-        arrivalTime: "2023-04-18T11:30:00Z",
-      },
-      {
-        id: 2,
-        transportId: "TR-234",
-        passengerId: passengerId,
-        price: 75.0,
-        departureTime: "2023-04-19T08:00:00Z",
-        arrivalTime: "2023-04-19T10:30:00Z",
-      },
-    ]);
   };
 
   return (
@@ -71,11 +56,11 @@ const PassengerBookings = () => {
           <ul>
             {bookings.map((booking) => (
               <li key={booking.id}>
-                <p>Booking ID: {booking.id}</p>
-                <p>Transport ID: {booking.transportId}</p>
-                <p>Price: {booking.price}</p>
-                <p>Departure Time: {booking.departureTime}</p>
-                <p>Arrival Time: {booking.arrivalTime}</p>
+                <p>Booking ID: {booking.ID}</p>
+                <p>Transport ID: {booking.TransportID}</p>
+                <p>Price: {booking.Price}</p>
+                <p>Date Booked: {booking.DateBooked}</p>
+                <p>Status: {booking.Status}</p>
               </li>
             ))}
           </ul>

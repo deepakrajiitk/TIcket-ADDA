@@ -12,7 +12,7 @@ function HomePage() {
   };
 
   const handlePassengerClick = () => {
-    navigate("/passenger");
+    navigate("/loginPass");
   };
 
   return (

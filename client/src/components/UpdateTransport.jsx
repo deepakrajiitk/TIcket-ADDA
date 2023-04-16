@@ -9,8 +9,9 @@ const UpdateTransportationDetails = () => {
   const [speed, setSpeed] = useState("");
   const [source, setSource] = useState("");
   const [destination, setDestination] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const data1 = {
@@ -23,10 +24,20 @@ const UpdateTransportationDetails = () => {
     };
 
     try {
-      const response = axios.get("http://localhost:5000/updateTransport", {
+      setResponseMessage("Processing.....");
+      const response = await axios.get("http://localhost:5000/updateTransport", {
         params: data1,
       });
+
       console.log(response.data);
+      setResponseMessage(response.data);
+      setTransportID("");
+      setName("");
+      setCapacity("");
+      setSpeed("");
+      setSource("");
+      setDestination("");
+
     } catch (error) {
       console.error(error);
     }
@@ -36,6 +47,7 @@ const UpdateTransportationDetails = () => {
   };
 
   return (
+    <Container>
     <Form onSubmit={handleSubmit}>
       <h1>Update transport details</h1>
       <Form.Group controlId="formTransportID">
@@ -103,6 +115,10 @@ const UpdateTransportationDetails = () => {
         Update Transportation Details
       </Button>
     </Form>
+    {responseMessage && (
+      <p style={{ marginTop: "1rem" }}>{responseMessage}</p>
+    )}
+    </Container>
   );
 };
 
