@@ -7,7 +7,7 @@ const port = 5000;
 
 // ADD THIS
 var cors = require("cors");
-app.use(cors()); 
+app.use(cors());
 
 const {
   deletePassenger,
@@ -21,7 +21,6 @@ const {
 const {
   updatePassenger,
 } = require("./../ticketadda/javascript/invokePassenger");
-
 
 const {
   registerTransporter,
@@ -44,7 +43,6 @@ const {
 const {
   findAvailableTransport,
 } = require("./../ticketadda/javascript/invokeTransport");
-
 
 const { calculateTicketPrice } = require("./../ticketadda/javascript/invoke");
 const { bookTicket } = require("./../ticketadda/javascript/invoke");
@@ -133,8 +131,18 @@ app.get("/transporter", async (req, res) => {
   const contactNumber = req.query.contact;
 
   try {
-    await registerTransporter( firstName, lastName, email, address,  contactNumber);
-    res.status(201).send(`Successfully registered and enrolled user "${email}" and imported it into the wallet`);
+    await registerTransporter(
+      firstName,
+      lastName,
+      email,
+      address,
+      contactNumber
+    );
+    res
+      .status(201)
+      .send(
+        `Successfully registered and enrolled user "${email}" and imported it into the wallet`
+      );
   } catch (error) {
     console.error(`Failed to register user "${email}": ${error}`);
     res.status(500).send("Failed to register transporter");
@@ -168,7 +176,7 @@ app.get("/transport", async (req, res) => {
 app.get("/deleteModeOfTransport", async (req, res) => {
   const transportID = req.query.transportID;
   const transporterID = req.query.transporterID;
-  
+
   try {
     await deleteModeOfTransport(transporterID, transportID);
     // console.log(`Transaction result: ${result.toString()}`);
@@ -233,15 +241,15 @@ app.get("/deleteTransport", async (req, res) => {
   }
 });
 
-app.get("/AvailableTransport", async (req, res) => { 
+app.get("/availableTransport", async (req, res) => {
   const source = req.query.source;
   const dest = req.query.destination;
 
   try {
-    const result = findAvailableTransport(source, dest);
-
-    console.log(`Available Transport: ${result.toString()}`);
-    res.status(201).send(`Available Transport: ${result.toString()}`);
+    const result = await findAvailableTransport(source, dest);
+    console.log(`Available Transport: ${result}`);
+    if (typeof result == "string") res.status(201).send("");
+    else res.status(201).send(result);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
     res.status(500).send("Failed to show transport");
