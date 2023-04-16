@@ -8,7 +8,9 @@ const AddPassengerForm = () => {
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("male");
-  const [isPublic, setIsPublic] = useState("yes");
+  // const [isPublic, setIsPublic] = useState("yes");
+  const [password, setPassword] = useState("");
+  
   const [responseMessage, setResponseMessage] = useState("");
 
   const handleSubmit = async (event) => {
@@ -20,7 +22,8 @@ const AddPassengerForm = () => {
       lastName: lastName,
       age: age,
       gender: gender,
-      isPublic: isPublic === "yes",
+      password: password,
+      isPublic: true,
     };
     try {
       setResponseMessage("Processing.....");
@@ -92,7 +95,7 @@ const AddPassengerForm = () => {
             <option value="other">Other</option>
           </Form.Control>
         </Form.Group>
-        <Form.Group controlId="isPublic">
+        {/* <Form.Group controlId="isPublic">
           <Form.Label>Is Public?</Form.Label>
           <Form.Control
             as="select"
@@ -102,6 +105,16 @@ const AddPassengerForm = () => {
             <option value="yes">Yes</option>
             <option value="no">No</option>
           </Form.Control>
+        </Form.Group> */}
+
+        <Form.Group controlId="password">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="number"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </Form.Group>
         <Button variant="primary" type="submit">
           Submit

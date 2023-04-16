@@ -9,6 +9,8 @@ const CreateTransportProvider = () => {
   const [address, setAddress] = useState("");
   const [contact, setContact] = useState("");
   const [responseMessage, setResponseMessage] = useState("");
+  const [password, setPassword] = useState("");
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -19,6 +21,7 @@ const CreateTransportProvider = () => {
       lastName: lastName,
       address: address,
       contact: contact,
+      password: password,
     };
     try {
       setResponseMessage("Processing.....");
@@ -32,6 +35,7 @@ const CreateTransportProvider = () => {
       setName2("");
       setAddress("");
       setContact("");
+      setPassword("");
 
     } catch (error) {
       console.error(error);
@@ -91,6 +95,16 @@ const CreateTransportProvider = () => {
             placeholder="Enter Contact"
             value={contact}
             onChange={(e) => setContact(e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="password">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="number"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
 
