@@ -219,8 +219,6 @@ async function deleteModeOfTransport(transporterID, busID) {
 
     try {
         // Connect to the gateway using a connection profile and wallet
-        // Replace with the actual path to your connection profile
-        // Replace with the actual path to your wallet
 
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
@@ -260,8 +258,6 @@ async function getTransportation(_transportID, busID) {
 
     try {
         // Connect to the gateway using a connection profile and wallet
-        // Replace with the actual path to your connection profile
-        // Replace with the actual path to your wallet
 
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
@@ -466,8 +462,7 @@ async function findAvailableTransport(source, destination) {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-// enrollAdmin2();
-// enrollAdmin2();
+enrollAdmin2();
 // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 // registerTransporter("Adi", "Loth", "testid1", "Jodhpur", "1990");
 // enrollAdmin2();
@@ -478,12 +473,12 @@ async function findAvailableTransport(source, destination) {
 // createModeOfTransport("testid1", "Bus35", 250, "10", "Kanpur", "Bombay");
 
 // deleteModeOfTransport('idxx', 'B1');
-getTransportation("testid1", "Bu45");
+// getTransportation("testid1", "Bu45");
 
 // updateTransportationDetails('testid1', 'aa', '30', '40' , 'Kanpur', 'Delhi')
 
 // deleteTransportProvider("id2");
-findAvailableTransport("Kanpurd", "Bombay");
+// findAvailableTransport("Kanpurd", "Bombay");
 
 // findAvailableTransport("Kanpur", "Bombay");
 

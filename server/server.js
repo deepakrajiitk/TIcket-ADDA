@@ -131,7 +131,6 @@ app.get("/transporter", async (req, res) => {
   const contactNumber = req.query.contact;
 
   try {
-<<<<<<< HEAD
     await registerTransporter(
       firstName,
       lastName,
@@ -144,10 +143,6 @@ app.get("/transporter", async (req, res) => {
       .send(
         `Successfully registered and enrolled user "${email}" and imported it into the wallet`
       );
-=======
-    const result = await registerTransporter( firstName, lastName, email, address,  contactNumber);
-    res.status(201).send(result);
->>>>>>> ad9b52b123587d98cd0b3c03b320624f1a3a8dbd
   } catch (error) {
     console.error(`Failed to register tranporter "${email}": ${error}`);
     res.status(500).send("Failed to register transporter");

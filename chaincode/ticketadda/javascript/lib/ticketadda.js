@@ -1,14 +1,9 @@
 "use strict";
-"use strict";
 
 const { Contract } = require("fabric-contract-api");
-const { Contract } = require("fabric-contract-api");
 
-class TicketAdda extends Contract {
 class TicketAdda extends Contract {
     async initLedger(ctx) {
-        console.info("============= START : Initialize Ledger ===========");
-        console.info("============= END : Initialize Ledger ===========");
         console.info("============= START : Initialize Ledger ===========");
         console.info("============= END : Initialize Ledger ===========");
     }
@@ -23,17 +18,9 @@ class TicketAdda extends Contract {
             } else return true;
         } else return false;
     }
-        if (buffer && buffer.length > 0) {
-            const passenger = JSON.parse(buffer.toString());
-            if (passenger.type != "passenger") {
-                return false;
-            } else return true;
-        } else return false;
-    }
 
     async createPassenger(ctx, passengerID, name, age, gender, isPublic) {
         // Check if the passenger already exists
-        passengerID = passengerID;
         passengerID = passengerID;
         const exists = await this.passengerExists(ctx, passengerID);
         if (exists) {
@@ -48,7 +35,6 @@ class TicketAdda extends Contract {
             Age: age,
             Gender: gender,
             IsPublic: isPublic || false,
-            type: "passenger",
             type: "passenger",
         };
 
@@ -92,10 +78,6 @@ class TicketAdda extends Contract {
             "DeletePassengerEvent",
             Buffer.from(eventPayload)
         );
-        await ctx.stub.setEvent(
-            "DeletePassengerEvent",
-            Buffer.from(eventPayload)
-        );
     }
 
     async updatePassenger(ctx, passengerID, name, age, gender, isAnonymous) {
@@ -118,7 +100,6 @@ class TicketAdda extends Contract {
         const updatedPassengerBuffer = Buffer.from(JSON.stringify(passenger));
         await ctx.stub.putState(passengerID, updatedPassengerBuffer);
 
-
         // Emit an event to indicate that the passenger has been updated
         const eventPayload = `Passenger ${passengerID} has been updated`;
         await ctx.stub.setEvent(
@@ -126,15 +107,8 @@ class TicketAdda extends Contract {
             Buffer.from(eventPayload)
         );
 
-        await ctx.stub.setEvent(
-            "UpdatePassengerEvent",
-            Buffer.from(eventPayload)
-        );
-
         // Return the updated passenger object
         return passenger;
-    }
-
     }
 
     async getPassengerDetails(ctx, passengerID) {
@@ -145,7 +119,6 @@ class TicketAdda extends Contract {
         const passenger = JSON.parse(passengerAsBytes.toString());
         return passenger;
     }
-    }
 
     async transporterExists(ctx, transporterID) {
         const transporterBuffer = await ctx.stub.getState(transporterID);
@@ -155,16 +128,10 @@ class TicketAdda extends Contract {
             if (transporter.type != "transporter") {
                 return false;
             } else return true;
-        if (transporterBuffer && transporterBuffer.length > 0) {
-            const transporter = JSON.parse(transporterBuffer.toString());
-            if (transporter.type != "transporter") {
-                return false;
-            } else return true;
         }
         return false;
     }
 
-    }
 
     async transportExists(ctx, transportID) {
         const transportBuffer = await ctx.stub.getState(transportID);
@@ -221,14 +188,11 @@ class TicketAdda extends Contract {
         // Create a new mode of transport object
         const modeOfTransport = {
             ID: transportID,
-            ID: transportID,
             Name: name,
             Capacity: capacity,
             Speed: speed,
             Source: source,
             Destination: destination,
-            type: "transport",
-            SeatsBooked: 0,
             type: "transport",
             SeatsBooked: 0,
         };
@@ -246,17 +210,7 @@ class TicketAdda extends Contract {
             Buffer.from(eventPayload)
         );
 
-        await ctx.stub.setEvent(
-            "CreateModeOfTransportEvent",
-            Buffer.from(eventPayload)
-        );
-
         // To make search using source and destination
-
-        const compositeKey = ctx.stub.createCompositeKey("transport", [
-            source,
-            destination,
-        ]);
 
         const compositeKey = ctx.stub.createCompositeKey("transport", [
             source,
@@ -268,42 +222,6 @@ class TicketAdda extends Contract {
 
         const existingTransportBuffer = await ctx.stub.getState(compositeKey);
         if (existingTransportBuffer && existingTransportBuffer.length > 0) {
-            // Deserialize the existing buffer to an array of transport objects
-            const existingTransportObjects = JSON.parse(
-                existingTransportBuffer.toString()
-            );
-
-            if (Array.isArray(existingTransportObjects)) {
-                // Append the new mode of transport object to the existing array
-                existingTransportObjects.push(modeOfTransport);
-
-                // Serialize the updated array back to a buffer
-                const updatedTransportBuffer = Buffer.from(
-                    JSON.stringify(existingTransportObjects)
-                );
-
-                // Save the updated buffer back to the ledger
-                await ctx.stub.putState(compositeKey, updatedTransportBuffer);
-            } else {
-                // If the existing value is not an array, create a new array containing both the existing and new mode of transport objects
-                const updatedTransportObjects = [
-                    JSON.parse(existingTransportBuffer.toString()),
-                    modeOfTransport,
-                ];
-
-                // Serialize the updated array back to a buffer
-                const updatedTransportBuffer = Buffer.from(
-                    JSON.stringify(updatedTransportObjects)
-                );
-
-                // Save the updated buffer back to the ledger
-                await ctx.stub.putState(compositeKey, updatedTransportBuffer);
-            }
-        } else {
-            // If no existing value, save the new buffer as the value for the composite key
-            await ctx.stub.putState(compositeKey, transportBuffer);
-        }
-
             // Deserialize the existing buffer to an array of transport objects
             const existingTransportObjects = JSON.parse(
                 existingTransportBuffer.toString()
@@ -408,9 +326,7 @@ class TicketAdda extends Contract {
         }
 
         // Convert the updated mode of transport object to a buffer and save to the ledger
-        const updatedTransportBuffer = Buffer.from(
-            JSON.stringify(modeOfTransport)
-        );
+
         const updatedTransportBuffer = Buffer.from(
             JSON.stringify(modeOfTransport)
         );
@@ -501,14 +417,6 @@ class TicketAdda extends Contract {
         let speedFactor = 0.05;
         let typeFactor = 0.2;
 
-        // Determine the type factor based on the type of transport
-        // if (modeOfTransport.Type === "Bus") {
-        //     typeFactor = 0.2;
-        // } else if (modeOfTransport.Type === "Train") {
-        //     typeFactor = 0.3;
-        // } else if (modeOfTransport.Type === "Flight") {
-        //     typeFactor = 0.5;
-        // }
 
         // Calculate the final ticket price based on the factors
         let ticketPrice = basePrice;
