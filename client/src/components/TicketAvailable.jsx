@@ -3,49 +3,33 @@ import axios from "axios";
 import { Container, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-
 const TicketAvailability = () => {
   const [source, setSource] = useState("");
   const [destination, setDestination] = useState("");
-  const [tickets, setTickets] = useState([
-    {
-      id: 1,
-      transportId: "T123",
-      price: 10,
-      departureTime: "2023-05-01T09:00:00Z",
-      arrivalTime: "2023-05-01T11:00:00Z",
-    },
-    {
-      id: 2,
-      transportId: "T456",
-      price: 15,
-      departureTime: "2023-05-02T10:00:00Z",
-      arrivalTime: "2023-05-02T12:00:00Z",
-    },
-    {
-      id: 3,
-      transportId: "T789",
-      price: 20,
-      departureTime: "2023-05-03T11:00:00Z",
-      arrivalTime: "2023-05-03T13:00:00Z",
-    },
-  ]);
+  const [tickets, setTickets] = useState([]);
+  const [searched, setSearched] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleSearch = (event) => {
+  const handleSearch = async (event) => {
     event.preventDefault();
 
     const data1 = {
       source: source,
       destination: destination,
     };
-  
+
     try {
-      const response = axios.get("http://localhost:5000/AvailableTransport", {
-        params: data1,
-      });
-      console.log(response.data);
+      const response = await axios.get(
+        "http://localhost:5000/availableTransport",
+        {
+          params: data1,
+        }
+      );
+      if (response == "") {
+        setTickets([]);
+      } else setTickets(response.data);
+      setSearched(true);
     } catch (error) {
       console.error(error);
     }
@@ -86,23 +70,29 @@ const TicketAvailability = () => {
       </Form>
 
       <h2>Available Tickets</h2>
-      <ul>
-        {tickets.map((ticket) => (
-          <li key={ticket.id}>
-            <p>Ticket ID: {ticket.id}</p>
-            <p>Transport ID: {ticket.transportId}</p>
-            <p>Price: {ticket.price}</p>
-            <p>Departure Time: {ticket.departureTime}</p>
-            <p>Arrival Time: {ticket.arrivalTime}</p>
-            <Button
-              variant="success"
-              onClick={() => handleBookTicket(ticket.transportId)}
-            >
-              Book Ticket
-            </Button>
-          </li>
-        ))}
-      </ul>
+      {searched && tickets.length === 0 ? (
+        <p>No tickets available for this route.</p>
+      ) : (
+        <ul>
+          {tickets.map((ticket) => (
+            <li key={ticket.ID}>
+              <p>Transport ID: {ticket.ID}</p>
+              <p>Name: {ticket.Name}</p>
+              <p>Source: {ticket.Source}</p>
+              <p>Destination: {ticket.Destination}</p>
+              <p>Capacity: {ticket.Capacity}</p>
+              <p>Speed: {ticket.Speed}</p>
+              <p>Seats Booked: {ticket.SeatsBooked}</p>
+              <Button
+                variant="success"
+                onClick={() => handleBookTicket(ticket.ID)}
+              >
+                Book Ticket
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
     </Container>
   );
 };
