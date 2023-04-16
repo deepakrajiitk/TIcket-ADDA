@@ -123,6 +123,7 @@ async function registerTransporter(
             .getProvider(adminIdentity.type);
         const adminUser = await provider.getUserContext(adminIdentity, "admin");
 
+        createTransportProvider(email, firstName, address, contactNumber);
         // Register the user, enroll the user, and import the new identity into the wallet.
         const secret = await ca.register(
             {
@@ -150,11 +151,12 @@ async function registerTransporter(
             type: "X.509",
         };
         await wallet.put(email, x509Identity);
+
         console.log(
             `Successfully registered and enrolled user "${email}" and imported it into the wallet`
         );
 
-        createTransportProvider(email, firstName, address, contactNumber);
+        await createTransportProvider(email, firstName, address, contactNumber);
     } catch (error) {
         console.error(`Failed to register user "${email}": ${error}`);
         process.exit(1);
@@ -221,7 +223,7 @@ async function createModeOfTransport(
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-async function deleteModeOfTransport(transportIDValue) {
+async function deleteModeOfTransport(transporterID, busID) {
     // Create a new gateway instance
     const gateway = new Gateway();
 
@@ -522,11 +524,9 @@ async function findAvailableTransport(source, destination) {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-// <<<<<<< HEAD
-// enrollAdmin2();
+enrollAdmin2();
 // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 // registerTransporter('Adi', 'Loth', 'testid1', 'Jodhpur', '1990');
-// =======
 // enrollAdmin2();
 // registerTransporter('Adi', 'Loth', 'id4', 'Jodhpur', '1990');
 
@@ -534,12 +534,11 @@ async function findAvailableTransport(source, destination) {
 // createModeOfTransport('testid1', 'Bus25', 150, '20' , 'Kanpur', 'Bombay');
 // createModeOfTransport('testid1', 'Bus35', 250, '10' , 'Kanpur', 'Bombay');
 
-// deleteModeOfTransport('testid2')
+// deleteModeOfTransport('idxx', 'B1');
 // getTransportation('testid1', 'Adi');
 
-// updateTransportationDetails('testid2', 'Bus2', '30', '40' , 'Kanpur', 'Delhi', 'bus')
+// updateTransportationDetails('idxx', 'aa', '30', '40' , 'Kanpur', 'Delhi')
 
-// createTransportProvider("testid2", "Dinkar", "Jodhpur", "1990")
 // deleteTransportProvider("id2");
 
 // findAvailableTransport("Kanpur", "Bombay") ;

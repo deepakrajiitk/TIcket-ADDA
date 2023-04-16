@@ -9,7 +9,6 @@ const UpdateTransportationDetails = () => {
   const [speed, setSpeed] = useState("");
   const [source, setSource] = useState("");
   const [destination, setDestination] = useState("");
-  const [type, setType] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -38,6 +37,7 @@ const UpdateTransportationDetails = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
+      <h1>Update transport details</h1>
       <Form.Group controlId="formTransportID">
         <Form.Label>Transport ID</Form.Label>
         <Form.Control
@@ -98,15 +98,6 @@ const UpdateTransportationDetails = () => {
         />
       </Form.Group>
 
-      <Form.Group controlId="formType">
-        <Form.Label>Type</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Enter type"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        />
-      </Form.Group>
 
       <Button variant="primary" type="submit">
         Update Transportation Details
