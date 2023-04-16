@@ -17,11 +17,11 @@ function App() {
       <MyNavbar />
       <Routes>
         <Route exact path="/provider" element={<ProviderPage />} />
-        <Route exact path="/passenger" element={<ProfilePage />} />
-        <Route exact path="/" element={<HomePage />} />
+        <Route exact path="/passenger" element={<PassengerPage />} />
+        <Route exact path="/homepage" element={<HomePage />} />
         <Route exact path="/about" element={<AboutPage />} />
         <Route exact path="/ticket-booking" element={<TicketBooking />} />
-         <Route exact path = "/loginPass" element = {<ProfilePage/>}/>
+         <Route exact path = "/" element = {<ProfilePage/>}/>
       </Routes>
       {/* <PassengerLogin/> */}
     </>

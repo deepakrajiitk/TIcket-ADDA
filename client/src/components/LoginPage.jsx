@@ -22,7 +22,7 @@ const LoginPageForm = () => {
       setResponseMessage(response.data.message);
       setEmail("");
       setPassword("");
-      navigate('/')
+      navigate('/passenger')
     } catch (error) {
       console.error(error, "----------------------------------");
       setResponseMessage(error.response.data.message);
