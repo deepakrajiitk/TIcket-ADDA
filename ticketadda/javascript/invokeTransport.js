@@ -454,11 +454,8 @@ async function findAvailableTransport(source, destination) {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> ae7454dff98b09dca5a10ae3052a9f4534f5b315
 enrollAdmin2();
 // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 // registerTransporter('Adi', 'Loth', 'testid1', 'Jodhpur', '1990');
