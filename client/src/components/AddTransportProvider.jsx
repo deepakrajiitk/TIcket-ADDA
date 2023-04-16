@@ -98,7 +98,7 @@ const CreateTransportProvider = () => {
           />
         </Form.Group>
 
-        <Form.Group controlId="password">
+        {/* <Form.Group controlId="password">
           <Form.Label>Password</Form.Label>
           <Form.Control
             type="number"
@@ -106,7 +106,7 @@ const CreateTransportProvider = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        </Form.Group>
+        </Form.Group> */}
 
         <Button variant="primary" type="submit">
           Submit

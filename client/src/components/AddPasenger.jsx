@@ -107,7 +107,7 @@ const AddPassengerForm = () => {
           </Form.Control>
         </Form.Group> */}
 
-        <Form.Group controlId="password">
+        {/* <Form.Group controlId="password">
           <Form.Label>Password</Form.Label>
           <Form.Control
             type="number"
@@ -115,7 +115,7 @@ const AddPassengerForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        </Form.Group>
+        </Form.Group> */}
         <Button variant="primary" type="submit">
           Submit
         </Button>

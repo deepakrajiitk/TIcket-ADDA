@@ -159,7 +159,7 @@ app.get("/transport", async (req, res) => {
       destination
     );
     // console.log(result);
-    res.status(201).send(`Successeful added mode of transport with ID: ${transportID+name1}`);
+    res.status(201).send(result);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
     res.status(500).send("Failed to register mode of transport");
