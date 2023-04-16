@@ -113,18 +113,15 @@ async function registerTransporter(firstName, lastName, email, address, contactN
         type: 'X.509',
       };
       await wallet.put(email, x509Identity);
+
       console.log(`Successfully registered and enrolled user "${email}" and imported it into the wallet`);
 
-      createTransportProvider(email, firstName , address, contactNumber);
+      await createTransportProvider(email, firstName , address, contactNumber);
   
     } catch (error) {
       console.error(`Failed to register user "${email}": ${error}`);
       process.exit(1);
     }
-
-
-
-
 
   }
 
@@ -155,7 +152,7 @@ async function createModeOfTransport( transportID, name, capacity, speed, source
 
         // Invoke the createModeOfTransport function on the chaincode
         const result = await contract.submitTransaction('createModeOfTransport', transportID, name, capacity, speed, source ,destination);
-        console.log(`Transaction result: ${result.toString()}`);
+        console.log(`Mode of transport created: ${transportID+name}`);
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
     } finally {
@@ -169,7 +166,7 @@ async function createModeOfTransport( transportID, name, capacity, speed, source
 
 
 
-async function deleteModeOfTransport(transportIDValue) {
+async function deleteModeOfTransport(transporterID, busID) {
     // Create a new gateway instance
     const gateway = new Gateway();
 
@@ -191,8 +188,9 @@ async function deleteModeOfTransport(transportIDValue) {
         const contract = network.getContract('ticketadda'); // Replace with the actual chaincode name
 
         // Invoke the deleteModeOfTransport function on the chaincode
-        const result = await contract.submitTransaction('deleteModeOfTransport', transportIDValue);
-        console.log(`Transaction result: ${result.toString()}`);
+        transporterID = transporterID+busID;
+        const result = await contract.submitTransaction('deleteModeOfTransport', transporterID);
+        console.log('Mode of transport deleted');
 
         return result;
     } catch (error) {
@@ -303,9 +301,11 @@ async function createTransportProvider(providerID, name, address, contact) {
         // Get the network and contract from the gateway
         const network = await gateway.getNetwork('mychannel'); // Replace with the actual channel name
         const contract = network.getContract('ticketadda'); // Replace with the actual chaincode name
-        
-        const result = await contract.submitTransaction('createTransportProvider', providerID, name, address, contact);
-        console.log(`Transportation provider created: ${result.toString()}`);
+
+
+        await contract.submitTransaction('createTransportProvider', providerID, name, address, contact);
+
+        console.log(`Transportation provider created: ${providerID}`);
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
     } finally {
@@ -398,24 +398,19 @@ async function findAvailableTransport(source, destination) {
 
 
 
-<<<<<<< HEAD
-enrollAdmin2();
-// console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-// registerTransporter('Adi', 'Loth', 'testid1', 'Jodhpur', '1990');
-=======
 // enrollAdmin2();
-registerTransporter('Adi', 'Loth', 'id4', 'Jodhpur', '1990');
 
-// createModeOfTransport('testid1', 'Bu45', 50, '120' , 'Delhi', 'Bombay');
-// createModeOfTransport('testid1', 'Bus25', 150, '20' , 'Kanpur', 'Bombay');
+// registerTransporter('Adi', 'Loth', 'testid11', 'Jodhpur', '1990');
+
+// createModeOfTransport('idxx', 'aa', 50, '120' , 'Delhi', 'Bombay');
+// createModeOfTransport('testid11', 'Bus25', 150, '20' , 'Kanpur', 'Bombay');
 // createModeOfTransport('testid1', 'Bus35', 250, '10' , 'Kanpur', 'Bombay');
 
-// deleteModeOfTransport('testid2')
+// deleteModeOfTransport('idxx', 'B1');
 // getTransportation('testid1', 'Adi');
 
-// updateTransportationDetails('testid2', 'Bus2', '30', '40' , 'Kanpur', 'Delhi', 'bus')
+// updateTransportationDetails('idxx', 'aa', '30', '40' , 'Kanpur', 'Delhi')
 
-// createTransportProvider("testid2", "Dinkar", "Jodhpur", "1990")
 // deleteTransportProvider("id2");
 
 // findAvailableTransport("Kanpur", "Bombay") ;

@@ -102,23 +102,13 @@ app.get("/updatePassengers", async (req, res) => {
 app.get("/transporter", async (req, res) => {
   const firstName = req.query.firstName;
   const lastName = req.query.lastName;
-  const email = req.query.email;
+  const email = req.query.providerID;
   const address = req.query.address;
-  const contactNumber = req.query.contactNumber;
+  const contactNumber = req.query.contact;
 
   try {
-    await registerTransporter(
-      firstName,
-      lastName,
-      email,
-      address,
-      contactNumber
-    );
-    res
-      .status(201)
-      .send(
-        `Successfully registered and enrolled user "${email}" and imported it into the wallet`
-      );
+    await registerTransporter( firstName, lastName, email, address,  contactNumber);
+    res.status(201).send(`Successfully registered and enrolled user "${email}" and imported it into the wallet`);
   } catch (error) {
     console.error(`Failed to register user "${email}": ${error}`);
     res.status(500).send("Failed to register transporter");
@@ -145,10 +135,12 @@ app.get("/transport", async (req, res) => {
 
 app.get("/deleteModeOfTransport", async (req, res) => {
   const transportID = req.query.transportID;
+  const transporterID = req.query.transporterID;
+  
   try {
-    const result = deleteModeOfTransport(transportID);
-    console.log(`Transaction result: ${result.toString()}`);
-    res.status(201).send(`Transaction result: ${result.toString()}`);
+    await deleteModeOfTransport(transporterID, transportID);
+    // console.log(`Transaction result: ${result.toString()}`);
+    // res.status(201).send(`Transaction result: ${result.toString()}`);
   } catch (error) {
     console.error(`Failed to invoke chaincode:: ${error}`);
     res.status(500).send("Failed to delete transport");
@@ -171,7 +163,7 @@ app.get("/getTransport", async (req, res) => {
 
 app.get("/updateTransport", async (req, res) => {
   const transportID = req.query.transportID;
-  const name1 = req.query.name1;
+  const name1 = req.query.name;
   const capacity = req.query.capacity;
   const speed = req.query.speed;
   const source = req.query.source;

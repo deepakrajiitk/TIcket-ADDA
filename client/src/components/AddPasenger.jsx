@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Container, Form, Button } from "react-bootstrap";
-import axios from "axios";
 
 const AddPassengerForm = () => {
   const [passengerID, setPassengerID] = useState("");
