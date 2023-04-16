@@ -356,9 +356,7 @@ class TicketAdda extends Contract {
         // const exists = await this.transportProviderExists(ctx, providerID);
         const exists = await this.transporterExists(ctx, providerID);
         if (!exists) {
-            throw new Error(
-                `The transportation provider ${providerID} does not exist`
-            );
+           return "The transportation provider " +providerID+" does not exist";
         }
 
         // Delete the transportation provider from the ledger
@@ -366,10 +364,9 @@ class TicketAdda extends Contract {
 
         // Emit an event to indicate that a transportation provider has been deleted
         const eventPayload = `Transportation provider with ID ${providerID} has been deleted`;
-        await ctx.stub.setEvent(
-            "DeleteTransportProviderEvent",
-            Buffer.from(eventPayload)
-        );
+        await ctx.stub.setEvent('DeleteTransportProviderEvent', Buffer.from(eventPayload));
+
+        return "Transportation provider with ID " + providerID+ " has been deleted";
     }
 
     async calculateTicketPrice(ctx, transportID) {

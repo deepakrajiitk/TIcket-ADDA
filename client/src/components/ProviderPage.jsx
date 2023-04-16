@@ -1,8 +1,6 @@
 import { useState } from "react";
 import Sidebar from "./SidebarTranport";
 import AddTransportForm from "./AddTransport";
-import ProviderContact from "./ProviderContact";
-import ProviderServices from "./ProviderService";
 import TransportDeleter from "./DeleteTransport";
 import UpdateTransportationDetails from "./UpdateTransport";
 import CreatePassengerProvider from "./AddTransportProvider";

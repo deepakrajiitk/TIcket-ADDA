@@ -8,8 +8,9 @@ const CreateTransportProvider = () => {
   const [lastName, setName2] = useState("");
   const [address, setAddress] = useState("");
   const [contact, setContact] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // Do something with the submitted data
     const data1 = {
@@ -20,9 +21,18 @@ const CreateTransportProvider = () => {
       contact: contact,
     };
     try {
-      const response = axios.get("http://localhost:5000/transporter", {
+      setResponseMessage("Processing.....");
+      const response = await axios.get("http://localhost:5000/transporter", {
         params: data1
       });
+      console.log(response.data);
+      setResponseMessage(response.data);
+      setProviderID("");
+      setName("");
+      setName2("");
+      setAddress("");
+      setContact("");
+
     } catch (error) {
       console.error(error);
     }
@@ -88,6 +98,9 @@ const CreateTransportProvider = () => {
           Submit
         </Button>
       </Form>
+      {responseMessage && (
+        <p style={{ marginTop: "1rem" }}>{responseMessage}</p>
+      )}
     </Container>
   );
 };
