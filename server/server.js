@@ -7,7 +7,7 @@ const port = 5000;
 
 // ADD THIS
 var cors = require("cors");
-app.use(cors());
+app.use(cors()); 
 
 const {
   deletePassenger,
@@ -21,6 +21,7 @@ const {
 const {
   updatePassenger,
 } = require("./../ticketadda/javascript/invokePassenger");
+
 
 const {
   registerTransporter,
@@ -40,6 +41,10 @@ const {
 const {
   deleteTransportProvider,
 } = require("./../ticketadda/javascript/invokeTransport");
+const {
+  findAvailableTransport,
+} = require("./../ticketadda/javascript/invokeTransport");
+
 
 const { calculateTicketPrice } = require("./../ticketadda/javascript/invoke");
 const { bookTicket } = require("./../ticketadda/javascript/invoke");
@@ -220,7 +225,7 @@ app.get("/deleteTransport", async (req, res) => {
   }
 });
 
-app.get("/showTransport", async (req, res) => {
+app.get("/AvailableTransport", async (req, res) => { 
   const source = req.query.source;
   const dest = req.query.destination;
 

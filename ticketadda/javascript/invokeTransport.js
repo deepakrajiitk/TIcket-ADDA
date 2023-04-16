@@ -487,7 +487,7 @@ async function findAvailableTransport(source, destination) {
         gateway.disconnect();
         return availableTransport;
     } catch (error) {
-        console.error("Failed to invoke chaincode:", error);
+        console.error("Failed to invoke chaincode:", error); 
         process.exit(1);
     }
 }
@@ -495,14 +495,11 @@ async function findAvailableTransport(source, destination) {
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-
-<<<<<<< HEAD
 enrollAdmin2();
 // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 // registerTransporter('Adi', 'Loth', 'testid1', 'Jodhpur', '1990');
-=======
 // enrollAdmin2();
-registerTransporter('Adi', 'Loth', 'id4', 'Jodhpur', '1990');
+// registerTransporter('Adi', 'Loth', 'id4', 'Jodhpur', '1990');
 
 // createModeOfTransport('testid1', 'Bu45', 50, '120' , 'Delhi', 'Bombay');
 // createModeOfTransport('testid1', 'Bus25', 150, '20' , 'Kanpur', 'Bombay');
