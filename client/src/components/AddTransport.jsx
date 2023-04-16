@@ -9,9 +9,9 @@ const AddTransportForm = () => {
   const [speed, setSpeed] = useState("");
   const [source, setSource] = useState("");
   const [destination, setDestination] = useState("");
-  // const [type, setType] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     
     // Create an object to hold the data
@@ -25,10 +25,18 @@ const AddTransportForm = () => {
     };
   
     try {
-      const response = axios.get("http://localhost:5000/transport", {
+      setResponseMessage("Processing.....");
+      const response = await axios.get("http://localhost:5000/transport", {
         params: data1,
       });
       console.log(response.data);
+      setResponseMessage(response.data);
+      setTransportID("");
+      setName("");
+      setCapacity("");
+      setSpeed("");
+      setSource("");
+      setDestination("");
     } catch (error) {
       console.error(error);
     }
@@ -102,6 +110,9 @@ const AddTransportForm = () => {
           Submit
         </Button>
       </Form>
+      {responseMessage && (
+        <p style={{ marginTop: "1rem" }}>{responseMessage}</p>
+      )}
     </Container>
   );
 };

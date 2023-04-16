@@ -101,20 +101,21 @@ async function registerTransporter(
         // Check to see if we've already enrolled the user.
         const userIdentity = await wallet.get(email);
         if (userIdentity) {
-            console.log(
-                `An identity for the user "${email}" already exists in the wallet`
+            const resp = `An identity for the user "${email}" already exists in the wallet`;
+            console.log(resp
             );
-            // return;
+            return resp;
         }
 
         // Check to see if we've already enrolled the admin user.
         const adminIdentity = await wallet.get("admin2");
         if (!adminIdentity) {
+            const resp = 'An identity for the admin user "admin2" does not exist in the wallet';
             console.log(
-                'An identity for the admin user "admin2" does not exist in the wallet'
+                resp
             );
-            console.log("Run the enrollAdmin2.js application before retrying");
-            return;
+            // console.log("Run the enrollAdmin2.js application before retrying");
+            return resp;
         }
 
         // Build a user object for authenticating with the CA
@@ -123,7 +124,6 @@ async function registerTransporter(
             .getProvider(adminIdentity.type);
         const adminUser = await provider.getUserContext(adminIdentity, "admin");
 
-        createTransportProvider(email, firstName, address, contactNumber);
         // Register the user, enroll the user, and import the new identity into the wallet.
         const secret = await ca.register(
             {
@@ -156,7 +156,10 @@ async function registerTransporter(
             `Successfully registered and enrolled user "${email}" and imported it into the wallet`
         );
 
-        await createTransportProvider(email, firstName, address, contactNumber);
+        const resp = await createTransportProvider(email, firstName, address, contactNumber);
+
+        return resp.toString();
+
     } catch (error) {
         console.error(`Failed to register user "${email}": ${error}`);
     }
@@ -211,7 +214,11 @@ async function createModeOfTransport(
             source,
             destination
         );
-        console.log(`Transaction result: ${result.toString()}`);
+
+        const resp = `Transaction result: ${result.toString()}`; 
+        console.log(resp);
+
+        return resp;
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
     } finally {
@@ -415,7 +422,10 @@ async function createTransportProvider(providerID, name, address, contact) {
             address,
             contact
         );
-        console.log(`Transportation provider created: ${result.toString()}`);
+        const resp = `Transportation provider created: ${result.toString()}`;
+        console.log(resp);
+
+        return resp;
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
     } finally {
@@ -458,14 +468,17 @@ async function deleteTransportProvider(providerIDValue) {
         const contract = network.getContract("ticketadda"); // Replace with the actual chaincode name
 
         // Invoke the deleteTransportProvider function on the chaincode
-        await wallet.remove(providerIDValue);
-        await contract.submitTransaction(
+        const result = await contract.submitTransaction(
             "deleteTransportProvider",
             providerIDValue
         );
-        console.log(`TSP deleted`);
+        // console.log(result);
+        return result;
+
     } catch (error) {
         console.error(`Failed to invoke chaincode: ${error}`);
+        return error;
+    
     } finally {
         // Disconnect from the gateway
         gateway.disconnect();
@@ -523,9 +536,9 @@ async function findAvailableTransport(source, destination) {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-enrollAdmin2();
+// enrollAdmin2();
 // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-// registerTransporter('Adi', 'Loth', 'testid1', 'Jodhpur', '1990');
+// registerTransporter('Adi', 'Loth', 'id33', 'Jodhpur', '1990');
 // enrollAdmin2();
 // registerTransporter('Adi', 'Loth', 'id4', 'Jodhpur', '1990');
 

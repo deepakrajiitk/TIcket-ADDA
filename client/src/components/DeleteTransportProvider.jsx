@@ -4,8 +4,9 @@ import { Container, Form, Button } from "react-bootstrap";
 
 const DeleteTransportProvider = ({ onDelete }) => {
   const [providerId, setProviderId] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const data1 = {
@@ -13,10 +14,17 @@ const DeleteTransportProvider = ({ onDelete }) => {
     };
   
     try {
+      setResponseMessage("Processing.....");
       console.log(providerId);
-      const response = axios.get("http://localhost:5000/deleteTransport", {
+      const response = await axios.get("http://localhost:5000/deleteTransport", {
         params: data1,
       });
+
+      console.log(response);
+
+      setResponseMessage(response.data);
+      setProviderId("");
+
       // console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -24,6 +32,7 @@ const DeleteTransportProvider = ({ onDelete }) => {
   };
 
   return (
+    <Container>
     <Form onSubmit={handleSubmit}>
       <h1> Delete Transport Provider</h1>
       <Form.Group controlId="providerId">
@@ -40,6 +49,10 @@ const DeleteTransportProvider = ({ onDelete }) => {
         Delete
       </Button>
     </Form>
+    {responseMessage && (
+      <p style={{ marginTop: "1rem" }}>{responseMessage}</p>
+    )}
+    </Container>
   );
 };
 
