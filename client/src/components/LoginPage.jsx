@@ -1,70 +1,65 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { Container, Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-
-const PassengerLogin = () => {
-  const [passengerID, setPassengerID] = useState("");
+const LoginPageForm = () => {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [responseMessage, setResponseMessage] = useState("");
   const navigate = useNavigate();
-
-  const clickSubmit = () => {
-    // define function to handle button click event
-    navigate("/passenger");
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const data = {
-      passengerID: passengerID,
-      password: password
+      email: email,
+      password: password,
     };
     try {
       setResponseMessage("Processing.....");
-      console.log(passengerID, password);
-      const response = await axios.get("http://localhost:5000/addpassenger", {
-        params: data,
-      });
+      const response = await axios.post("http://localhost:5000/login", data);
       console.log(response.data);
-      setResponseMessage(response.data);
+      setResponseMessage(response.data.message);
+      setEmail("");
+      setPassword("");
+      navigate('/')
     } catch (error) {
       console.error(error, "----------------------------------");
-      // setResponseMessage(error.data);
+      setResponseMessage(error.response.data.message);
     }
   };
 
   return (
     <Container>
-      <h1>Passenger Login</h1>
+      <h1>Login</h1>
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="passengerID">
-          <Form.Label>Passenger ID</Form.Label>
+        <Form.Group controlId="email">
+          <Form.Label>Email Address</Form.Label>
           <Form.Control
-            type="text"
-            placeholder="Enter Passenger ID"
-            value={passengerID}
-            onChange={(e) => setPassengerID(e.target.value)}
+            type="email"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </Form.Group>
         <Form.Group controlId="password">
           <Form.Label>Password</Form.Label>
           <Form.Control
-            type="text"
+            type="password"
             placeholder="Enter Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
-        
-        <Button variant="primary" type="submit" onClick={clickSubmit}>
+        <Button variant="primary" type="submit">
           Submit
         </Button>
       </Form>
+      {responseMessage && (
+        <p style={{ marginTop: "1rem" }}>{responseMessage}</p>
+      )}
     </Container>
   );
 };
 
-export default PassengerLogin;
+export default LoginPageForm;

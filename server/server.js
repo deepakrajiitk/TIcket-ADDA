@@ -4,6 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const port = 5000;
+const fs = require("fs")
 
 // ADD THIS
 var cors = require("cors");
@@ -57,6 +58,59 @@ const {
 
 // Configure body-parser middleware to parse JSON
 app.use(bodyParser.json());
+
+// Signup endpoint
+app.post("/signup", (req, res) => {
+  const { email, password } = req.body;
+  console.log("=====================", email);
+
+  // Check if user already exists
+  const users = getUsers();
+  const userExists = users.some((user) => user.email === email);
+  if (userExists) {
+    res.status(400).send("User already exists");
+    return;
+  }
+
+  // Add new user to file
+  const newUser = { email, password };
+  users.push(newUser);
+  saveUsers(users);
+
+  res.send("User created successfully");
+});
+
+// Login endpoint
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+
+  // Find user in file
+  const users = getUsers();
+  const user = users.find((user) => user.email === email);
+  if (!user) {
+    res.status(400).send("User not found");
+    return;
+  }
+
+  // Check password
+  if (user.password !== password) {
+    res.status(400).send("Invalid password");
+    return;
+  }
+
+  res.send("Login successful");
+});
+
+// Helper functions
+function getUsers() {
+  const data = fs.readFileSync("users.json");
+  return JSON.parse(data);
+}
+
+function saveUsers(users) {
+  const data = JSON.stringify(users);
+  fs.writeFileSync("users.json", data);
+}
 
 // Create a new passenger
 app.get("/addpassenger", async (req, res) => {

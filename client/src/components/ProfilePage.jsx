@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Sidebar from "./sidebarLogin";
-import PassengerLogin from "./loginPage";
-import AddPassengerForm from "./AddPasenger";
+import LoginForm from "./LoginPage";
+import SidebarProfile from "./SidebarProfile";
+import SignpupForm from "./SignupPage";
 
-function LoginSignup() {
-  const [selectedMenuItem, setSelectedMenuItem] = useState("login"); // set initial value to "addtransport"
+function ProfilePage() {
+  const [selectedMenuItem, setSelectedMenuItem] = useState("loginpage"); // set initial value to "addtransport"
 
   const handleMenuItemClick = (menuItem) => {
     setSelectedMenuItem(menuItem);
@@ -14,18 +14,18 @@ function LoginSignup() {
     <div className="container-fluid" style={{ height: "100vh" }}>
       <div className="row flex-grow-1" style={{ height: "100vh" }}>
         <div className="col-md-2 bg-light">
-          <Sidebar
+          <SidebarProfile
             selectedMenuItem={selectedMenuItem}
             onMenuItemClick={handleMenuItemClick}
           />
         </div>
         <div className="col-md-10">
-          {selectedMenuItem === "login" && <PassengerLogin />}
-          {selectedMenuItem === "signup" && <AddPassengerForm />}
+          {selectedMenuItem === "loginpage" && <LoginForm />}
+          {selectedMenuItem === "signuppage" && <SignpupForm />}
         </div>
-      </div>
+      </div>    
     </div>
   );
 }
 
-export default LoginSignup;
+export default ProfilePage;
